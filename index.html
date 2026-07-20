@@ -48,11 +48,22 @@ button{ font-family:inherit; cursor:pointer; }
 .masthead .tagline{ color:#B9C4D4; font-size:14px; margin-top:4px; max-width:46ch; }
 .side-note{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:#8FA0B5; text-align:right; line-height:1.7; }
 .side-note b{ color: var(--amber-2); }
+.student-change{ margin-top:6px; padding:4px 7px; border:1px solid var(--ink-line); border-radius:5px; background:transparent; color:#AEBBCC; font-size:11px; }
+.student-change:hover{ color:var(--paper); border-color:#8FA0B5; }
 
 /* ---------- Screens ---------- */
 .screen{ display:none; }
 .screen.visible{ display:block; animation: fadeIn .35s ease; }
 @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+.student-card{ max-width:540px; margin:38px auto; background:var(--paper); color:var(--ink); border-radius:18px; padding:32px 30px; box-shadow:var(--shadow); }
+.student-card h2{ font-size:26px; margin-bottom:8px; }
+.student-card p{ color:var(--slate); font-size:14px; line-height:1.6; margin:0 0 22px; }
+.student-form{ display:grid; gap:16px; }
+.student-form label{ display:grid; gap:7px; color:var(--ink-2); font-size:13px; font-weight:600; }
+.student-form input{ width:100%; border:1px solid #CFC6B0; border-radius:8px; background:#FBF8F1; color:var(--ink); font:inherit; padding:11px 12px; }
+.student-form input:focus{ outline:2px solid rgba(62,142,142,0.45); border-color:var(--teal); }
+.student-form .btn{ margin-top:4px; }
 
 /* ---------- Home: topic grid ---------- */
 .section-label{
@@ -244,13 +255,31 @@ footer.note{ text-align:center; color:#5C6B7A; font-size:12px; margin-top:60px; 
         <div class="tagline">Luyện nghe – chép chính tả từ vựng học thuật theo 12 chủ đề thường gặp trong IELTS, giúp bạn phản xạ tốt hơn ở cả 4 kỹ năng.</div>
       </div>
     </div>
-    <div class="side-note">TAPE No. <b>IELTS‑CORE‑12</b><br>chế độ: <b>Nghe → Gõ lại</b></div>
+    <div class="side-note">TAPE No. <b>IELTS‑CORE‑12</b><br>chế độ: <b>Nghe → Gõ lại</b><br><button class="student-change" id="btn-change-student">Đổi tên / lớp</button></div>
   </div>
 
   <div id="warn" class="warn-banner">Trình duyệt của bạn có thể không hỗ trợ đọc giọng nói (Web Speech API). Hãy thử Chrome hoặc Edge trên máy tính để có trải nghiệm tốt nhất.</div>
 
+  <!-- STUDENT DETAILS -->
+  <section id="screen-student" class="screen visible">
+    <div class="student-card">
+      <span class="level-badge">THÔNG TIN HỌC SINH</span>
+      <h2>Bắt đầu bài luyện</h2>
+      <p>Nhập thông tin để giáo viên nhận biết kết quả của bạn. Thông tin này sẽ được dùng khi lưu điểm.</p>
+      <form class="student-form" id="student-form">
+        <label>Họ và tên
+          <input type="text" id="student-name" placeholder="Ví dụ: Nguyễn Minh Anh" maxlength="100" autocomplete="name" required>
+        </label>
+        <label>Lớp
+          <input type="text" id="student-class" placeholder="Ví dụ: 8A1" maxlength="50" required>
+        </label>
+        <button class="btn btn-primary" type="submit">Vào làm bài →</button>
+      </form>
+    </div>
+  </section>
+
   <!-- HOME -->
-  <section id="screen-home" class="screen visible">
+  <section id="screen-home" class="screen">
     <div class="section-label">Bài nghe điền từ · Trình độ A2–B1</div>
     <div id="passage-grid" class="topic-grid"></div>
 
@@ -546,7 +575,10 @@ const LEVEL_META = {
 };
 
 /* ===================== STATE ===================== */
-let state = { topic:null, level:null, queue:[], index:0, correct:0, wrong:0, streak:0, missed:[], awaitingNext:false, voice:null, rate:1 };
+let state = { topic:null, level:null, queue:[], index:0, correct:0, wrong:0, streak:0, missed:[], awaitingNext:false, voice:null, rate:1, student:null };
+
+/* Paste the deployed Google Apps Script Web App URL here after completing the setup below. */
+const RESULTS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzjblF8hCmFf-AwkIoq6AxySqjwfD0YNM-lkjjp9plnDupuF2SL1QBP8GGYMNQsN9w8EQ/exec';
 
 /* ===================== STORAGE HELPERS ===================== */
 async function getBest(topicId, level){
@@ -562,6 +594,32 @@ async function setBest(topicId, level, pct){
       localStorage.setItem(`dictationlab:best:${topicId}:${level}`, JSON.stringify({pct, date:new Date().toISOString()}));
     }
   }catch(e){ /* ignore (e.g. private browsing) */ }
+}
+
+function getStoredStudent(){
+  try{
+    const raw = localStorage.getItem('dictationlab:student');
+    const student = raw ? JSON.parse(raw) : null;
+    return student && student.name && student.className ? student : null;
+  }catch(e){ return null; }
+}
+
+async function saveStudentResult(result){
+  if(!RESULTS_ENDPOINT || !state.student) return;
+  const payload = {
+    student_name: state.student.name,
+    student_class: state.student.className,
+    completed_at: new Date().toISOString(),
+    ...result
+  };
+  try{
+    await fetch(RESULTS_ENDPOINT, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload)
+    });
+  }catch(e){ console.warn('Không thể lưu kết quả trực tuyến.', e); }
 }
 
 /* ===================== SPEECH ===================== */
@@ -600,6 +658,24 @@ function showScreen(id){
   document.getElementById(id).classList.add('visible');
   window.scrollTo({top:0, behavior:'smooth'});
 }
+
+document.getElementById('student-form').addEventListener('submit', (event)=>{
+  event.preventDefault();
+  const name = document.getElementById('student-name').value.trim();
+  const className = document.getElementById('student-class').value.trim();
+  if(!name || !className) return;
+  state.student = { name, className };
+  try{ localStorage.setItem('dictationlab:student', JSON.stringify(state.student)); }catch(e){ /* ignore */ }
+  showScreen('screen-home');
+});
+
+document.getElementById('btn-change-student').addEventListener('click', ()=>{
+  const student = state.student || getStoredStudent();
+  document.getElementById('student-name').value = student ? student.name : '';
+  document.getElementById('student-class').value = student ? student.className : '';
+  showScreen('screen-student');
+  document.getElementById('student-name').focus();
+});
 
 /* ===================== GAP-FILL PASSAGE (A2–B1) ===================== */
 let gf = { passage:null, sentences:[], index:0, correctBlanks:0, wrongBlanks:0, totalBlanks:0, missedSentences:[], rate:1, awaitingNext:false };
@@ -796,6 +872,11 @@ async function finishGapfill(){
   document.getElementById('btn-retry-missed').style.opacity = gf.missedSentences.length===0 ? 0.5 : 1;
 
   await setBest(gf.passage.id, 'gapfill', pct);
+  await saveStudentResult({
+    activity_type:'gapfill', exercise_id:gf.passage.id, exercise_title:gf.passage.title,
+    level:gf.passage.level, score_percent:pct, correct_count:gf.correctBlanks,
+    wrong_count:gf.wrongBlanks, total_count:total
+  });
   showScreen('screen-results');
 }
 
@@ -1009,6 +1090,11 @@ async function finishPractice(){
   document.getElementById('btn-retry-missed').style.opacity = state.missed.length===0 ? 0.5 : 1;
 
   await setBest(state.topic.id, state.level, pct);
+  await saveStudentResult({
+    activity_type:state.level, exercise_id:state.topic.id, exercise_title:state.topic.name,
+    level:LEVEL_META[state.level].label, score_percent:pct, correct_count:state.correct,
+    wrong_count:state.wrong, total_count:total
+  });
   showScreen('screen-results');
 }
 
@@ -1042,6 +1128,11 @@ document.getElementById('btn-retry-all').addEventListener('click', ()=>{
 /* ===================== INIT ===================== */
 renderHome();
 renderGapfillHome();
+const storedStudent = getStoredStudent();
+if(storedStudent){
+  state.student = storedStudent;
+  showScreen('screen-home');
+}
 </script>
 </body>
 </html>
