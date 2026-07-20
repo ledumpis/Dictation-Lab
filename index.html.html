@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dictation Lab — Luyện chép chính tả IELTS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B2A41;
+  --ink-2:#233A56;
+  --paper:#F6F1E7;
+  --paper-2:#EDE6D6;
+  --amber:#E8A33D;
+  --amber-2:#F2BE6F;
+  --teal:#3E8E8E;
+  --coral:#D8604C;
+  --slate:#5C6B7A;
+  --ink-line: rgba(246,241,231,0.12);
+  --shadow: 0 18px 40px rgba(9,15,26,0.35);
+  --radius: 14px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(1200px 700px at 15% -10%, #24395a 0%, var(--ink) 45%, #16223a 100%);
+  color: var(--paper);
+  font-family:'IBM Plex Sans', sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{ font-family:'Fraunces', serif; font-weight:600; margin:0; }
+.mono{ font-family:'IBM Plex Mono', monospace; }
+button{ font-family:inherit; cursor:pointer; }
+:focus-visible{ outline:2px solid var(--amber-2); outline-offset:3px; }
+.app{ max-width:1080px; margin:0 auto; padding:32px 20px 80px; }
+
+/* ---------- Top masthead ---------- */
+.masthead{
+  display:flex; align-items:flex-end; justify-content:space-between; gap:20px;
+  border-bottom: 1px solid var(--ink-line); padding-bottom:22px; margin-bottom:34px;
+  flex-wrap:wrap;
+}
+.masthead .brand{ display:flex; align-items:center; gap:14px; }
+.reel-mark{ width:46px; height:46px; flex:none; }
+.masthead h1{ font-size: clamp(26px, 4vw, 34px); letter-spacing:0.2px; }
+.masthead .tagline{ color:#B9C4D4; font-size:14px; margin-top:4px; max-width:46ch; }
+.side-note{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:#8FA0B5; text-align:right; line-height:1.7; }
+.side-note b{ color: var(--amber-2); }
+
+/* ---------- Screens ---------- */
+.screen{ display:none; }
+.screen.visible{ display:block; animation: fadeIn .35s ease; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+/* ---------- Home: topic grid ---------- */
+.section-label{
+  font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:1.5px; text-transform:uppercase;
+  color: var(--amber-2); margin-bottom:14px; display:flex; align-items:center; gap:10px;
+}
+.section-label::after{ content:""; flex:1; height:1px; background:var(--ink-line); }
+
+.topic-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin-bottom:40px; }
+.topic-card{
+  background: linear-gradient(160deg, var(--ink-2), #1E2F49);
+  border:1px solid var(--ink-line); border-radius: var(--radius);
+  padding:18px 18px 16px; text-align:left; color:var(--paper);
+  position:relative; overflow:hidden; transition: transform .18s ease, border-color .18s ease;
+}
+.topic-card:hover{ transform: translateY(-3px); border-color: rgba(232,163,61,0.5); }
+.topic-card::before{
+  content:""; position:absolute; top:0; left:0; height:4px; width:100%;
+  background: linear-gradient(90deg, var(--amber), var(--teal));
+  opacity:0; transition:opacity .18s ease;
+}
+.topic-card:hover::before{ opacity:1; }
+.topic-card .cassette-id{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--amber-2); letter-spacing:1px; }
+.topic-card h3{ font-size:19px; margin:8px 0 6px; }
+.topic-card p{ font-size:13px; color:#AEBBCC; margin:0 0 14px; line-height:1.5; min-height:36px; }
+.topic-card .meta{ display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#8FA0B5; font-family:'IBM Plex Mono',monospace; }
+.topic-card .meta .best{ color: var(--teal); }
+
+/* ---------- Level select ---------- */
+.back-link{
+  background:none; border:none; color:#AEBBCC; font-size:13px; display:inline-flex; align-items:center; gap:6px;
+  margin-bottom:18px; padding:6px 2px;
+}
+.back-link:hover{ color:var(--paper); }
+.level-header{ margin-bottom:26px; }
+.level-header .cassette-id{ font-family:'IBM Plex Mono',monospace; color:var(--amber-2); font-size:12px; letter-spacing:1px; }
+.level-header h2{ font-size: clamp(24px,3.4vw,30px); margin-top:6px; }
+.level-header p{ color:#AEBBCC; margin-top:8px; max-width:56ch; font-size:14px; line-height:1.6; }
+
+.level-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:16px; }
+.level-card{
+  background: var(--paper); color: var(--ink); border-radius: var(--radius); padding:20px;
+  text-align:left; border:1px solid transparent; box-shadow: var(--shadow);
+  display:flex; flex-direction:column; gap:10px; transition: transform .16s ease;
+}
+.level-card:hover{ transform: translateY(-3px); }
+.level-card .tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--slate); }
+.level-card h3{ font-size:20px; color:var(--ink); }
+.level-card .desc{ font-size:13px; color:var(--slate); line-height:1.5; flex:1; }
+.level-card .stat-row{ display:flex; justify-content:space-between; align-items:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--slate); border-top:1px dashed #CFC6B0; padding-top:10px; }
+.level-card .stat-row b{ color:var(--teal); }
+.level-card .start-btn{
+  margin-top:4px; background:var(--ink); color:var(--paper); border:none; border-radius:8px; padding:10px 14px;
+  font-weight:600; font-size:13px; display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.level-card .start-btn:hover{ background:#2C4266; }
+
+/* ---------- Practice screen ---------- */
+.practice-topbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:10px; }
+.practice-topbar .info{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:#AEBBCC; }
+.practice-topbar .info b{ color:var(--amber-2); }
+.exit-btn{ background:none; border:1px solid var(--ink-line); color:#AEBBCC; border-radius:8px; padding:7px 12px; font-size:12px; }
+.exit-btn:hover{ color:var(--paper); border-color:#8FA0B5; }
+
+.progress-track{ height:6px; background:var(--ink-2); border-radius:6px; overflow:hidden; margin-bottom:30px; }
+.progress-fill{ height:100%; background: linear-gradient(90deg, var(--amber), var(--teal)); width:0%; transition:width .3s ease; }
+
+.deck{ display:grid; grid-template-columns: 220px 1fr; gap:32px; align-items:start; }
+@media (max-width: 720px){ .deck{ grid-template-columns:1fr; } }
+
+/* cassette / reel widget */
+.cassette{
+  background: linear-gradient(160deg,#22314C,#182643); border:1px solid var(--ink-line); border-radius:16px;
+  padding:20px 18px; box-shadow: var(--shadow); text-align:center;
+}
+.reels{ display:flex; justify-content:space-between; margin:6px 10px 18px; }
+.reel{ width:64px; height:64px; border-radius:50%; background: radial-gradient(circle at 50% 50%, #0F1A2E 0 18%, #2C4266 19% 38%, #0F1A2E 39% 100%); position:relative; }
+.reel::before{ content:""; position:absolute; inset:0; border-radius:50%; border:2px dashed rgba(246,241,231,0.18); }
+.reel.spin{ animation: spin 1.6s linear infinite; }
+@keyframes spin{ to{ transform: rotate(360deg); } }
+.tape-window{ background:#0F1A2E; border-radius:8px; height:8px; margin:0 8px 16px; }
+
+.play-controls{ display:flex; flex-direction:column; gap:10px; align-items:center; }
+.play-btn{
+  width:64px; height:64px; border-radius:50%; border:none; background: linear-gradient(160deg, var(--amber-2), var(--amber));
+  color:#3A2405; font-size:22px; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(232,163,61,0.35);
+  transition: transform .12s ease;
+}
+.play-btn:hover{ transform: scale(1.05); }
+.play-btn:active{ transform: scale(0.96); }
+.replay-btn{
+  background:none; border:1px solid var(--ink-line); color:#AEBBCC; border-radius:8px; padding:6px 12px; font-size:12px;
+  display:flex; align-items:center; gap:6px;
+}
+.replay-btn:hover{ color:var(--paper); border-color:#8FA0B5; }
+.speed-row{ margin-top:14px; text-align:left; }
+.speed-row label{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8FA0B5; display:flex; justify-content:space-between; margin-bottom:6px; }
+.speed-row input[type=range]{ width:100%; accent-color: var(--amber); }
+.hint-text{ font-size:11px; color:#7C8AA0; margin-top:12px; line-height:1.5; }
+
+/* gap-fill passage */
+.level-badge{
+  display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1px;
+  background: rgba(232,163,61,0.16); color: var(--amber-2); border:1px solid rgba(232,163,61,0.4);
+  border-radius:20px; padding:3px 10px; margin-bottom:10px;
+}
+.passage-context{ font-size:14px; color:var(--slate); line-height:1.7; background:#FBF8F1; border:1px solid #E5DCC5; border-radius:12px; padding:16px 18px; margin-bottom:22px; }
+.intro-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; }
+.passage-sentence{ font-family:'Fraunces',serif; font-size:19px; line-height:1.9; color:var(--ink); }
+.blank-input{
+  display:inline-block; min-width:64px; border:none; border-bottom:2px solid var(--ink); background:rgba(27,42,65,0.04);
+  font-family:'IBM Plex Mono',monospace; font-size:16px; text-align:center; padding:3px 6px; margin:0 3px; color:var(--ink);
+  border-radius:4px 4px 0 0;
+}
+.blank-input:focus{ outline:none; border-bottom-color:var(--teal); background:rgba(62,142,142,0.08); }
+.blank-input.correct{ border-bottom-color:var(--teal); background:rgba(62,142,142,0.14); color:#256060; }
+.blank-input.wrong{ border-bottom-color:var(--coral); background:rgba(216,96,76,0.12); color:#9C3C2C; }
+.sentence-counter{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--slate); margin-bottom:10px; letter-spacing:1px; text-transform:uppercase; }
+
+/* answer sheet */
+.answer-sheet{ background: var(--paper); color:var(--ink); border-radius:16px; padding:28px 26px; box-shadow: var(--shadow); }
+.item-tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--slate); margin-bottom:8px; }
+.answer-line{ display:flex; align-items:flex-end; gap:10px; border-bottom:2px solid var(--ink); padding-bottom:10px; margin-bottom:8px; }
+.answer-line input{
+  flex:1; border:none; background:transparent; font-family:'Fraunces',serif; font-size:22px; color:var(--ink);
+  padding:4px 2px;
+}
+.answer-line input::placeholder{ color:#B7AE99; font-family:'IBM Plex Sans',sans-serif; font-size:16px; }
+.answer-line input:focus{ outline:none; }
+.char-count{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--slate); }
+
+.feedback{ min-height:70px; margin-top:14px; padding:14px 16px; border-radius:10px; font-size:14px; display:none; }
+.feedback.show{ display:block; animation: fadeIn .25s ease; }
+.feedback.correct{ background:rgba(62,142,142,0.12); border:1px solid rgba(62,142,142,0.4); color:#256060; }
+.feedback.wrong{ background:rgba(216,96,76,0.1); border:1px solid rgba(216,96,76,0.4); color:#9C3C2C; }
+.feedback b{ display:block; font-family:'Fraunces',serif; font-size:16px; margin-bottom:4px; }
+
+.actions-row{ display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
+.btn{ border:none; border-radius:9px; padding:12px 20px; font-weight:600; font-size:14px; }
+.btn-primary{ background: var(--ink); color:var(--paper); }
+.btn-primary:hover{ background:#2C4266; }
+.btn-ghost{ background:transparent; border:1px solid #CFC6B0; color:var(--slate); }
+.btn-ghost:hover{ border-color:var(--ink); color:var(--ink); }
+.btn:disabled{ opacity:0.45; cursor:not-allowed; }
+
+.score-strip{ display:flex; gap:18px; margin-top:20px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--slate); flex-wrap:wrap; }
+.score-strip span b{ color:var(--ink); font-size:15px; display:block; font-family:'Fraunces',serif; }
+
+/* ---------- Results ---------- */
+.results-card{ background:var(--paper); color:var(--ink); border-radius:18px; padding:34px 30px; box-shadow: var(--shadow); text-align:center; }
+.score-ring{ width:150px; height:150px; margin:0 auto 18px; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; }
+.score-ring .pct{ font-family:'Fraunces',serif; font-size:36px; font-weight:700; }
+.score-ring .lbl{ font-size:11px; font-family:'IBM Plex Mono',monospace; color:var(--slate); position:absolute; bottom:38px; }
+.results-card h2{ font-size:24px; margin-bottom:6px; }
+.results-card .sub{ color:var(--slate); font-size:14px; margin-bottom:24px; }
+.missed-list{ text-align:left; background:#FBF8F1; border:1px solid #E5DCC5; border-radius:12px; padding:16px 18px; margin:0 0 24px; max-height:260px; overflow:auto; }
+.missed-list h4{ font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--slate); margin:0 0 10px; }
+.missed-row{ display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px dashed #E5DCC5; font-size:14px; }
+.missed-row:last-child{ border-bottom:none; }
+.missed-row .typed{ color:var(--coral); text-decoration:line-through; opacity:0.8; }
+.missed-row .correct{ color:var(--teal); font-weight:600; }
+.results-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+
+.warn-banner{
+  background:rgba(216,96,76,0.14); border:1px solid rgba(216,96,76,0.4); color:#F3D2CA; border-radius:10px;
+  padding:12px 16px; font-size:13px; margin-bottom:20px; display:none;
+}
+.warn-banner.show{ display:block; }
+
+footer.note{ text-align:center; color:#5C6B7A; font-size:12px; margin-top:60px; font-family:'IBM Plex Mono',monospace; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="masthead">
+    <div class="brand">
+      <svg class="reel-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="24" cy="24" r="22" stroke="#E8A33D" stroke-width="2"/>
+        <circle cx="24" cy="24" r="8" fill="#E8A33D"/>
+        <circle cx="24" cy="24" r="3" fill="#1B2A41"/>
+        <circle cx="14" cy="16" r="2.4" fill="#3E8E8E"/>
+        <circle cx="34" cy="16" r="2.4" fill="#3E8E8E"/>
+        <circle cx="14" cy="32" r="2.4" fill="#3E8E8E"/>
+        <circle cx="34" cy="32" r="2.4" fill="#3E8E8E"/>
+      </svg>
+      <div>
+        <h1>Dictation Lab</h1>
+        <div class="tagline">Luyện nghe – chép chính tả từ vựng học thuật theo 12 chủ đề thường gặp trong IELTS, giúp bạn phản xạ tốt hơn ở cả 4 kỹ năng.</div>
+      </div>
+    </div>
+    <div class="side-note">TAPE No. <b>IELTS‑CORE‑12</b><br>chế độ: <b>Nghe → Gõ lại</b></div>
+  </div>
+
+  <div id="warn" class="warn-banner">Trình duyệt của bạn có thể không hỗ trợ đọc giọng nói (Web Speech API). Hãy thử Chrome hoặc Edge trên máy tính để có trải nghiệm tốt nhất.</div>
+
+  <!-- HOME -->
+  <section id="screen-home" class="screen visible">
+    <div class="section-label">Bài nghe điền từ · Trình độ A2–B1</div>
+    <div id="passage-grid" class="topic-grid"></div>
+
+    <div class="section-label" style="margin-top:8px;">Luyện từ vựng theo chủ đề IELTS</div>
+    <div id="topic-grid" class="topic-grid"></div>
+  </section>
+
+  <!-- PASSAGE INTRO -->
+  <section id="screen-passage-intro" class="screen">
+    <button class="back-link" id="btn-back-home-2">← Tất cả bài nghe</button>
+    <div class="level-header">
+      <span class="level-badge" id="intro-level"></span>
+      <h2 id="intro-title"></h2>
+      <div class="passage-context" id="intro-context"></div>
+    </div>
+    <div class="intro-actions">
+      <button class="btn btn-ghost" id="btn-listen-full">▶ Nghe thử toàn bài</button>
+      <button class="btn btn-primary" id="btn-start-gapfill">Bắt đầu điền từ →</button>
+    </div>
+  </section>
+
+  <!-- GAP-FILL PRACTICE -->
+  <section id="screen-gapfill" class="screen">
+    <div class="practice-topbar">
+      <button class="exit-btn" id="btn-exit-gapfill">✕ Thoát bài luyện</button>
+      <div class="info mono" id="gf-info"></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="gf-progress-fill"></div></div>
+
+    <div class="deck">
+      <div class="cassette">
+        <div class="reels">
+          <div class="reel"></div>
+          <div class="reel"></div>
+        </div>
+        <div class="tape-window"></div>
+        <div class="play-controls">
+          <button class="play-btn" id="btn-play-gf" title="Nghe câu này">▶</button>
+          <button class="replay-btn" id="btn-replay-gf">↻ Nghe lại</button>
+        </div>
+        <div class="speed-row">
+          <label><span>Tốc độ đọc</span><span id="speed-val-gf">1.0×</span></label>
+          <input type="range" id="speed-slider-gf" min="0.6" max="1.2" step="0.1" value="1">
+        </div>
+        <div class="hint-text">Nghe câu, sau đó điền từ còn thiếu vào (các) ô trống ngay trong câu.</div>
+      </div>
+
+      <div class="answer-sheet">
+        <div class="sentence-counter" id="gf-counter"></div>
+        <div class="passage-sentence" id="gf-sentence"></div>
+        <div class="feedback" id="feedback-gf"></div>
+        <div class="actions-row">
+          <button class="btn btn-primary" id="btn-check-gf">Kiểm tra</button>
+          <button class="btn btn-ghost" id="btn-skip-gf">Bỏ qua</button>
+        </div>
+        <div class="score-strip">
+          <span>Từ đúng<b id="stat-correct-gf">0</b></span>
+          <span>Từ sai<b id="stat-wrong-gf">0</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEVEL SELECT -->
+  <section id="screen-levels" class="screen">
+    <button class="back-link" id="btn-back-home">← Tất cả chủ đề</button>
+    <div class="level-header">
+      <div class="cassette-id" id="lvl-cassette-id"></div>
+      <h2 id="lvl-title"></h2>
+      <p id="lvl-desc"></p>
+    </div>
+    <div class="section-label">Chọn độ khó</div>
+    <div id="level-grid" class="level-grid"></div>
+  </section>
+
+  <!-- PRACTICE -->
+  <section id="screen-practice" class="screen">
+    <div class="practice-topbar">
+      <button class="exit-btn" id="btn-exit-practice">✕ Thoát bài luyện</button>
+      <div class="info mono" id="practice-info"></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <div class="deck">
+      <div class="cassette">
+        <div class="reels">
+          <div class="reel" id="reel-l"></div>
+          <div class="reel" id="reel-r"></div>
+        </div>
+        <div class="tape-window"></div>
+        <div class="play-controls">
+          <button class="play-btn" id="btn-play" title="Nghe (Enter)">▶</button>
+          <button class="replay-btn" id="btn-replay">↻ Nghe lại</button>
+        </div>
+        <div class="speed-row">
+          <label><span>Tốc độ đọc</span><span id="speed-val">1.0×</span></label>
+          <input type="range" id="speed-slider" min="0.6" max="1.2" step="0.1" value="1">
+        </div>
+        <div class="hint-text">Bấm ▶ để nghe. Bạn có thể nghe lại nhiều lần trước khi gõ đáp án.</div>
+      </div>
+
+      <div class="answer-sheet">
+        <div class="item-tag" id="item-tag"></div>
+        <div class="answer-line">
+          <input type="text" id="answer-input" placeholder="Gõ lại những gì bạn nghe được…" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <span class="char-count" id="char-count"></span>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <div class="actions-row">
+          <button class="btn btn-primary" id="btn-check">Kiểm tra</button>
+          <button class="btn btn-ghost" id="btn-skip">Bỏ qua</button>
+        </div>
+        <div class="score-strip">
+          <span>Đúng<b id="stat-correct">0</b></span>
+          <span>Sai<b id="stat-wrong">0</b></span>
+          <span>Chuỗi đúng liên tiếp<b id="stat-streak">0</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="screen-results" class="screen">
+    <div class="results-card">
+      <div class="score-ring" id="score-ring">
+        <span class="pct" id="score-pct">0%</span>
+        <span class="lbl">CHÍNH XÁC</span>
+      </div>
+      <h2 id="results-title">Hoàn thành bài luyện!</h2>
+      <div class="sub" id="results-sub"></div>
+      <div class="missed-list" id="missed-list" style="display:none;">
+        <h4>Các từ cần ôn lại</h4>
+        <div id="missed-rows"></div>
+      </div>
+      <div class="results-actions">
+        <button class="btn btn-primary" id="btn-retry-missed">Luyện lại từ sai</button>
+        <button class="btn btn-ghost" id="btn-retry-all">Làm lại toàn bộ</button>
+        <button class="btn btn-ghost" id="btn-back-topics">Về danh sách chủ đề</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="note">DICTATION LAB · luyện từ vựng học thuật cho Listening · Speaking · Reading · Writing</footer>
+</div>
+
+<script>
+/* ===================== DATA ===================== */
+const TOPICS = [
+  { id:'environment', name:'Môi trường & Biến đổi khí hậu', desc:'Từ vựng về ô nhiễm, năng lượng, hệ sinh thái — chủ đề Writing Task 2 & Speaking Part 3 rất hay gặp.',
+    words:['pollution','ecosystem','biodiversity','deforestation','emissions','sustainability','drought','renewable','extinction','conservation'],
+    phrases:['carbon footprint','greenhouse gases','renewable energy sources','endangered species','global warming','natural resources','air pollution levels','environmental impact'],
+    sentences:['Many countries are investing in renewable energy to reduce carbon emissions.','Deforestation has led to a significant loss of biodiversity.','Governments must work together to tackle climate change effectively.','Air pollution levels have risen sharply in major cities.'] },
+
+  { id:'education', name:'Giáo dục & Học tập', desc:'Từ vựng học thuật thường gặp trong bài đọc và bài viết về hệ thống giáo dục, học bổng, đào tạo.',
+    words:['curriculum','literacy','scholarship','tuition','graduate','lecture','undergraduate','assessment','qualification','plagiarism'],
+    phrases:['higher education','distance learning','academic performance','student loan','vocational training','lifelong learning','compulsory education','critical thinking'],
+    sentences:['Universities are offering more scholarships to attract international students.','Distance learning has become increasingly popular since the pandemic.','A good curriculum should balance theory and practical skills.','Critical thinking is one of the most valuable skills students can develop.'] },
+
+  { id:'technology', name:'Công nghệ & Đổi mới', desc:'Từ vựng về AI, mạng xã hội, an ninh mạng — luôn xuất hiện trong Reading và Speaking hiện đại.',
+    words:['innovation','algorithm','automation','smartphone','encryption','bandwidth','software','hardware','cybersecurity','connectivity'],
+    phrases:['artificial intelligence','social media platforms','digital transformation','data privacy','online security','wireless connection','technological advances','virtual reality'],
+    sentences:['Artificial intelligence is transforming the way businesses operate.','Cybersecurity has become a major concern for online users.','Many people rely on smartphones for daily communication.','Digital transformation is reshaping traditional industries.'] },
+
+  { id:'health', name:'Sức khỏe & Lối sống', desc:'Từ vựng về dinh dưỡng, sức khỏe tâm thần, hệ thống y tế — chủ đề Speaking Part 1 & Writing rất phổ biến.',
+    words:['nutrition','obesity','immune','diagnosis','medication','therapy','epidemic','wellbeing','hygiene','vaccination'],
+    phrases:['balanced diet','mental health','physical activity','public health system','chronic illness','healthy lifestyle','healthcare provider','stress management'],
+    sentences:['Regular exercise and a balanced diet can prevent many chronic illnesses.','Mental health awareness has increased significantly in recent years.','Access to healthcare remains unequal in many developing countries.','Stress management techniques can improve overall wellbeing.'] },
+
+  { id:'travel', name:'Du lịch & Lữ hành', desc:'Từ vựng về hành trình, di sản văn hóa, du lịch bền vững — thường gặp trong Listening Section 2.',
+    words:['itinerary','accommodation','destination','excursion','passport','luggage','souvenir','sightseeing','journey','tourism'],
+    phrases:['package holiday','cultural heritage','tourist attraction','local cuisine','public transport','travel restrictions','eco-tourism','off the beaten track'],
+    sentences:['Tourism plays a vital role in the economy of many coastal cities.','Travelers should research local customs before visiting a new country.','Sustainable tourism aims to minimize environmental impact.','Cultural heritage sites attract millions of visitors every year.'] },
+
+  { id:'work', name:'Công việc & Sự nghiệp', desc:'Từ vựng về tuyển dụng, môi trường làm việc, cân bằng cuộc sống — quan trọng cho Speaking Part 1.',
+    words:['recruitment','salary','promotion','workforce','entrepreneur','unemployment','workplace','colleague','resignation','internship'],
+    phrases:['job satisfaction','career development','work-life balance','remote working','professional experience','job market','flexible hours','team collaboration'],
+    sentences:['Many employees now prefer remote working over traditional office jobs.','A good work-life balance can improve overall job satisfaction.','The job market has become increasingly competitive in recent years.','Career development opportunities help retain talented staff.'] },
+
+  { id:'society', name:'Xã hội & Văn hóa', desc:'Từ vựng về cộng đồng, đa dạng văn hóa, đô thị hóa — chủ đề Writing Task 2 hàn lâm.',
+    words:['tradition','diversity','community','generation','custom','heritage','identity','integration','inequality','urbanization'],
+    phrases:['cultural identity','social inequality','generation gap','ethnic minority','local community','cultural diversity','social norms','sense of belonging'],
+    sentences:['Urbanization has changed the way communities interact with one another.','Cultural diversity enriches society by bringing different perspectives together.','Younger generations often have different values from their parents.','Social inequality remains a pressing issue in many cities.'] },
+
+  { id:'family', name:'Gia đình & Các mối quan hệ', desc:'Từ vựng thân thuộc cho Speaking Part 1 & 2 khi nói về gia đình, nuôi dạy con cái.',
+    words:['upbringing','sibling','marriage','parenting','household','dependent','relative','divorce','guardian','nurture'],
+    phrases:['extended family','single parent','family bond','childhood memories','quality time','family values','close-knit family','parental guidance'],
+    sentences:['Spending quality time together helps strengthen family bonds.','Parenting styles have a significant impact on a child\'s development.','Many families today are smaller than in previous generations.','Childhood memories often shape our values as adults.'] },
+
+  { id:'media', name:'Truyền thông & Giao tiếp', desc:'Từ vựng về báo chí, mạng xã hội, tin giả — hay xuất hiện trong Reading học thuật.',
+    words:['journalism','broadcast','censorship','advertisement','influence','audience','publication','headline','subscription','streaming'],
+    phrases:['mass media','freedom of speech','social media influence','fake news','public opinion','media coverage','online streaming','targeted advertising'],
+    sentences:['Social media has changed the way people consume news.','Freedom of speech is a fundamental right in most democracies.','The media plays a powerful role in shaping public opinion.','Fake news can spread rapidly across social platforms.'] },
+
+  { id:'global', name:'Vấn đề toàn cầu', desc:'Từ vựng về nghèo đói, toàn cầu hóa, di cư — chủ đề Writing Task 2 điểm cao thường dùng.',
+    words:['poverty','globalization','migration','corruption','inequality','refugee','sanctions','humanitarian','crisis','sustainability'],
+    phrases:['developing countries','income inequality','human rights','economic growth','natural disaster','food security','global economy','humanitarian aid'],
+    sentences:['Globalization has increased economic interdependence between nations.','Millions of refugees are displaced due to conflict and natural disasters.','Reducing poverty remains one of the greatest global challenges.','Food security is threatened by climate change and conflict.'] },
+
+  { id:'arts', name:'Nghệ thuật & Giải trí', desc:'Từ vựng về triển lãm, biểu diễn, ngành công nghiệp sáng tạo — hữu ích cho Speaking Part 2.',
+    words:['exhibition','sculpture','masterpiece','orchestra','choreography','screenplay','gallery','festival','performance','aesthetic'],
+    phrases:['contemporary art','box office','live performance','art exhibition','cultural festival','creative industry','visual arts','artistic expression'],
+    sentences:['The gallery is hosting an exhibition of contemporary art this month.','Streaming services have transformed the entertainment industry.','Music festivals attract visitors from all over the world.','Artistic expression allows people to communicate complex emotions.'] },
+
+  { id:'science', name:'Khoa học & Nghiên cứu', desc:'Từ vựng học thuật cho Reading khoa học và Writing Task 1 về dữ liệu nghiên cứu.',
+    words:['hypothesis','experiment','laboratory','discovery','evolution','molecule','genome','theory','observation','innovation'],
+    phrases:['scientific research','clinical trial','genetic engineering','peer review','renewable technology','research funding','data analysis','scientific method'],
+    sentences:['Scientists conducted an experiment to test their hypothesis.','Genetic engineering has opened new possibilities in medicine.','Research funding is essential for scientific innovation.','Peer review helps ensure the quality of scientific research.'] },
+];
+
+const PASSAGES = [
+  { id:'restaurant', title:'Ăn tối ở nhà hàng', level:'A2 – B1',
+    context:'Bài nghe mô tả các bước khi bạn đến ăn ở một nhà hàng: từ lúc được xếp chỗ ngồi cho tới lúc thanh toán. Nghe từng câu rồi điền từ còn thiếu vào chỗ trống — phù hợp cho học sinh trình độ A2 tới B1.',
+    sentences:[
+      'Please wait to be {{seated}}.',
+      'A host or hostess will ask you how many people are in your {{party}}.',
+      'Then they will want to know if you want to sit in the {{smoking}} or {{non-smoking}} section.',
+      'The host or hostess will take you to your {{seat}}.',
+      'You might sit at a {{table}} or at a {{booth}}.',
+      'The host or hostess will give you a {{menu}} to look at.',
+      'Sometimes, there are different menus for different {{meals}}.',
+      'There can be a breakfast menu, a {{lunch}} menu and a dinner menu.',
+      'Sometimes, there is also a wine list and a {{dessert}} menu.',
+      'The food and the {{prices}} of the food are listed on the menu.',
+      'On your table, there will be {{cutlery}}.',
+      'Cutlery is the knives, {{forks}} and spoons.',
+      'There will also be a {{napkin}}.',
+      'You are supposed to put your napkin on your {{lap}} when you eat.',
+      'Your waiter or {{waitress}} will take your order.',
+      'You might want an {{appetizer}} before your meal.',
+      'Some people want a {{salad}} or soup before their meal.',
+      'After your meal, you might have a dessert, or tea, or {{coffee}}.',
+      'When it is time to go, you will pay your {{bill}} and leave a {{tip}} for the waiter or waitress.',
+    ] },
+];
+
+const LEVEL_META = {
+  word:     { label:'Từ vựng',        tag:'CẤP ĐỘ 1', desc:'Từ đơn tần suất cao — làm quen phát âm & chính tả.' },
+  phrase:   { label:'Cụm từ / Collocation', tag:'CẤP ĐỘ 2', desc:'Cụm từ tự nhiên hay dùng trong bài viết và bài nói band cao.' },
+  sentence: { label:'Câu hoàn chỉnh', tag:'CẤP ĐỘ 3', desc:'Câu đầy đủ giống dạng nghe điền từ trong đề thi thật.' },
+};
+
+/* ===================== STATE ===================== */
+let state = { topic:null, level:null, queue:[], index:0, correct:0, wrong:0, streak:0, missed:[], awaitingNext:false, voice:null, rate:1 };
+
+/* ===================== STORAGE HELPERS ===================== */
+async function getBest(topicId, level){
+  try{
+    const raw = localStorage.getItem(`dictationlab:best:${topicId}:${level}`);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+async function setBest(topicId, level, pct){
+  try{
+    const prev = await getBest(topicId, level);
+    if(!prev || pct > prev.pct){
+      localStorage.setItem(`dictationlab:best:${topicId}:${level}`, JSON.stringify({pct, date:new Date().toISOString()}));
+    }
+  }catch(e){ /* ignore (e.g. private browsing) */ }
+}
+
+/* ===================== SPEECH ===================== */
+function pickVoice(){
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  const prefer = ['Google UK English Female','Google US English','Microsoft Aria Online (Natural) - English (United States)','Samantha'];
+  for(const p of prefer){ const v = voices.find(v=>v.name===p); if(v) return v; }
+  const en = voices.find(v=>v.lang && v.lang.startsWith('en'));
+  return en || voices[0] || null;
+}
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged = () => { state.voice = pickVoice(); };
+  state.voice = pickVoice();
+} else {
+  document.getElementById('warn').classList.add('show');
+}
+
+function speak(text, rate){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = rate || 1;
+  utter.pitch = 1;
+  if(state.voice) utter.voice = state.voice;
+  const visible = document.querySelector('.screen.visible');
+  const reels = visible ? Array.from(visible.querySelectorAll('.reel')) : [];
+  reels.forEach(r=>r.classList.add('spin'));
+  utter.onend = () => reels.forEach(r=>r.classList.remove('spin'));
+  utter.onerror = () => reels.forEach(r=>r.classList.remove('spin'));
+  window.speechSynthesis.speak(utter);
+}
+
+/* ===================== NAV ===================== */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('visible'));
+  document.getElementById(id).classList.add('visible');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===================== GAP-FILL PASSAGE (A2–B1) ===================== */
+let gf = { passage:null, sentences:[], index:0, correctBlanks:0, wrongBlanks:0, totalBlanks:0, missedSentences:[], rate:1, awaitingNext:false };
+let resultsMode = 'vocab';
+
+function parseTemplate(t){
+  const regex = /\{\{(.*?)\}\}/g;
+  const parts = []; let lastIndex = 0; let m;
+  while((m = regex.exec(t)) !== null){
+    if(m.index > lastIndex) parts.push({type:'text', value:t.slice(lastIndex, m.index)});
+    parts.push({type:'blank', answer:m[1]});
+    lastIndex = regex.lastIndex;
+  }
+  if(lastIndex < t.length) parts.push({type:'text', value:t.slice(lastIndex)});
+  const full = t.replace(/\{\{(.*?)\}\}/g, (_, a) => a);
+  return { parts, full, template:t };
+}
+
+function renderGapfillHome(){
+  const grid = document.getElementById('passage-grid');
+  grid.innerHTML = '';
+  PASSAGES.forEach((p, i)=>{
+    const blanks = p.sentences.join(' ').match(/\{\{.*?\}\}/g) || [];
+    const card = document.createElement('button');
+    card.className = 'topic-card';
+    card.innerHTML = `
+      <div class="cassette-id">BÀI ${String(i+1).padStart(2,'0')} · ${p.level}</div>
+      <h3>${p.title}</h3>
+      <p>${p.context}</p>
+      <div class="meta"><span>${p.sentences.length} câu · ${blanks.length} chỗ trống</span><span></span></div>
+    `;
+    card.addEventListener('click', ()=> openPassageIntro(p.id));
+    grid.appendChild(card);
+  });
+}
+
+function openPassageIntro(passageId){
+  const p = PASSAGES.find(x=>x.id===passageId);
+  gf.passage = p;
+  document.getElementById('intro-level').textContent = p.level;
+  document.getElementById('intro-title').textContent = p.title;
+  document.getElementById('intro-context').textContent = p.context;
+  showScreen('screen-passage-intro');
+}
+document.getElementById('btn-back-home-2').addEventListener('click', ()=> showScreen('screen-home'));
+document.getElementById('btn-listen-full').addEventListener('click', ()=>{
+  const fullText = gf.passage.sentences.map(s=>s.replace(/\{\{(.*?)\}\}/g,'$1')).join(' ');
+  speak(fullText, 1);
+});
+document.getElementById('btn-start-gapfill').addEventListener('click', ()=> startGapfill(gf.passage));
+
+function startGapfill(passage){
+  gf.passage = passage;
+  gf.sentences = passage.sentences.map(parseTemplate);
+  gf.index = 0;
+  gf.correctBlanks = 0;
+  gf.wrongBlanks = 0;
+  gf.totalBlanks = gf.sentences.reduce((sum, s)=> sum + s.parts.filter(p=>p.type==='blank').length, 0);
+  gf.missedSentences = [];
+  gf.rate = parseFloat(document.getElementById('speed-slider-gf').value);
+  updateGfStrip();
+  showScreen('screen-gapfill');
+  loadGapfillItem();
+}
+
+function updateGfStrip(){
+  document.getElementById('stat-correct-gf').textContent = gf.correctBlanks;
+  document.getElementById('stat-wrong-gf').textContent = gf.wrongBlanks;
+}
+
+function loadGapfillItem(){
+  const total = gf.sentences.length;
+  document.getElementById('gf-info').innerHTML = `${gf.passage.title} · <b>${gf.passage.level}</b>`;
+  document.getElementById('gf-progress-fill').style.width = `${(gf.index/total)*100}%`;
+  document.getElementById('gf-counter').textContent = `Câu ${String(gf.index+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+
+  const item = gf.sentences[gf.index];
+  const sentenceEl = document.getElementById('gf-sentence');
+  let blankIdx = 0;
+  sentenceEl.innerHTML = item.parts.map(part=>{
+    if(part.type==='text') return escapeHtml(part.value);
+    const width = Math.max(part.answer.length*13 + 24, 64);
+    const html = `<input type="text" class="blank-input" data-i="${blankIdx}" style="width:${width}px" autocomplete="off" autocapitalize="off" spellcheck="false">`;
+    blankIdx++;
+    return html;
+  }).join('');
+
+  const fb = document.getElementById('feedback-gf');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  gf.awaitingNext = false;
+  document.getElementById('btn-check-gf').textContent = 'Kiểm tra';
+  document.getElementById('btn-skip-gf').disabled = false;
+
+  const firstInput = sentenceEl.querySelector('.blank-input');
+  if(firstInput) firstInput.focus();
+
+  sentenceEl.querySelectorAll('.blank-input').forEach(inp=>{
+    inp.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){ e.preventDefault(); checkGapfillAnswer(); }
+    });
+  });
+
+  setTimeout(()=> speak(item.full, gf.rate), 300);
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function normalizeGf(s){
+  return s.toLowerCase().trim().replace(/[.,!?;:'"]/g,'').replace(/-/g,' ').replace(/\s+/g,' ');
+}
+
+function checkGapfillAnswer(){
+  if(gf.awaitingNext){ nextGapfillItem(); return; }
+  const item = gf.sentences[gf.index];
+  const inputs = Array.from(document.querySelectorAll('#gf-sentence .blank-input'));
+  const blanks = item.parts.filter(p=>p.type==='blank');
+  let sentenceHasWrong = false;
+
+  inputs.forEach((inp, i)=>{
+    const expected = blanks[i].answer;
+    const ok = normalizeGf(inp.value) === normalizeGf(expected) && inp.value.trim().length>0;
+    inp.classList.remove('correct','wrong');
+    inp.classList.add(ok ? 'correct' : 'wrong');
+    inp.disabled = true;
+    if(ok){ gf.correctBlanks++; } else { gf.wrongBlanks++; sentenceHasWrong = true; inp.value = expected; }
+  });
+
+  if(sentenceHasWrong){
+    gf.missedSentences.push({ template:item.template, full:item.full });
+  }
+
+  const fb = document.getElementById('feedback-gf');
+  fb.classList.add('show');
+  if(!sentenceHasWrong){
+    fb.className = 'feedback show correct';
+    fb.innerHTML = `<b>Chính xác!</b> ${item.full}`;
+  } else {
+    fb.className = 'feedback show wrong';
+    fb.innerHTML = `<b>Xem lại câu đúng</b> ${item.full}`;
+  }
+  updateGfStrip();
+  document.getElementById('btn-skip-gf').disabled = true;
+  document.getElementById('btn-check-gf').textContent = gf.index+1 < gf.sentences.length ? 'Câu tiếp theo →' : 'Xem kết quả';
+  gf.awaitingNext = true;
+}
+
+function skipGapfillItem(){
+  const item = gf.sentences[gf.index];
+  const blanks = item.parts.filter(p=>p.type==='blank');
+  gf.wrongBlanks += blanks.length;
+  gf.missedSentences.push({ template:item.template, full:item.full });
+  updateGfStrip();
+  nextGapfillItem();
+}
+
+function nextGapfillItem(){
+  gf.index++;
+  if(gf.index >= gf.sentences.length){ finishGapfill(); } else { loadGapfillItem(); }
+}
+
+async function finishGapfill(){
+  resultsMode = 'gapfill';
+  document.getElementById('gf-progress-fill').style.width = '100%';
+  const total = gf.totalBlanks;
+  const pct = total>0 ? Math.round((gf.correctBlanks/total)*100) : 0;
+  document.getElementById('score-pct').textContent = pct + '%';
+  const ring = document.getElementById('score-ring');
+  const color = pct>=80 ? '#3E8E8E' : pct>=50 ? '#E8A33D' : '#D8604C';
+  ring.style.background = `conic-gradient(${color} ${pct*3.6}deg, #EDE6D6 0deg)`;
+  document.getElementById('results-title').textContent = pct>=80 ? 'Xuất sắc!' : pct>=50 ? 'Khá tốt, cố thêm chút nữa!' : 'Cần luyện thêm nhé!';
+  document.getElementById('results-sub').textContent = `${gf.correctBlanks}/${total} từ đúng — ${gf.passage.title} · ${gf.passage.level}`;
+
+  const missedBox = document.getElementById('missed-list');
+  const missedRows = document.getElementById('missed-rows');
+  missedRows.innerHTML = '';
+  if(gf.missedSentences.length>0){
+    missedBox.style.display='block';
+    document.querySelector('#missed-list h4').textContent = 'Các câu cần ôn lại';
+    gf.missedSentences.forEach(m=>{
+      const row = document.createElement('div');
+      row.className = 'missed-row';
+      row.innerHTML = `<span class="typed" style="text-decoration:none; color:var(--slate);">${m.full}</span>`;
+      missedRows.appendChild(row);
+    });
+  } else {
+    missedBox.style.display='none';
+  }
+  document.getElementById('btn-retry-missed').disabled = gf.missedSentences.length===0;
+  document.getElementById('btn-retry-missed').style.opacity = gf.missedSentences.length===0 ? 0.5 : 1;
+
+  await setBest(gf.passage.id, 'gapfill', pct);
+  showScreen('screen-results');
+}
+
+function retryGapfillMissed(){
+  if(gf.missedSentences.length===0){ showScreen('screen-home'); return; }
+  const tempPassage = {
+    id: gf.passage.id, title: gf.passage.title + ' (ôn lại câu sai)', level: gf.passage.level, context: gf.passage.context,
+    sentences: gf.missedSentences.map(m=>m.template)
+  };
+  startGapfill(tempPassage);
+}
+
+document.getElementById('btn-play-gf').addEventListener('click', ()=> speak(gf.sentences[gf.index].full, gf.rate));
+document.getElementById('btn-replay-gf').addEventListener('click', ()=> speak(gf.sentences[gf.index].full, gf.rate));
+document.getElementById('speed-slider-gf').addEventListener('input', (e)=>{
+  gf.rate = parseFloat(e.target.value);
+  document.getElementById('speed-val-gf').textContent = gf.rate.toFixed(1) + '×';
+});
+document.getElementById('btn-check-gf').addEventListener('click', checkGapfillAnswer);
+document.getElementById('btn-skip-gf').addEventListener('click', skipGapfillItem);
+document.getElementById('btn-exit-gapfill').addEventListener('click', ()=>{
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  showScreen('screen-passage-intro');
+});
+
+/* ===================== HOME ===================== */
+async function renderHome(){
+  const grid = document.getElementById('topic-grid');
+  grid.innerHTML = '';
+  for(let i=0;i<TOPICS.length;i++){
+    const t = TOPICS[i];
+    const total = t.words.length + t.phrases.length + t.sentences.length;
+    const card = document.createElement('button');
+    card.className = 'topic-card';
+    card.innerHTML = `
+      <div class="cassette-id">TRACK ${String(i+1).padStart(2,'0')}</div>
+      <h3>${t.name}</h3>
+      <p>${t.desc}</p>
+      <div class="meta"><span>${total} mục</span><span class="best" id="best-${t.id}"></span></div>
+    `;
+    card.addEventListener('click', ()=> openTopic(t.id));
+    grid.appendChild(card);
+  }
+}
+
+async function openTopic(topicId){
+  const t = TOPICS.find(x=>x.id===topicId);
+  state.topic = t;
+  document.getElementById('lvl-cassette-id').textContent = t.name.toUpperCase();
+  document.getElementById('lvl-title').textContent = t.name;
+  document.getElementById('lvl-desc').textContent = t.desc;
+
+  const levelGrid = document.getElementById('level-grid');
+  levelGrid.innerHTML = '';
+  const levels = [
+    {key:'word', items:t.words},
+    {key:'phrase', items:t.phrases},
+    {key:'sentence', items:t.sentences},
+  ];
+  for(const lv of levels){
+    const meta = LEVEL_META[lv.key];
+    const card = document.createElement('div');
+    card.className = 'level-card';
+    card.innerHTML = `
+      <div class="tag">${meta.tag}</div>
+      <h3>${meta.label}</h3>
+      <div class="desc">${meta.desc}</div>
+      <div class="stat-row"><span>${lv.items.length} mục</span><span id="best-lvl-${lv.key}">–</span></div>
+      <button class="start-btn">▶ Bắt đầu</button>
+    `;
+    card.querySelector('.start-btn').addEventListener('click', ()=> startPractice(t, lv.key, lv.items));
+    levelGrid.appendChild(card);
+
+    getBest(t.id, lv.key).then(b=>{
+      if(b) document.getElementById(`best-lvl-${lv.key}`).innerHTML = `Tốt nhất: <b>${b.pct}%</b>`;
+    });
+  }
+  showScreen('screen-levels');
+}
+
+document.getElementById('btn-back-home').addEventListener('click', ()=> showScreen('screen-home'));
+document.getElementById('btn-back-topics').addEventListener('click', ()=> showScreen('screen-home'));
+
+/* ===================== PRACTICE ===================== */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+function startPractice(topic, levelKey, items){
+  state.topic = topic;
+  state.level = levelKey;
+  state.queue = shuffle(items);
+  state.index = 0;
+  state.correct = 0;
+  state.wrong = 0;
+  state.streak = 0;
+  state.missed = [];
+  state.rate = parseFloat(document.getElementById('speed-slider').value);
+  updateScoreStrip();
+  showScreen('screen-practice');
+  loadItem();
+}
+
+function retryMissed(){
+  if(state.missed.length===0){ showScreen('screen-home'); return; }
+  const items = state.missed.map(m=>m.correct);
+  startPractice(state.topic, state.level, items);
+}
+
+function updateScoreStrip(){
+  document.getElementById('stat-correct').textContent = state.correct;
+  document.getElementById('stat-wrong').textContent = state.wrong;
+  document.getElementById('stat-streak').textContent = state.streak;
+}
+
+function loadItem(){
+  const total = state.queue.length;
+  document.getElementById('practice-info').innerHTML = `${state.topic.name} · <b>${LEVEL_META[state.level].label}</b>`;
+  document.getElementById('progress-fill').style.width = `${(state.index/total)*100}%`;
+  document.getElementById('item-tag').textContent = `Mục ${String(state.index+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+  const input = document.getElementById('answer-input');
+  input.value = '';
+  input.disabled = false;
+  document.getElementById('char-count').textContent = '';
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  state.awaitingNext = false;
+  document.getElementById('btn-check').textContent = 'Kiểm tra';
+  document.getElementById('btn-check').disabled = false;
+  document.getElementById('btn-skip').disabled = false;
+  input.focus();
+  setTimeout(()=> speak(state.queue[state.index], state.rate), 300);
+}
+
+function normalize(s){
+  return s.toLowerCase().trim().replace(/[.,!?;:'"]/g,'').replace(/\s+/g,' ');
+}
+
+function checkAnswer(){
+  if(state.awaitingNext){ nextItem(); return; }
+  const correctText = state.queue[state.index];
+  const typed = document.getElementById('answer-input').value;
+  const isCorrect = normalize(typed) === normalize(correctText) && typed.trim().length>0;
+  const fb = document.getElementById('feedback');
+  fb.classList.add('show');
+  if(isCorrect){
+    state.correct++; state.streak++;
+    fb.className = 'feedback show correct';
+    fb.innerHTML = `<b>Chính xác!</b> ${correctText}`;
+  } else {
+    state.wrong++; state.streak = 0;
+    state.missed.push({typed: typed.trim() || '(để trống)', correct: correctText});
+    fb.className = 'feedback show wrong';
+    fb.innerHTML = `<b>Chưa đúng</b> Bạn gõ: "${typed.trim() || '(để trống)'}"<br>Đáp án đúng: "${correctText}"`;
+  }
+  updateScoreStrip();
+  document.getElementById('answer-input').disabled = true;
+  document.getElementById('btn-skip').disabled = true;
+  document.getElementById('btn-check').textContent = state.index+1 < state.queue.length ? 'Câu tiếp theo →' : 'Xem kết quả';
+  state.awaitingNext = true;
+}
+
+function skipItem(){
+  const correctText = state.queue[state.index];
+  state.wrong++; state.streak = 0;
+  state.missed.push({typed:'(bỏ qua)', correct: correctText});
+  updateScoreStrip();
+  nextItem();
+}
+
+function nextItem(){
+  state.index++;
+  if(state.index >= state.queue.length){
+    finishPractice();
+  } else {
+    loadItem();
+  }
+}
+
+async function finishPractice(){
+  resultsMode = 'vocab';
+  document.querySelector('#missed-list h4').textContent = 'Các từ cần ôn lại';
+  document.getElementById('progress-fill').style.width = '100%';
+  const total = state.correct + state.wrong;
+  const pct = total>0 ? Math.round((state.correct/total)*100) : 0;
+  document.getElementById('score-pct').textContent = pct + '%';
+  const ring = document.getElementById('score-ring');
+  const color = pct>=80 ? '#3E8E8E' : pct>=50 ? '#E8A33D' : '#D8604C';
+  ring.style.background = `conic-gradient(${color} ${pct*3.6}deg, #EDE6D6 0deg)`;
+  document.getElementById('results-title').textContent = pct>=80 ? 'Xuất sắc!' : pct>=50 ? 'Khá tốt, cố thêm chút nữa!' : 'Cần luyện thêm nhé!';
+  document.getElementById('results-sub').textContent = `${state.correct}/${total} câu đúng — ${state.topic.name} · ${LEVEL_META[state.level].label}`;
+
+  const missedBox = document.getElementById('missed-list');
+  const missedRows = document.getElementById('missed-rows');
+  missedRows.innerHTML = '';
+  if(state.missed.length>0){
+    missedBox.style.display='block';
+    state.missed.forEach(m=>{
+      const row = document.createElement('div');
+      row.className = 'missed-row';
+      row.innerHTML = `<span class="typed">${m.typed}</span><span class="correct">${m.correct}</span>`;
+      missedRows.appendChild(row);
+    });
+  } else {
+    missedBox.style.display='none';
+  }
+  document.getElementById('btn-retry-missed').disabled = state.missed.length===0;
+  document.getElementById('btn-retry-missed').style.opacity = state.missed.length===0 ? 0.5 : 1;
+
+  await setBest(state.topic.id, state.level, pct);
+  showScreen('screen-results');
+}
+
+/* ===================== EVENTS ===================== */
+document.getElementById('btn-play').addEventListener('click', ()=> speak(state.queue[state.index], state.rate));
+document.getElementById('btn-replay').addEventListener('click', ()=> speak(state.queue[state.index], state.rate));
+document.getElementById('speed-slider').addEventListener('input', (e)=>{
+  state.rate = parseFloat(e.target.value);
+  document.getElementById('speed-val').textContent = state.rate.toFixed(1) + '×';
+});
+document.getElementById('btn-check').addEventListener('click', checkAnswer);
+document.getElementById('btn-skip').addEventListener('click', skipItem);
+document.getElementById('answer-input').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); checkAnswer(); }
+});
+document.getElementById('answer-input').addEventListener('input', (e)=>{
+  document.getElementById('char-count').textContent = e.target.value.length + ' ký tự';
+});
+document.getElementById('btn-exit-practice').addEventListener('click', ()=>{
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  showScreen('screen-levels');
+});
+document.getElementById('btn-retry-missed').addEventListener('click', ()=>{
+  if(resultsMode==='gapfill') retryGapfillMissed(); else retryMissed();
+});
+document.getElementById('btn-retry-all').addEventListener('click', ()=>{
+  if(resultsMode==='gapfill'){ startGapfill(gf.passage); }
+  else { startPractice(state.topic, state.level, state.level==='word'?state.topic.words:state.level==='phrase'?state.topic.phrases:state.topic.sentences); }
+});
+
+/* ===================== INIT ===================== */
+renderHome();
+renderGapfillHome();
+</script>
+</body>
+</html>
