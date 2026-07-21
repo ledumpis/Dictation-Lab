@@ -481,7 +481,7 @@ button {
 }
 .level-card .start-btn:hover { background: var(--primary-hover); }
 
-/* ---------- Dictation Page: Split Layout ---------- */
+/* ---------- General Practice Split Layout ---------- */
 .practice-topbar {
   display: flex;
   justify-content: space-between;
@@ -587,7 +587,7 @@ button {
 .reel.spin { animation: spin 2s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.tape-window { display: none; /* Hide old UI element */ }
+.tape-window { display: none; }
 
 .play-controls {
   display: flex;
@@ -608,7 +608,7 @@ button {
   align-items: center;
   justify-content: center;
   box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-  padding-left: 4px; /* optical center for play icon */
+  padding-left: 4px; 
 }
 
 .play-btn:hover { transform: scale(1.05); background: var(--primary-hover); }
@@ -789,6 +789,120 @@ button {
 .score-strip span { display: flex; flex-direction: column; gap: 4px; }
 .score-strip span b { color: var(--text); font-size: 18px; font-weight: 700; }
 
+/* ---------- QUIZ SPECIFIC STYLES ---------- */
+.quiz-image { 
+  max-width: 700px; 
+  width: 100%; 
+  border-radius: var(--radius-sm); 
+  box-shadow: var(--shadow-soft); 
+  margin-bottom: 24px; 
+  display: block; 
+}
+.quiz-question-text { 
+  font-size: 18px; 
+  font-weight: 600; 
+  margin-bottom: 16px; 
+}
+.quiz-choices { 
+  display: flex; 
+  gap: 16px; 
+  margin-bottom: 24px; 
+  flex-wrap: wrap;
+}
+.quiz-choices input[type="radio"] {
+  display: none;
+}
+.quiz-choices label { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  gap: 8px; 
+  font-size: 16px; 
+  font-weight: 600; 
+  cursor: pointer; 
+  padding: 12px 28px; 
+  border: 2px solid var(--border); 
+  border-radius: 12px; 
+  background: #F9FAFB; 
+  color: var(--text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); 
+  min-width: 110px;
+  user-select: none;
+}
+.quiz-choices label:hover { 
+  border-color: var(--primary); 
+  background: #EFF6FF; 
+  color: var(--primary);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+.quiz-choices label:active {
+  transform: scale(0.98);
+}
+.quiz-choices input[type="radio"]:checked + label { 
+  border-color: var(--primary); 
+  background: var(--primary); 
+  color: #FFFFFF; 
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+}
+.quiz-choices input[type="radio"]:checked + label:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: #FFFFFF;
+}
+.quiz-choices label.correct {
+  background: var(--success) !important;
+  border-color: var(--success) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3) !important;
+  transform: none !important;
+}
+.quiz-choices label.wrong {
+  background: var(--danger) !important;
+  border-color: var(--danger) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3) !important;
+  transform: none !important;
+}
+
+.tf-table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-bottom: 24px; 
+  background: #FFF;
+}
+.tf-table th, .tf-table td { 
+  border: 1px solid var(--border); 
+  padding: 16px 12px; 
+  text-align: left; 
+}
+.tf-table th { 
+  background: #F9FAFB; 
+  font-weight: 600; 
+}
+.tf-table td.center { 
+  text-align: center; 
+}
+.tf-table tr:hover { 
+  background: #F9FAFB; 
+}
+.tf-radio { 
+  transform: scale(1.3); 
+  cursor: pointer; 
+  accent-color: var(--primary);
+}
+.tf-statement {
+  font-size: 15px;
+  font-weight: 500;
+}
+.tf-result-icon {
+  margin-left: 8px;
+  font-weight: bold;
+}
+.tf-result-icon.correct { color: var(--success); }
+.tf-result-icon.wrong { color: var(--danger); }
+
 /* ---------- Results ---------- */
 .results-card {
   background: var(--card);
@@ -911,7 +1025,7 @@ footer.note {
       </div>
     </div>
     <div class="side-note">
-      Chế độ: <b>Nghe → Gõ lại</b><br>
+      Chế độ: <b>Nghe → Gõ lại / Quiz</b><br>
       <button class="student-change" id="btn-change-student">Đổi tên / lớp</button>
     </div>
   </div>
@@ -938,7 +1052,7 @@ footer.note {
 
   <!-- HOME -->
   <section id="screen-home" class="screen">
-    <div class="section-label">Bài nghe điền từ · Trình độ A2–B1</div>
+    <div class="section-label">Bài nghe điền từ & Quiz · Trình độ A2–B1</div>
     <div id="passage-grid" class="topic-grid"></div>
 
     <div class="section-label" style="margin-top:16px;">Luyện từ vựng theo chủ đề IELTS</div>
@@ -1009,6 +1123,38 @@ footer.note {
           <span>Từ đúng<b id="stat-correct-gf">0</b></span>
           <span>Từ sai<b id="stat-wrong-gf">0</b></span>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ ENGINE (NEW) -->
+  <section id="screen-quiz" class="screen">
+    <div class="practice-topbar">
+      <button class="exit-btn" id="btn-exit-quiz">✕ Thoát bài Quiz</button>
+      <div class="info" id="quiz-info"></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="quiz-progress-fill"></div></div>
+
+    <div class="deck">
+      <div class="cassette">
+        <div class="reels">
+          <div class="reel"></div>
+          <div class="reel"></div>
+        </div>
+        <div class="tape-window"></div>
+        <div class="play-controls">
+          <button class="play-btn" id="btn-play-quiz" title="Nghe âm thanh">▶</button>
+          <button class="replay-btn" id="btn-replay-quiz">↻ Nghe lại</button>
+        </div>
+        <div class="speed-row">
+          <label><span>Tốc độ đọc</span><span id="speed-val-quiz">1.0×</span></label>
+          <input type="range" id="speed-slider-quiz" min="0.6" max="1.2" step="0.1" value="1">
+        </div>
+        <div class="hint-text">Lắng nghe đoạn hội thoại và chọn đáp án chính xác.</div>
+      </div>
+
+      <div class="answer-sheet" id="quiz-answer-sheet">
+        <!-- Rendered dynamically -->
       </div>
     </div>
   </section>
@@ -1087,12 +1233,12 @@ footer.note {
       <div class="results-actions">
         <button class="btn btn-primary" id="btn-retry-missed">Luyện lại từ sai</button>
         <button class="btn btn-ghost" id="btn-retry-all">Làm lại toàn bộ</button>
-        <button class="btn btn-ghost" id="btn-back-topics">Về danh sách chủ đề</button>
+        <button class="btn btn-ghost" id="btn-back-topics">Về danh sách</button>
       </div>
     </div>
   </section>
 
-  <footer class="note">DICTATION LAB · Luyện từ vựng học thuật cho IELTS</footer>
+  <footer class="note">DICTATION LAB · Luyện nghe và từ vựng học thuật</footer>
 </div>
 
 <script>
@@ -1122,45 +1268,10 @@ const TOPICS = [
     words:['itinerary','accommodation','destination','excursion','passport','luggage','souvenir','sightseeing','journey','tourism'],
     phrases:['package holiday','cultural heritage','tourist attraction','local cuisine','public transport','travel restrictions','eco-tourism','off the beaten track'],
     sentences:['Tourism plays a vital role in the economy of many coastal cities.','Travelers should research local customs before visiting a new country.','Sustainable tourism aims to minimize environmental impact.','Cultural heritage sites attract millions of visitors every year.'] },
-
-  { id:'work', name:'Công việc & Sự nghiệp', desc:'Từ vựng về tuyển dụng, môi trường làm việc, cân bằng cuộc sống — quan trọng cho Speaking Part 1.',
-    words:['recruitment','salary','promotion','workforce','entrepreneur','unemployment','workplace','colleague','resignation','internship'],
-    phrases:['job satisfaction','career development','work-life balance','remote working','professional experience','job market','flexible hours','team collaboration'],
-    sentences:['Many employees now prefer remote working over traditional office jobs.','A good work-life balance can improve overall job satisfaction.','The job market has become increasingly competitive in recent years.','Career development opportunities help retain talented staff.'] },
-
-  { id:'society', name:'Xã hội & Văn hóa', desc:'Từ vựng về cộng đồng, đa dạng văn hóa, đô thị hóa — chủ đề Writing Task 2 hàn lâm.',
-    words:['tradition','diversity','community','generation','custom','heritage','identity','integration','inequality','urbanization'],
-    phrases:['cultural identity','social inequality','generation gap','ethnic minority','local community','cultural diversity','social norms','sense of belonging'],
-    sentences:['Urbanization has changed the way communities interact with one another.','Cultural diversity enriches society by bringing different perspectives together.','Younger generations often have different values from their parents.','Social inequality remains a pressing issue in many cities.'] },
-
-  { id:'family', name:'Gia đình & Các mối quan hệ', desc:'Từ vựng thân thuộc cho Speaking Part 1 & 2 khi nói về gia đình, nuôi dạy con cái.',
-    words:['upbringing','sibling','marriage','parenting','household','dependent','relative','divorce','guardian','nurture'],
-    phrases:['extended family','single parent','family bond','childhood memories','quality time','family values','close-knit family','parental guidance'],
-    sentences:['Spending quality time together helps strengthen family bonds.','Parenting styles have a significant impact on a child\'s development.','Many families today are smaller than in previous generations.','Childhood memories often shape our values as adults.'] },
-
-  { id:'media', name:'Truyền thông & Giao tiếp', desc:'Từ vựng về báo chí, mạng xã hội, tin giả — hay xuất hiện trong Reading học thuật.',
-    words:['journalism','broadcast','censorship','advertisement','influence','audience','publication','headline','subscription','streaming'],
-    phrases:['mass media','freedom of speech','social media influence','fake news','public opinion','media coverage','online streaming','targeted advertising'],
-    sentences:['Social media has changed the way people consume news.','Freedom of speech is a fundamental right in most democracies.','The media plays a powerful role in shaping public opinion.','Fake news can spread rapidly across social platforms.'] },
-
-  { id:'global', name:'Vấn đề toàn cầu', desc:'Từ vựng về nghèo đói, toàn cầu hóa, di cư — chủ đề Writing Task 2 điểm cao thường dùng.',
-    words:['poverty','globalization','migration','corruption','inequality','refugee','sanctions','humanitarian','crisis','sustainability'],
-    phrases:['developing countries','income inequality','human rights','economic growth','natural disaster','food security','global economy','humanitarian aid'],
-    sentences:['Globalization has increased economic interdependence between nations.','Millions of refugees are displaced due to conflict and natural disasters.','Reducing poverty remains one of the greatest global challenges.','Food security is threatened by climate change and conflict.'] },
-
-  { id:'arts', name:'Nghệ thuật & Giải trí', desc:'Từ vựng về triển lãm, biểu diễn, ngành công nghiệp sáng tạo — hữu ích cho Speaking Part 2.',
-    words:['exhibition','sculpture','masterpiece','orchestra','choreography','screenplay','gallery','festival','performance','aesthetic'],
-    phrases:['contemporary art','box office','live performance','art exhibition','cultural festival','creative industry','visual arts','artistic expression'],
-    sentences:['The gallery is hosting an exhibition of contemporary art this month.','Streaming services have transformed the entertainment industry.','Music festivals attract visitors from all over the world.','Artistic expression allows people to communicate complex emotions.'] },
-
-  { id:'science', name:'Khoa học & Nghiên cứu', desc:'Từ vựng học thuật cho Reading khoa học và Writing Task 1 về dữ liệu nghiên cứu.',
-    words:['hypothesis','experiment','laboratory','discovery','evolution','molecule','genome','theory','observation','innovation'],
-    phrases:['scientific research','clinical trial','genetic engineering','peer review','renewable technology','research funding','data analysis','scientific method'],
-    sentences:['Scientists conducted an experiment to test their hypothesis.','Genetic engineering has opened new possibilities in medicine.','Research funding is essential for scientific innovation.','Peer review helps ensure the quality of scientific research.'] },
 ];
 
 const PASSAGES = [
-  { id:'direction', title:'Which direction?', level:'A2 – B1',
+  { id:'direction', title:'Which direction?', level:'A2 – B1', type:'gapfill',
     context:'Bài nghe về các từ chỉ phương hướng cơ bản (lên, xuống, trái, phải, tiến, lùi...). Nghe từng câu rồi điền từ còn thiếu — phù hợp cho học sinh trình độ A2 tới B1.',
     sentences:[
       'Which {{direction}} should I go in?',
@@ -1186,7 +1297,7 @@ const PASSAGES = [
     context:'Bài nghe mô tả trải nghiệm dùng bữa tại nhà hàng. Bấm vào để chọn phần bài học — phù hợp cho học sinh trình độ A2 tới B1.',
     lessons: [
       {
-        id: 'restaurant-1', title: 'Part 1', level: 'A2 – B1',
+        id: 'restaurant-1', title: 'Part 1', level: 'A2 – B1', type: 'gapfill',
         context: 'Phần 1: Những điều cơ bản khi đến nhà hàng, đặt bàn và gọi món.',
         sentences: [
           'When you go to a restaurant you might see a sign that says, "Please wait to be {{seated}}."',
@@ -1211,21 +1322,20 @@ const PASSAGES = [
         ]
       },
       {
-        id: 'restaurant-2', title: 'Part 2', level: 'A2 – B1',
+        id: 'restaurant-2', title: 'Part 2', level: 'A2 – B1', type: 'gapfill',
         context: 'Phần 2: Sở thích đi ăn nhà hàng và những trải nghiệm cá nhân.',
         sentences: [
           'I love {{restaurants}}.',
-          'I never get {{tired of}} going to them.',
-          'I go to restaurants a lot, maybe {{three times}} a week. I have my favourite restaurants, which I go to {{regularly}}.',
+          'I {{never}} get tired of going to them.',
+          'I go to restaurants a lot, maybe three times a week. I have my favourite restaurants, which I go to {{regularly}}.',
           'The waiters know me and I usually get very good {{service}}. But I also like trying {{new}} restaurants.',
           "It’s exciting to see {{what's on the}} menu and how the food will taste. Most of the time a visit to a new restaurant is a great {{experience}}.",
-          'But sometimes, I wonder why my friend {{recommended}} a restaurant. I’ve been to a few restaurants where the food was so bad, so {{tasteless}}, I didn’t want to pay.',
-          'My favourite restaurants are {{Indian}}.',
-          'I can’t get enough of Indian food. I love the {{smells}} inside Indian restaurants. And of course the tastes.'
+          'But sometimes, I wonder why my friend recommended a restaurant. I’ve been to a few restaurants where the food was so bad, so {{tasteless}}, I didn’t want to pay.',
+          'My favourite restaurants are Indian. I can’t get enough of Indian food. I love the smells inside Indian restaurants. And of course the tastes.'
         ]
       },
       {
-        id: 'restaurant-3', title: 'Part 3', level: 'A2 – B1',
+        id: 'restaurant-3', title: 'Part 3', level: 'A2 – B1', type: 'gapfill',
         context: 'Phần 3: Thói quen ăn uống và các lựa chọn thực đơn.',
         sentences: [
           'I eat {{out}} at least once a week. There are many restaurants in my {{neighborhood}}. It is very {{convenient}}.',
@@ -1235,10 +1345,75 @@ const PASSAGES = [
           'People {{on diet}} often choose healthier meals. Price {{matters}} to many customers.',
           'We are {{big fans}} of Italian food. They do not drink {{alcohol}}.'
         ]
+      },
+      {
+        id: 'restaurant-4', title: 'Part 4', level: 'A2 – B1', type: 'quiz',
+        context: 'Phần 4: Listening Quiz. Bài luyện nghe theo cấu trúc câu hỏi Multiple Choice và True/False.',
+        activities: [
+          {
+            type: "picture-choice",
+            questions: [
+              {
+                audioText: "What would you like to order? I think I’ll have the fish. Okay, and would you like asparagus or a baked potato? I’ll have the asparagus. And could I have some tea please? Sure. Oh! Could you ask the chef to hurry? I’m really starving. Okay. I’ll try to get it for you as soon as possible.",
+                question: "Example: What does the customer order?",
+                image: "images/q1.png.jpg",
+                choices: ["A", "B"],
+                answer: "B"
+              },
+              {
+                audioText: "What would you like to order? I’d like the steak, please. Would you like baked potatoes or fries with that? I’d like fries, please. Okay. And make sure there are lots of fries, please. They’re my favorite food. Sure.",
+                question: "What does the customer order?",
+                image: "images/q2.png.jpg",
+                choices: ["A", "B"],
+                answer: "A"
+              },
+              {
+                audioText: "Have you made up your mind? Yes, I’m going to have spaghetti and a small salad. Anything else? When you bring the spaghetti, could you bring me a bottle of hot sauce? Hot sauce? Like TabascoTM sauce? Yes. I like really spicy food. No problem.",
+                question: "What does the customer order?",
+                image: "images/q3.png.jpg",
+                choices: ["A", "B"],
+                answer: "A"
+              },
+              {
+                audioText: "What can I get you? I’d like a cheeseburger, French fries, and a cola. Okay. But could you make sure there’s no salt on the French fries? No salt? Okay. Thanks. I’m on a salt-free diet. I’ll make sure there’s no salt on the fries. Don’t worry.",
+                question: "What does the customer order?",
+                image: "images/q4.png.jpg",
+                choices: ["A", "B"],
+                answer: "B"
+              },
+              {
+                audioText: "Are you ready to order? Yeah. I’m just going to have some dessert. I’ll just have a piece of apple pie. Fine. With ice cream? No, just pie, thanks. Fine. But please don’t heat it. You want it cold? Yes. I hate hot pie. Okay",
+                question: "What does the customer order?",
+                image: "images/q5.png.jpg",
+                choices: ["A", "B"],
+                answer: "A"
+              },
+              {
+                audioText: "What can I get you? I don’t want anything to eat. Just a milk shake, please. Sure. What flavor would you like? Vanilla, please. Okay. One vanilla milk shake coming up. And please make sure they don’t add any sugar to it. No sugar? That’s right. I don’t like sweet shakes. Certainly.",
+                question: "What does the customer order?",
+                image: "images/q6.png.jpg",
+                choices: ["A", "B"],
+                answer: "B"
+              }
+            ]
+          },
+          {
+            type: "true-false",
+            audioText: "1. What would you like to order? I think I’ll have the fish. Okay, and would you like asparagus or a baked potato? I’ll have the asparagus. And could I have some tea please? Sure. Oh! Could you ask the chef to hurry? I’m really starving. Okay. I’ll try to get it for you as soon as possible. \n2. What would you like to order? I’d like the steak, please. Would you like baked potatoes or fries with that? I’d like fries, please. Okay. And make sure there are lots of fries, please. They’re my favorite food. Sure. \n3. Have you made up your mind? Yes, I’m going to have spaghetti and a small salad. Anything else? When you bring the spaghetti, could you bring me a bottle of hot sauce? Hot sauce? Like TabascoTM sauce? Yes. I like really spicy food. No problem. \n4. What can I get you? I’d like a cheeseburger, French fries, and a cola. Okay. But could you make sure there’s no salt on the French fries? No salt? Okay. Thanks. I’m on a salt-free diet. I’ll make sure there’s no salt on the fries. Don’t worry. \n5. Are you ready to order? Yeah. I’m just going to have some dessert. I’ll just have a piece of apple pie. Fine. With ice cream? No, just pie, thanks. Fine. But please don’t heat it. You want it cold? Yes. I hate hot pie. Okay. \n6. What can I get you? I don’t want anything to eat. Just a milk shake, please. Sure. What flavor would you like? Vanilla, please. Okay. One vanilla milk shake coming up. And please make sure they don’t add any sugar to it. No sugar? That’s right. I don’t like sweet shakes. Certainly.",
+            questions: [
+              { text: "1. The customer orders a baked potato with her fish.", answer: false },
+              { text: "2. The customer's favorite food is fries.", answer: true },
+              { text: "3. The customer asks for a large salad with the spaghetti.", answer: false },
+              { text: "4. The customer is on a salt-free diet.", answer: true },
+              { text: "5. The customer hates hot pie.", answer: true },
+              { text: "6. The customer would like a chocolate milk shake.", answer: false }
+            ]
+          }
+        ]
       }
     ]
   },
-  { id:'winter', title:'Winter', level:'A2 – B1',
+  { id:'winter', title:'Winter', level:'A2 – B1', type:'gapfill',
     context:'Bài nghe về những hoạt động, khung cảnh và trải nghiệm mùa đông. Nghe từng câu rồi điền từ còn thiếu vào chỗ trống — phù hợp cho học sinh trình độ A2 tới B1.',
     sentences:[
       'Once the {{fall}} is over and the {{snowflakes}} start to fall I get very excited.',
@@ -1269,7 +1444,7 @@ const PASSAGES = [
       'I like to leave my {{footprints}} in the snow.',
       'Winter can be very beautiful and {{exciting}}.',
     ] },
-  { id:'housework', title:'Housework', level:'A2 – B1',
+  { id:'housework', title:'Housework', level:'A2 – B1', type:'gapfill',
     context:'Bài nghe về những công việc nhà thường ngày: dọn dẹp, giặt giũ, nấu ăn và chăm sóc không gian sống. Nghe từng câu rồi điền từ còn thiếu vào chỗ trống — phù hợp cho học sinh trình độ A2 tới B1.',
     sentences:[
       'There is always {{housework}} to do when you live in a house.',
@@ -1294,7 +1469,7 @@ const PASSAGES = [
       'They need to have clean {{sheets}} put on them.',
       'There are just so many things to {{do}}.',
       'Household {{chores}} take up a lot of time.',
-    ] },
+    ] }
 ];
 
 const LEVEL_META = {
@@ -1305,9 +1480,10 @@ const LEVEL_META = {
 
 /* ===================== STATE ===================== */
 let state = { topic:null, level:null, queue:[], index:0, correct:0, wrong:0, streak:0, missed:[], awaitingNext:false, voice:null, rate:1, student:null };
+let resultsMode = 'vocab';
 
-/* Paste the deployed Google Apps Script Web App URL here after completing the setup below. */
-const RESULTS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzjblF8hCmFf-AwkIoq6AxySqjwfD0YNM-lkjjp9plnDupuF2SL1QBP8GGYMNQsN9w8EQ/exec';
+/* Paste the deployed Google Apps Script Web App URL here */
+const RESULTS_ENDPOINT = '';
 
 /* ===================== STORAGE HELPERS ===================== */
 async function getBest(topicId, level){
@@ -1322,7 +1498,7 @@ async function setBest(topicId, level, pct){
     if(!prev || pct > prev.pct){
       localStorage.setItem(`dictationlab:best:${topicId}:${level}`, JSON.stringify({pct, date:new Date().toISOString()}));
     }
-  }catch(e){ /* ignore (e.g. private browsing) */ }
+  }catch(e){ /* ignore */ }
 }
 
 function getStoredStudent(){
@@ -1406,9 +1582,8 @@ document.getElementById('btn-change-student').addEventListener('click', ()=>{
   document.getElementById('student-name').focus();
 });
 
-/* ===================== GAP-FILL PASSAGE (A2–B1) ===================== */
+/* ===================== GAP-FILL PASSAGE ===================== */
 let gf = { passage:null, currentGroup:null, sentences:[], index:0, correctBlanks:0, wrongBlanks:0, totalBlanks:0, missedSentences:[], rate:1, awaitingNext:false };
-let resultsMode = 'vocab';
 
 function parseTemplate(t){
   const regex = /\{\{(.*?)\}\}/g;
@@ -1443,8 +1618,12 @@ function renderGapfillHome(){
     
     if (p.type === 'group') {
       p.lessons.forEach(l => {
-        totalSentences += l.sentences.length;
-        totalBlanks += (l.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+        if(l.type === 'quiz') {
+            totalSentences += l.activities.length;
+        } else {
+            totalSentences += l.sentences.length;
+            totalBlanks += (l.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+        }
       });
     } else {
       totalSentences = p.sentences.length;
@@ -1457,7 +1636,7 @@ function renderGapfillHome(){
       <div class="cassette-id">${p.level}</div>
       <h3>📘 ${p.title}</h3>
       <p>${p.context}</p>
-      <div class="meta"><span>${totalSentences} câu · ${totalBlanks} chỗ trống</span><span></span></div>
+      <div class="meta"><span>${p.type === 'group' ? 'Nhiều bài học' : `${totalSentences} câu · ${totalBlanks} chỗ trống`}</span><span></span></div>
     `;
     if (p.type === 'group') {
       card.addEventListener('click', ()=> openGroupSelect(p.id));
@@ -1477,14 +1656,21 @@ function openGroupSelect(groupId) {
   const grid = document.getElementById('group-grid');
   grid.innerHTML = '';
   group.lessons.forEach((l, i) => {
-    const blanks = (l.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+    let metaText = "";
+    if(l.type === 'quiz'){
+        metaText = `${l.activities.length} phần · Listening Quiz`;
+    } else {
+        const blanks = (l.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+        metaText = `${l.sentences.length} câu · ${blanks} chỗ trống`;
+    }
+
     const card = document.createElement('button');
     card.className = 'topic-card';
     card.innerHTML = `
       <div class="cassette-id">PHẦN ${i+1}</div>
       <h3>📘 ${l.title}</h3>
       <p>${l.context || ''}</p>
-      <div class="meta"><span>${l.sentences.length} câu · ${blanks} chỗ trống</span><span></span></div>
+      <div class="meta"><span>${metaText}</span><span></span></div>
     `;
     card.addEventListener('click', ()=> openPassageIntro(l.id));
     grid.appendChild(card);
@@ -1510,6 +1696,15 @@ function openPassageIntro(passageId){
   } else {
     backBtn.textContent = `← Tất cả bài nghe`;
   }
+
+  const startBtn = document.getElementById('btn-start-gapfill');
+  if(p.type === 'quiz'){
+    startBtn.textContent = 'Bắt đầu Quiz →';
+    document.getElementById('btn-listen-full').style.display = 'none';
+  } else {
+    startBtn.textContent = 'Bắt đầu điền từ →';
+    document.getElementById('btn-listen-full').style.display = 'inline-flex';
+  }
   
   showScreen('screen-passage-intro');
 }
@@ -1525,10 +1720,18 @@ document.getElementById('btn-back-home-2').addEventListener('click', ()=> {
 });
 
 document.getElementById('btn-listen-full').addEventListener('click', ()=>{
-  const fullText = gf.passage.sentences.map(s=>s.replace(/\{\{(.*?)\}\}/g,'$1')).join(' ');
-  speak(fullText, 1);
+  if(gf.passage && gf.passage.type !== 'quiz'){
+      const fullText = gf.passage.sentences.map(s=>s.replace(/\{\{(.*?)\}\}/g,'$1')).join(' ');
+      speak(fullText, 1);
+  }
 });
-document.getElementById('btn-start-gapfill').addEventListener('click', ()=> startGapfill(gf.passage));
+document.getElementById('btn-start-gapfill').addEventListener('click', ()=> {
+    if(gf.passage.type === 'quiz'){
+        startQuiz(gf.passage);
+    } else {
+        startGapfill(gf.passage);
+    }
+});
 
 function startGapfill(passage){
   gf.passage = passage;
@@ -1674,6 +1877,7 @@ async function finishGapfill(){
     missedBox.style.display='none';
   }
   document.getElementById('btn-retry-missed').disabled = gf.missedSentences.length===0;
+  document.getElementById('btn-retry-all').style.display = 'inline-flex';
 
   await setBest(gf.passage.id, 'gapfill', pct);
   await saveStudentResult({
@@ -1705,6 +1909,289 @@ document.getElementById('btn-exit-gapfill').addEventListener('click', ()=>{
   if(window.speechSynthesis) window.speechSynthesis.cancel();
   openPassageIntro(gf.passage.id);
 });
+
+/* ===================== QUIZ ENGINE (NEW) ===================== */
+let qz = { passage:null, activities:[], actIndex:0, qIndex:0, correct:0, wrong:0, total:0, rate:1, awaitingNext:false };
+
+function startQuiz(passage) {
+  qz.passage = passage;
+  qz.activities = passage.activities;
+  qz.actIndex = 0;
+  qz.qIndex = 0;
+  qz.correct = 0;
+  qz.wrong = 0;
+  qz.total = 0;
+  qz.rate = parseFloat(document.getElementById('speed-slider-quiz').value);
+  
+  // Calculate total items across all activities
+  qz.activities.forEach(act => {
+    if(act.type === 'picture-choice') qz.total += act.questions.length;
+    if(act.type === 'true-false') qz.total += act.questions.length;
+  });
+
+  document.getElementById('quiz-info').innerHTML = `<b>${passage.title}</b> · ${passage.level}`;
+  showScreen('screen-quiz');
+  loadQuizActivity();
+}
+
+function loadQuizActivity() {
+  const activity = qz.activities[qz.actIndex];
+  if(activity.type === 'picture-choice'){
+    loadPictureChoiceItem(activity);
+  } else if (activity.type === 'true-false') {
+    loadTrueFalseActivity(activity);
+  }
+}
+
+function getQuizProgress() {
+  let completed = 0;
+  for(let i=0; i<qz.actIndex; i++){
+    let a = qz.activities[i];
+    completed += a.questions ? a.questions.length : 0;
+  }
+  if(qz.activities[qz.actIndex].type === 'picture-choice'){
+      completed += qz.qIndex;
+  }
+  return completed;
+}
+
+function updateQuizProgress(currentTotal = null) {
+  const completed = currentTotal !== null ? currentTotal : getQuizProgress();
+  document.getElementById('quiz-progress-fill').style.width = `${(completed/qz.total)*100}%`;
+}
+
+function loadPictureChoiceItem(activity) {
+  const q = activity.questions[qz.qIndex];
+  updateQuizProgress();
+  
+  const sheet = document.getElementById('quiz-answer-sheet');
+  let html = `
+    <div class="item-tag" id="quiz-tag">Câu hỏi ${qz.qIndex + 1} / ${activity.questions.length}</div>
+    <div class="quiz-question-text">${q.question}</div>
+    <img id="quiz-image" class="quiz-image" src="${q.image}" alt="Question Image" />
+    <div class="quiz-choices" id="quiz-choices">
+      ${q.choices.map((c, i) => `
+        <input type="radio" name="pic-choice" id="choice-${i}" value="${c}">
+        <label for="choice-${i}">${c}</label>
+      `).join('')}
+    </div>
+    <div class="feedback" id="feedback-quiz"></div>
+    <div class="actions-row">
+      <button class="btn btn-primary" id="btn-check-quiz">Check</button>
+    </div>
+  `;
+  sheet.innerHTML = html;
+  
+  // Bind events
+  const checkBtn = document.getElementById('btn-check-quiz');
+  checkBtn.addEventListener('click', () => {
+    if(qz.awaitingNext){ nextPictureChoiceItem(); return; }
+    
+    const selected = document.querySelector('input[name="pic-choice"]:checked');
+    if(!selected) return; // Force selection
+    
+    const answer = selected.value;
+    const isCorrect = (answer === q.answer);
+    
+    if(isCorrect) qz.correct++;
+    else qz.wrong++;
+    
+    // Disable inputs and style labels for feedback
+    document.querySelectorAll('input[name="pic-choice"]').forEach(r => {
+      r.disabled = true;
+      const lbl = document.querySelector(`label[for="${r.id}"]`);
+      if (lbl) {
+        if (r.value === q.answer) {
+          lbl.classList.add('correct');
+        } else if (r.checked) {
+          lbl.classList.add('wrong');
+        }
+      }
+    });
+    
+    const fb = document.getElementById('feedback-quiz');
+    fb.classList.add('show');
+    if(isCorrect){
+      fb.className = 'feedback show correct';
+      fb.innerHTML = `<b>✔ Correct</b>`;
+    } else {
+      fb.className = 'feedback show wrong';
+      fb.innerHTML = `<b>✘ Wrong</b> The correct answer is <b>${q.answer}</b>.`;
+    }
+    
+    qz.awaitingNext = true;
+    checkBtn.textContent = (qz.qIndex + 1 < activity.questions.length) ? 'Next →' : 'Tiếp tục →';
+  });
+
+  qz.awaitingNext = false;
+  setTimeout(()=> speak(q.audioText, qz.rate), 300);
+}
+
+function nextPictureChoiceItem() {
+  const activity = qz.activities[qz.actIndex];
+  qz.qIndex++;
+  if(qz.qIndex >= activity.questions.length){
+    nextQuizActivity();
+  } else {
+    loadPictureChoiceItem(activity);
+  }
+}
+
+function loadTrueFalseActivity(activity) {
+  updateQuizProgress();
+  qz.qIndex = 0; // For True/False we do all at once, qIndex not heavily used for display
+  
+  const sheet = document.getElementById('quiz-answer-sheet');
+  let html = `
+    <div class="item-tag" id="quiz-tag">True / False</div>
+    <table class="tf-table">
+      <thead>
+        <tr>
+          <th>Statement</th>
+          <th class="center">True</th>
+          <th class="center">False</th>
+        </tr>
+      </thead>
+      <tbody id="tf-tbody">
+        ${activity.questions.map((q, i) => `
+          <tr id="tf-row-${i}">
+            <td><span class="tf-statement">${q.text}</span><span class="tf-result-icon" id="tf-icon-${i}"></span></td>
+            <td class="center"><input type="radio" class="tf-radio" name="tf-choice-${i}" value="true"></td>
+            <td class="center"><input type="radio" class="tf-radio" name="tf-choice-${i}" value="false"></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+    <div class="feedback" id="feedback-quiz"></div>
+    <div class="actions-row" id="tf-actions">
+      <button class="btn btn-primary" id="btn-submit-tf">Submit</button>
+    </div>
+  `;
+  sheet.innerHTML = html;
+  
+  const submitBtn = document.getElementById('btn-submit-tf');
+  submitBtn.addEventListener('click', () => {
+    if(qz.awaitingNext){ nextQuizActivity(); return; }
+    
+    // Check if all answered
+    let allAnswered = true;
+    activity.questions.forEach((q, i) => {
+      if(!document.querySelector(`input[name="tf-choice-${i}"]:checked`)) allAnswered = false;
+    });
+    
+    if(!allAnswered) {
+        alert("Vui lòng trả lời toàn bộ câu hỏi trước khi nộp bài.");
+        return;
+    }
+    
+    let currentActCorrect = 0;
+    let currentActWrong = 0;
+    
+    activity.questions.forEach((q, i) => {
+      const selectedStr = document.querySelector(`input[name="tf-choice-${i}"]:checked`).value;
+      const selectedBool = selectedStr === 'true';
+      const isCorrect = (selectedBool === q.answer);
+      
+      const icon = document.getElementById(`tf-icon-${i}`);
+      if(isCorrect){
+          currentActCorrect++;
+          qz.correct++;
+          icon.textContent = '✔';
+          icon.className = 'tf-result-icon correct';
+      } else {
+          currentActWrong++;
+          qz.wrong++;
+          icon.textContent = `✘ (Đúng: ${q.answer ? 'True' : 'False'})`;
+          icon.className = 'tf-result-icon wrong';
+      }
+      
+      document.querySelectorAll(`input[name="tf-choice-${i}"]`).forEach(r => r.disabled = true);
+    });
+    
+    const fb = document.getElementById('feedback-quiz');
+    fb.classList.add('show');
+    fb.className = 'feedback show correct';
+    fb.innerHTML = `<b>Kết quả:</b> ${currentActCorrect} đúng, ${currentActWrong} sai.<br>Accuracy: ${Math.round((currentActCorrect/activity.questions.length)*100)}%`;
+    
+    qz.awaitingNext = true;
+    submitBtn.textContent = 'Tiếp tục →';
+    updateQuizProgress(qz.total); // Max out progress bar
+    
+    // Add retry button inline
+    const retryBtn = document.createElement('button');
+    retryBtn.className = 'btn btn-ghost';
+    retryBtn.textContent = 'Làm lại (Retry)';
+    retryBtn.onclick = () => {
+        qz.correct -= currentActCorrect;
+        qz.wrong -= currentActWrong;
+        qz.awaitingNext = false;
+        loadTrueFalseActivity(activity);
+    };
+    document.getElementById('tf-actions').appendChild(retryBtn);
+  });
+  
+  qz.awaitingNext = false;
+  setTimeout(()=> speak(activity.audioText, qz.rate), 300);
+}
+
+function nextQuizActivity() {
+  qz.actIndex++;
+  if(qz.actIndex >= qz.activities.length) {
+    finishQuiz();
+  } else {
+    loadQuizActivity();
+  }
+}
+
+async function finishQuiz() {
+  resultsMode = 'quiz';
+  document.getElementById('quiz-progress-fill').style.width = '100%';
+  const pct = qz.total > 0 ? Math.round((qz.correct/qz.total)*100) : 0;
+  
+  document.getElementById('score-pct').textContent = pct + '%';
+  const ring = document.getElementById('score-ring');
+  const color = pct>=80 ? 'var(--success)' : pct>=50 ? 'var(--warning)' : 'var(--danger)';
+  ring.style.background = `conic-gradient(${color} ${pct*3.6}deg, var(--border) 0deg)`;
+  
+  document.getElementById('results-title').textContent = pct>=80 ? 'Xuất sắc!' : pct>=50 ? 'Khá tốt, cố thêm chút nữa!' : 'Cần luyện thêm nhé!';
+  
+  const displayTitle = gf.currentGroup ? `${gf.currentGroup.title} – ${qz.passage.title}` : qz.passage.title;
+  document.getElementById('results-sub').textContent = `${qz.correct}/${qz.total} đáp án đúng — ${displayTitle} · ${qz.passage.level}`;
+
+  document.getElementById('missed-list').style.display='none';
+  document.getElementById('btn-retry-missed').disabled = true;
+  document.getElementById('btn-retry-missed').style.display = 'none'; // Not applicable for Quiz
+  document.getElementById('btn-retry-all').style.display = 'inline-flex';
+
+  await setBest(qz.passage.id, 'quiz', pct);
+  await saveStudentResult({
+    activity_type:'quiz', exercise_id:qz.passage.id, exercise_title:displayTitle,
+    level:qz.passage.level, score_percent:pct, correct_count:qz.correct,
+    wrong_count:qz.wrong, total_count:qz.total
+  });
+  showScreen('screen-results');
+}
+
+// Global Quiz Audio Controls
+document.getElementById('btn-play-quiz').addEventListener('click', ()=> {
+    const act = qz.activities[qz.actIndex];
+    const audioText = act.type === 'picture-choice' ? act.questions[qz.qIndex].audioText : act.audioText;
+    speak(audioText, qz.rate);
+});
+document.getElementById('btn-replay-quiz').addEventListener('click', ()=> {
+    const act = qz.activities[qz.actIndex];
+    const audioText = act.type === 'picture-choice' ? act.questions[qz.qIndex].audioText : act.audioText;
+    speak(audioText, qz.rate);
+});
+document.getElementById('speed-slider-quiz').addEventListener('input', (e)=>{
+  qz.rate = parseFloat(e.target.value);
+  document.getElementById('speed-val-quiz').textContent = qz.rate.toFixed(1) + '×';
+});
+document.getElementById('btn-exit-quiz').addEventListener('click', ()=>{
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  openPassageIntro(qz.passage.id);
+});
+
 
 /* ===================== HOME ===================== */
 async function renderHome(){
@@ -1865,6 +2352,7 @@ function nextItem(){
 
 async function finishPractice(){
   resultsMode = 'vocab';
+  document.getElementById('btn-retry-missed').style.display = 'inline-flex';
   document.querySelector('#missed-list h4').textContent = 'Các từ cần ôn lại';
   document.getElementById('progress-fill').style.width = '100%';
   const total = state.correct + state.wrong;
@@ -1925,6 +2413,7 @@ document.getElementById('btn-retry-missed').addEventListener('click', ()=>{
 });
 document.getElementById('btn-retry-all').addEventListener('click', ()=>{
   if(resultsMode==='gapfill'){ startGapfill(gf.passage); }
+  else if (resultsMode === 'quiz') { startQuiz(qz.passage); }
   else { startPractice(state.topic, state.level, state.level==='word'?state.topic.words:state.level==='phrase'?state.topic.phrases:state.topic.sentences); }
 });
 
