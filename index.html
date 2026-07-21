@@ -1483,7 +1483,8 @@ let state = { topic:null, level:null, queue:[], index:0, correct:0, wrong:0, str
 let resultsMode = 'vocab';
 
 /* Paste the deployed Google Apps Script Web App URL here */
-const RESULTS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzjblF8hCmFf-AwkIoq6AxySqjwfD0YNM-lkjjp9plnDupuF2SL1QBP8GGYMNQsN9w8EQ/exec';
+const RESULTS_ENDPOINT =
+'https://script.google.com/macros/s/AKfycbzjblF8hCmFf-AwkIoq6AxySqjwfD0YNM-lkjjp9plnDupuF2SL1QBP8GGYMNQsN9w8EQ/exec';
 
 /* ===================== STORAGE HELPERS ===================== */
 async function getBest(topicId, level){
@@ -1510,21 +1511,35 @@ function getStoredStudent(){
 }
 
 async function saveStudentResult(result){
-  if(!RESULTS_ENDPOINT || !state.student) return;
+  console.log("=== saveStudentResult ===");
+  console.log("RESULTS_ENDPOINT =", RESULTS_ENDPOINT);
+  console.log("state.student =", state.student);
+
+  if(!RESULTS_ENDPOINT || !state.student){
+    console.log("RETURN HERE");
+    return;
+  }
+
   const payload = {
     student_name: state.student.name,
     student_class: state.student.className,
     completed_at: new Date().toISOString(),
     ...result
   };
+  console.log(payload);
   try{
     await fetch(RESULTS_ENDPOINT, {
       method:'POST',
       mode:'no-cors',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      headers:{
+        'Content-Type':'text/plain;charset=utf-8'
+      },
       body:JSON.stringify(payload)
     });
-  }catch(e){ console.warn('Không thể lưu kết quả trực tuyến.', e); }
+    console.log("FETCH SENT");
+  }catch(e){ 
+    console.error(e);
+  }
 }
 
 /* ===================== SPEECH ===================== */
