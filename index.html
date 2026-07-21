@@ -287,6 +287,18 @@ footer.note{ text-align:center; color:#5C6B7A; font-size:12px; margin-top:60px; 
     <div id="topic-grid" class="topic-grid"></div>
   </section>
 
+  <!-- GROUP SELECT (NEW) -->
+  <section id="screen-group" class="screen">
+    <button class="back-link" id="btn-back-home-3">← Tất cả bài nghe</button>
+    <div class="level-header">
+      <span class="level-badge" id="group-level"></span>
+      <h2 id="group-title"></h2>
+      <div class="passage-context" id="group-context"></div>
+    </div>
+    <div class="section-label">Chọn bài học</div>
+    <div id="group-grid" class="topic-grid"></div>
+  </section>
+
   <!-- PASSAGE INTRO -->
   <section id="screen-passage-intro" class="screen">
     <button class="back-link" id="btn-back-home-2">← Tất cả bài nghe</button>
@@ -512,44 +524,61 @@ const PASSAGES = [
       'It sounds very {{complicated}}, but it is not.',
       'Directions are very easy to {{follow}} if you just stop and think about them.',
     ] },
-  { id:'restaurant', title:'Restaurant', level:'A2 – B1',
-    context:'Bài nghe mô tả trải nghiệm dùng bữa tại nhà hàng. Nghe từng câu rồi điền đúng các từ hoặc cụm từ được chọn vào chỗ trống — phù hợp cho học sinh trình độ A2 tới B1.',
-    sentences:[
-      'When you go to a restaurant you might see a sign that says, "Please wait to be {{seated}}."',
-      'A {{host}} or {{hostess}} will ask you how many people are in your {{party}}.',
-      'Then they will want to know if you want to sit in the {{smoking or non-smoking}} section.',
-      'The host or hostess will take you to your seat.',
-      'You might sit at a table or at a {{booth}}.',
-      'The host or hostess will give you a menu {{to look at}}.',
-      'Sometimes, there are different menus for {{different meals}}.',
-      'There can be a breakfast menu, a lunch menu and a {{dinner}} menu.',
-      'Sometimes, there is also a wine list and a {{dessert}} menu.',
-      'The {{food}} and the prices of the food are {{listed}} on the menu.',
-      'On your table, there will be {{cutlery}}.',
-      'Cutlery is the knives, forks and spoons.',
-      'There will also be a {{napkin}}.',
-      'You are supposed to put your napkin on your {{lap}} when you eat.',
-      'Your waiter or waitress will take your {{order}}.',
-      'You might want an {{appetizer}} before your meal.',
-      'Some people want a salad or soup before their meal.',
-      'After your meal, you might have a {{dessert}}, or tea, or coffee.',
-      'When it is time to go, you will pay your {{bill}} and leave {{a tip}} for the waiter or waitress.',
-    
-'I love {{restaurants}}.',
-      'I {{never}} get tired of going to them.',
-      'I go to restaurants a lot.',
-      'Maybe three times a week.',
-      'I have my favourite restaurants, which I go to {{regularly}}.',
-      'The waiters know me and I usually get very good {{service}}.',
-      'But I also like trying {{new}} restaurants.',
-      "It’s exciting to see {{what's on the}} menu and how the food will taste.",
-      'Most of the time a visit to a new restaurant is a great {{experience}}.',
-      'But sometimes, I wonder why my friend recommended a restaurant.',
-      'I’ve been to a few restaurants where the food was so bad, so {{tasteless}}, I didn’t want to pay.',
-      'My favourite restaurants are Indian.',
-      'I can’t get enough of Indian food.',
-      'I love the smells inside Indian restaurants.',
-      'And of course the tastes.',] },
+  { id:'restaurant', title:'Restaurant', type:'group', level:'A2 – B1',
+    context:'Bài nghe mô tả trải nghiệm dùng bữa tại nhà hàng. Bấm vào để chọn phần bài học — phù hợp cho học sinh trình độ A2 tới B1.',
+    lessons: [
+      {
+        id: 'restaurant-1', title: 'Part 1', level: 'A2 – B1',
+        context: 'Phần 1: Những điều cơ bản khi đến nhà hàng, đặt bàn và gọi món.',
+        sentences: [
+          'When you go to a restaurant you might see a sign that says, "Please wait to be {{seated}}."',
+          'A {{host}} or {{hostess}} will ask you how many people are in your {{party}}.',
+          'Then they will want to know if you want to sit in the {{smoking or non-smoking}} section.',
+          'The host or hostess will take you to your seat.',
+          'You might sit at a table or at a {{booth}}.',
+          'The host or hostess will give you a menu {{to look at}}.',
+          'Sometimes, there are different menus for {{different meals}}.',
+          'There can be a breakfast menu, a lunch menu and a {{dinner}} menu.',
+          'Sometimes, there is also a wine list and a {{dessert}} menu.',
+          'The {{food}} and the prices of the food are {{listed}} on the menu.',
+          'On your table, there will be {{cutlery}}.',
+          'Cutlery is the knives, forks and spoons.',
+          'There will also be a {{napkin}}.',
+          'You are supposed to put your napkin on your {{lap}} when you eat.',
+          'Your waiter or waitress will take your {{order}}.',
+          'You might want an {{appetizer}} before your meal.',
+          'Some people want a salad or soup before their meal.',
+          'After your meal, you might have a {{dessert}}, or tea, or coffee.',
+          'When it is time to go, you will pay your {{bill}} and leave {{a tip}} for the waiter or waitress.'
+        ]
+      },
+      {
+        id: 'restaurant-2', title: 'Part 2', level: 'A2 – B1',
+        context: 'Phần 2: Sở thích đi ăn nhà hàng và những trải nghiệm cá nhân.',
+        sentences: [
+          'I love {{restaurants}}.',
+          'I {{never}} get tired of going to them.',
+          'I go to restaurants a lot, maybe three times a week. I have my favourite restaurants, which I go to {{regularly}}.',
+          'The waiters know me and I usually get very good {{service}}. But I also like trying {{new}} restaurants.',
+          "It’s exciting to see {{what's on the}} menu and how the food will taste. Most of the time a visit to a new restaurant is a great {{experience}}.",
+          'But sometimes, I wonder why my friend recommended a restaurant. I’ve been to a few restaurants where the food was so bad, so {{tasteless}}, I didn’t want to pay.',
+          'My favourite restaurants are Indian. I can’t get enough of Indian food. I love the smells inside Indian restaurants. And of course the tastes.'
+        ]
+      },
+      {
+        id: 'restaurant-3', title: 'Part 3', level: 'A2 – B1',
+        context: 'Phần 3: Thói quen ăn uống và các lựa chọn thực đơn.',
+        sentences: [
+          'I eat {{out}} at least once a week. There are many restaurants in my {{neighborhood}}. It is very {{convenient}}.',
+          'I am always {{interested}} in trying new places. Some restaurants have meals for just {{$5}}.',
+          'I love {{spicy}} food. The {{servers}} are usually very {{helpful}}.',
+          'I only eat there {{once}} or twice a month. Some people are {{concerned}} about eating too much.',
+          'People {{on diet}} often choose healthier meals. Price {{matters}} to many customers.',
+          'We are {{big fans}} of Italian food. They do not drink {{alcohol}}.'
+        ]
+      }
+    ]
+  },
   { id:'winter', title:'Winter', level:'A2 – B1',
     context:'Bài nghe về những hoạt động, khung cảnh và trải nghiệm mùa đông. Nghe từng câu rồi điền từ còn thiếu vào chỗ trống — phù hợp cho học sinh trình độ A2 tới B1.',
     sentences:[
@@ -719,7 +748,7 @@ document.getElementById('btn-change-student').addEventListener('click', ()=>{
 });
 
 /* ===================== GAP-FILL PASSAGE (A2–B1) ===================== */
-let gf = { passage:null, sentences:[], index:0, correctBlanks:0, wrongBlanks:0, totalBlanks:0, missedSentences:[], rate:1, awaitingNext:false };
+let gf = { passage:null, currentGroup:null, sentences:[], index:0, correctBlanks:0, wrongBlanks:0, totalBlanks:0, missedSentences:[], rate:1, awaitingNext:false };
 let resultsMode = 'vocab';
 
 function parseTemplate(t){
@@ -735,33 +764,107 @@ function parseTemplate(t){
   return { parts, full, template:t };
 }
 
+function getPassageById(id){
+  for (let p of PASSAGES) {
+    if (p.id === id) return { passage: p, group: null };
+    if (p.type === 'group') {
+      let lesson = p.lessons.find(l => l.id === id);
+      if (lesson) return { passage: lesson, group: p };
+    }
+  }
+  return null;
+}
+
 function renderGapfillHome(){
   const grid = document.getElementById('passage-grid');
   grid.innerHTML = '';
   PASSAGES.forEach((p, i)=>{
-    const blanks = p.sentences.join(' ').match(/\{\{.*?\}\}/g) || [];
+    let totalSentences = 0;
+    let totalBlanks = 0;
+    
+    if (p.type === 'group') {
+      p.lessons.forEach(l => {
+        totalSentences += l.sentences.length;
+        totalBlanks += (l.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+      });
+    } else {
+      totalSentences = p.sentences.length;
+      totalBlanks = (p.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+    }
+
     const card = document.createElement('button');
     card.className = 'topic-card';
     card.innerHTML = `
       <div class="cassette-id">BÀI ${String(i+1).padStart(2,'0')} · ${p.level}</div>
       <h3>${p.title}</h3>
       <p>${p.context}</p>
-      <div class="meta"><span>${p.sentences.length} câu · ${blanks.length} chỗ trống</span><span></span></div>
+      <div class="meta"><span>${totalSentences} câu · ${totalBlanks} chỗ trống</span><span></span></div>
     `;
-    card.addEventListener('click', ()=> openPassageIntro(p.id));
+    if (p.type === 'group') {
+      card.addEventListener('click', ()=> openGroupSelect(p.id));
+    } else {
+      card.addEventListener('click', ()=> openPassageIntro(p.id));
+    }
     grid.appendChild(card);
   });
 }
 
+function openGroupSelect(groupId) {
+  const group = PASSAGES.find(x => x.id === groupId);
+  document.getElementById('group-level').textContent = group.level;
+  document.getElementById('group-title').textContent = group.title;
+  document.getElementById('group-context').textContent = group.context;
+
+  const grid = document.getElementById('group-grid');
+  grid.innerHTML = '';
+  group.lessons.forEach((l, i) => {
+    const blanks = (l.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+    const card = document.createElement('button');
+    card.className = 'topic-card';
+    card.innerHTML = `
+      <div class="cassette-id">PHẦN ${i+1}</div>
+      <h3>${l.title}</h3>
+      <p>${l.context || ''}</p>
+      <div class="meta"><span>${l.sentences.length} câu · ${blanks} chỗ trống</span><span></span></div>
+    `;
+    card.addEventListener('click', ()=> openPassageIntro(l.id));
+    grid.appendChild(card);
+  });
+  showScreen('screen-group');
+}
+
 function openPassageIntro(passageId){
-  const p = PASSAGES.find(x=>x.id===passageId);
+  const match = getPassageById(passageId);
+  if (!match) return;
+  
+  const p = match.passage;
+  gf.currentGroup = match.group;
   gf.passage = p;
+  
   document.getElementById('intro-level').textContent = p.level;
-  document.getElementById('intro-title').textContent = p.title;
+  document.getElementById('intro-title').textContent = match.group ? `${match.group.title} – ${p.title}` : p.title;
   document.getElementById('intro-context').textContent = p.context;
+  
+  const backBtn = document.getElementById('btn-back-home-2');
+  if (match.group) {
+    backBtn.textContent = `← ${match.group.title}`;
+  } else {
+    backBtn.textContent = `← Tất cả bài nghe`;
+  }
+  
   showScreen('screen-passage-intro');
 }
-document.getElementById('btn-back-home-2').addEventListener('click', ()=> showScreen('screen-home'));
+
+document.getElementById('btn-back-home-3').addEventListener('click', ()=> showScreen('screen-home'));
+
+document.getElementById('btn-back-home-2').addEventListener('click', ()=> {
+  if (gf.currentGroup) {
+    openGroupSelect(gf.currentGroup.id);
+  } else {
+    showScreen('screen-home');
+  }
+});
+
 document.getElementById('btn-listen-full').addEventListener('click', ()=>{
   const fullText = gf.passage.sentences.map(s=>s.replace(/\{\{(.*?)\}\}/g,'$1')).join(' ');
   speak(fullText, 1);
@@ -892,7 +995,9 @@ async function finishGapfill(){
   const color = pct>=80 ? '#3E8E8E' : pct>=50 ? '#E8A33D' : '#D8604C';
   ring.style.background = `conic-gradient(${color} ${pct*3.6}deg, #EDE6D6 0deg)`;
   document.getElementById('results-title').textContent = pct>=80 ? 'Xuất sắc!' : pct>=50 ? 'Khá tốt, cố thêm chút nữa!' : 'Cần luyện thêm nhé!';
-  document.getElementById('results-sub').textContent = `${gf.correctBlanks}/${total} từ đúng — ${gf.passage.title} · ${gf.passage.level}`;
+  
+  const displayTitle = gf.currentGroup ? `${gf.currentGroup.title} – ${gf.passage.title}` : gf.passage.title;
+  document.getElementById('results-sub').textContent = `${gf.correctBlanks}/${total} từ đúng — ${displayTitle} · ${gf.passage.level}`;
 
   const missedBox = document.getElementById('missed-list');
   const missedRows = document.getElementById('missed-rows');
@@ -914,7 +1019,7 @@ async function finishGapfill(){
 
   await setBest(gf.passage.id, 'gapfill', pct);
   await saveStudentResult({
-    activity_type:'gapfill', exercise_id:gf.passage.id, exercise_title:gf.passage.title,
+    activity_type:'gapfill', exercise_id:gf.passage.id, exercise_title:displayTitle,
     level:gf.passage.level, score_percent:pct, correct_count:gf.correctBlanks,
     wrong_count:gf.wrongBlanks, total_count:total
   });
@@ -940,7 +1045,7 @@ document.getElementById('btn-check-gf').addEventListener('click', checkGapfillAn
 document.getElementById('btn-skip-gf').addEventListener('click', skipGapfillItem);
 document.getElementById('btn-exit-gapfill').addEventListener('click', ()=>{
   if(window.speechSynthesis) window.speechSynthesis.cancel();
-  showScreen('screen-passage-intro');
+  openPassageIntro(gf.passage.id);
 });
 
 /* ===================== HOME ===================== */
