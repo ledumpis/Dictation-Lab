@@ -985,6 +985,123 @@ button {
   flex-wrap: wrap;
 }
 
+/* ---------- GAP-FILL LEARNING CARDS STYLES ---------- */
+.learning-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.learning-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.learning-card-status {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.status-correct { color: var(--success); }
+.status-wrong { color: var(--danger); }
+
+.learning-section {
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+
+.learning-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.highlight-green {
+  color: var(--success);
+  font-weight: 600;
+  background: #DCFCE7;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.vocab-box {
+  background: #F9FAFB;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+  border: 1px solid var(--border);
+}
+
+.card-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.lesson-summary {
+  background: #F9FAFB;
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 32px 0;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.lesson-summary h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-item span:first-child {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-item span:last-child {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+@media (min-width: 600px) {
+  .summary-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .warn-banner {
   background: #FEF2F2;
   border: 1px solid #FCA5A5;
@@ -1226,10 +1343,19 @@ footer.note {
       </div>
       <h2 id="results-title">Hoàn thành bài luyện!</h2>
       <div class="sub" id="results-sub"></div>
+      
+      <!-- Existing missed list for normal practice -->
       <div class="missed-list" id="missed-list" style="display:none;">
-        <h4>Các từ cần ôn lại</h4>
+        <h4 id="missed-list-title">Các từ cần ôn lại</h4>
         <div id="missed-rows"></div>
       </div>
+
+      <!-- New Lesson Summary for Gapfill -->
+      <div id="gf-lesson-summary" class="lesson-summary" style="display:none;"></div>
+
+      <!-- New Learning Cards Container for Gapfill -->
+      <div id="gf-learning-container" style="display:none;"></div>
+
       <div class="results-actions">
         <button class="btn btn-primary" id="btn-retry-missed">Luyện lại từ sai</button>
         <button class="btn btn-ghost" id="btn-retry-all">Làm lại toàn bộ</button>
@@ -1254,7 +1380,7 @@ const TOPICS = [
     phrases:['higher education','distance learning','academic performance','student loan','vocational training','lifelong learning','compulsory education','critical thinking'],
     sentences:['Universities are offering more scholarships to attract international students.','Distance learning has become increasingly popular since the pandemic.','A good curriculum should balance theory and practical skills.','Critical thinking is one of the most valuable skills students can develop.'] },
 
-  { id:'technology', name:'Công nghệ & Đổi mới', desc:'Từ vựng về AI, mạng xã hội, an ninh mạng — luôn xuất hiện trong Reading và Speaking hiện đại.',
+  { id:'technology', name:'Công nghệ & Đổi mới', desc:'Từ vựng về AI, mạng xã hội, an margin mạng — luôn xuất hiện trong Reading và Speaking hiện đại.',
     words:['innovation','algorithm','automation','smartphone','encryption','bandwidth','software','hardware','cybersecurity','connectivity'],
     phrases:['artificial intelligence','social media platforms','digital transformation','data privacy','online security','wireless connection','technological advances','virtual reality'],
     sentences:['Artificial intelligence is transforming the way businesses operate.','Cybersecurity has become a major concern for online users.','Many people rely on smartphones for daily communication.','Digital transformation is reshaping traditional industries.'] },
@@ -1274,107 +1400,880 @@ const PASSAGES = [
   { id:'direction', title:'Which direction?', level:'A2 – B1', type:'gapfill',
     context:'Bài nghe về các từ chỉ phương hướng cơ bản (lên, xuống, trái, phải, tiến, lùi...). Nghe từng câu rồi điền từ còn thiếu — phù hợp cho học sinh trình độ A2 tới B1.',
     sentences:[
-      'Which {{direction}} should I go in?',
-      'Should I go {{up}}?',
-      'If I go up, I will head toward the {{sky}}.',
-      'I can go up the {{stairs}}.',
-      'Should I go {{down}}?',
-      'I can go down the stairs to the {{basement}}.',
-      'I can climb down into a {{hole}}.',
-      'Should I go {{left}} or {{right}}?',
-      'I am {{right-handed}}, so I know which way right is.',
-      'Should I go {{backwards}}?',
-      'I would be going away from the things that I am {{facing}} now if I went backwards.',
-      'If I went backwards from the thing that I am facing, I would go {{away}} from it.',
-      'Should I go {{forward}}?',
-      'I will just go straight {{ahead}} if I go forward.',
-      'If I am facing something and I go forward, then I will go {{toward}} the thing that I am facing.',
-      'Maybe I should go {{sideways}}, but which side, left or right?',
-      'It sounds very {{complicated}}, but it is not.',
-      'Directions are very easy to {{follow}} if you just stop and think about them.',
+        {
+          english: 'Which {{direction}} should I go in?',
+          translation: 'Tôi nên đi theo hướng nào?',
+          vocabulary: [ { word: 'direction', meaning: 'phương hướng, hướng đi' } ]
+        },
+        {
+          english: 'Should I go {{up}}?',
+          translation: 'Tôi có nên đi lên không?',
+          vocabulary: [ { word: 'up', meaning: 'lên, hướng lên' } ]
+        },
+        {
+          english: 'If I go up, I will head toward the {{sky}}.',
+          translation: 'Nếu tôi đi lên, tôi sẽ hướng về phía bầu trời.',
+          vocabulary: [ { word: 'sky', meaning: 'bầu trời' } ]
+        },
+        {
+          english: 'I can go up the {{stairs}}.',
+          translation: 'Tôi có thể đi lên cầu thang.',
+          vocabulary: [ { word: 'stairs', meaning: 'cầu thang' } ]
+        },
+        {
+          english: 'Should I go {{down}}?',
+          translation: 'Tôi có nên đi xuống không?',
+          vocabulary: [ { word: 'down', meaning: 'xuống, hướng xuống' } ]
+        },
+        {
+          english: 'I can go down the stairs to the {{basement}}.',
+          translation: 'Tôi có thể đi xuống cầu thang để vào tầng hầm.',
+          vocabulary: [ { word: 'basement', meaning: 'tầng hầm' } ]
+        },
+        {
+          english: 'I can climb down into a {{hole}}.',
+          translation: 'Tôi có thể trèo xuống một cái hố.',
+          vocabulary: [ { word: 'hole', meaning: 'cái hố' } ]
+        },
+        {
+          english: 'Should I go {{left}} or {{right}}?',
+          translation: 'Tôi nên rẽ trái hay rẽ phải?',
+          vocabulary: [
+            { word: 'left', meaning: 'bên trái' },
+            { word: 'right', meaning: 'bên phải' }
+          ]
+        },
+        {
+          english: 'I am {{right-handed}}, so I know which way right is.',
+          translation: 'Tôi thuận tay phải, nên tôi biết bên phải là hướng nào.',
+          vocabulary: [ { word: 'right-handed', meaning: 'thuận tay phải' } ]
+        },
+        {
+          english: 'Should I go {{backwards}}?',
+          translation: 'Tôi có nên đi lùi không?',
+          vocabulary: [ { word: 'backwards', meaning: 'về phía sau, đi lùi' } ]
+        },
+        {
+          english: 'I would be going away from the things that I am {{facing}} now if I went backwards.',
+          translation: 'Tôi sẽ rời xa những thứ mà tôi đang đối diện bây giờ nếu tôi đi lùi.',
+          vocabulary: [ { word: 'facing', meaning: 'đối diện, hướng mặt về' } ]
+        },
+        {
+          english: 'If I went backwards from the thing that I am facing, I would go {{away}} from it.',
+          translation: 'Nếu tôi đi lùi khỏi thứ mà tôi đang đối diện, tôi sẽ đi ra xa khỏi nó.',
+          vocabulary: [ { word: 'away', meaning: 'ra xa, rời xa' } ]
+        },
+        {
+          english: 'Should I go {{forward}}?',
+          translation: 'Tôi có nên tiến lên phía trước không?',
+          vocabulary: [ { word: 'forward', meaning: 'về phía trước, tiến lên' } ]
+        },
+        {
+          english: 'I will just go straight {{ahead}} if I go forward.',
+          translation: 'Tôi sẽ chỉ đi thẳng về phía trước nếu tôi tiến lên.',
+          vocabulary: [ { word: 'ahead', meaning: 'phía trước, thẳng tiến' } ]
+        },
+        {
+          english: 'If I am facing something and I go forward, then I will go {{toward}} the thing that I am facing.',
+          translation: 'Nếu tôi đang đối diện với một thứ gì đó và tôi tiến lên, thì tôi sẽ đi về phía thứ mà tôi đang đối diện.',
+          vocabulary: [ { word: 'toward', meaning: 'về phía, hướng về' } ]
+        },
+        {
+          english: 'Maybe I should go {{sideways}}, but which side, left or right?',
+          translation: 'Có lẽ tôi nên đi sang ngang, nhưng sang bên nào, trái hay phải?',
+          vocabulary: [ { word: 'sideways', meaning: 'sang ngang, sang một bên' } ]
+        },
+        {
+          english: 'It sounds very {{complicated}}, but it is not.',
+          translation: 'Nghe có vẻ rất phức tạp, nhưng thực ra không phải vậy.',
+          vocabulary: [ { word: 'complicated', meaning: 'phức tạp' } ]
+        },
+        {
+          english: 'Directions are very easy to {{follow}} if you just stop and think about them.',
+          translation: 'Các phương hướng rất dễ theo dõi nếu bạn chỉ cần dừng lại và suy nghĩ về chúng.',
+          vocabulary: [ { word: 'follow', meaning: 'đi theo, theo dõi' } ]
+        }
     ] },
   { id:'completeielts', title: 'Complete IELTS 4-5', type:'group', level:'B1 – B2',
     context:'Giới thiệu về các chuyến du lịch, đi xa bằng các loại phương tiện khác nhau',
     lessons: [
       {
-        id: 'completeielts-1', title: 'Part 1', level: 'B1 – B2', type: 'gapfill',
+        id: 'completeielts-1', title: 'Unit 3 WB p1', level: 'B1 – B2', type: 'gapfill',
         context: 'Phần 1: Bài nghe là lời giới thiệu của quản lý tàu Sunshine Express dành cho hành khách trước khi khởi hành từ London đến Naples. Nghe từng câu và điền từ còn thiếu vào chỗ trống.',
         sentences: [
-          'Hello, everyone, and welcome {{aboard}} the Sunshine Express on our journey from London to Naples. I’m Jane Sharpe, the train {{manager}}, and I hope you’ll all enjoy the trip.',
-          'Before we {{depart}}, I’d like to tell you a bit about the train and its facilities.',
-          'Now, we’re here on the {{observation deck}}, which is where you’ll probably spend most of your trip, as it offers the best views, and directly below us is, as well, we call it our {{leisure}} centre.',
-          'There are some games machines, a television, a small {{library}} and so on.',
-          'It has full wi-fi {{capability}}.',
-          'You’ll have breakfast in your {{cabins}}, by the way, which will be brought to you by your {{steward}}.',
-          'You’ll also find a simple basin for washing, and a small {{fold-down}} table.',
-          'To get to them, you’ll need to pass through the {{lounge}}.',
-          'This can be used by everyone during the day, but is {{exclusive}} to first-class passengers after 6 p.m.',
+          {
+            english: 'Hello, everyone, and welcome {{aboard}} the Sunshine Express on our journey from London to Naples. I’m Jane Sharpe, the train {{manager}}, and I hope you’ll all enjoy the trip.',
+            translation: 'Xin chào mọi người và chào mừng các bạn lên tàu Sunshine Express trong chuyến hành trình từ London đến Naples. Tôi là Jane Sharpe, quản lý tàu, và tôi hy vọng tất cả các bạn sẽ tận hưởng chuyến đi này.',
+            vocabulary: [
+              { word: 'aboard', meaning: 'lên tàu; trên tàu' },
+              { word: 'manager', meaning: 'quản lý' }
+            ]
+          },
+          {
+            english: 'Before we {{depart}}, I’d like to tell you a bit about the train and its facilities.',
+            translation: 'Trước khi chúng ta khởi hành, tôi muốn giới thiệu một chút về chuyến tàu và các tiện nghi của nó.',
+            vocabulary: [
+              { word: 'depart', meaning: 'khởi hành' }
+            ]
+          },
+          {
+            english: 'Now, we’re here on the {{observation deck}}, which is where you’ll probably spend most of your trip, as it offers the best views, and directly below us is, as well, we call it our {{leisure}} centre.',
+            translation: 'Bây giờ, chúng ta đang ở trên đài quan sát, nơi bạn có thể sẽ dành phần lớn thời gian của chuyến đi, vì nó mang lại tầm nhìn đẹp nhất, và ngay bên dưới chúng ta là khu vực mà chúng tôi gọi là trung tâm giải trí.',
+            vocabulary: [
+              { word: 'observation deck', meaning: 'đài quan sát' },
+              { word: 'leisure', meaning: 'giải trí' }
+            ]
+          },
+          {
+            english: 'There are some games machines, a television, a small {{library}} and so on.',
+            translation: 'Có một số máy chơi game, một chiếc tivi, một thư viện nhỏ, v.v.',
+            vocabulary: [
+              { word: 'library', meaning: 'thư viện' }
+            ]
+          },
+          {
+            english: 'It has full wi-fi {{capability}}.',
+            translation: 'Nó có khả năng kết nối wi-fi toàn diện.',
+            vocabulary: [
+              { word: 'capability', meaning: 'khả năng/năng lực' }
+            ]
+          },
+          {
+            english: 'You’ll have breakfast in your {{cabins}}, by the way, which will be brought to you by your {{steward}}.',
+            translation: 'Nhân tiện, bạn sẽ ăn sáng trong buồng của mình, bữa sáng sẽ được nhân viên phục vụ mang đến cho bạn.',
+            vocabulary: [
+              { word: 'cabins', meaning: 'buồng/khoang hành khách' },
+              { word: 'steward', meaning: 'nhân viên phục vụ' }
+            ]
+          },
+          {
+            english: 'You’ll also find a simple basin for washing, and a small {{fold-down}} table.',
+            translation: 'Bạn cũng sẽ tìm thấy một bồn rửa mặt đơn giản, và một chiếc bàn nhỏ có thể gập xuống.',
+            vocabulary: [
+              { word: 'fold-down', meaning: 'có thể gập xuống' }
+            ]
+          },
+          {
+            english: 'To get to them, you’ll need to pass through the {{lounge}}.',
+            translation: 'Để đến đó, bạn sẽ cần đi qua phòng chờ.',
+            vocabulary: [
+              { word: 'lounge', meaning: 'phòng chờ/phòng nghỉ' }
+            ]
+          },
+          {
+            english: 'This can be used by everyone during the day, but is {{exclusive}} to first-class passengers after 6 p.m.',
+            translation: 'Mọi người đều có thể sử dụng khu vực này vào ban ngày, nhưng nó chỉ dành riêng cho hành khách khoang hạng nhất sau 6 giờ tối.',
+            vocabulary: [
+              { word: 'exclusive', meaning: 'dành riêng/độc quyền' }
+            ]
+          }
         ]
       },
       {
-        id:'completeielts-2', title:'Part 2', level:'B2', type:'gapfill',
+        id:'completeielts-2', title:'Unit 3 WB p2', level:'B2', type:'gapfill',
         context:'Phần 2: Tiếp tục bài giới thiệu của quản lý tàu Sunshine Express về lịch trình, bữa ăn và các lưu ý dành cho hành khách.',
         sentences:[
-        'The first part of our journey is from London to Paris, going through the {{Channel Tunnel}}.',
-        'It will take us just over an hour to get to the Tunnel, including a short stop before we get there to {{pick up}} some more passengers.',
-        'From there, it’ll be another three hours to Paris, so we’re looking at four hours {{altogether}}.',
-        'Ask your steward — that’s the person in charge of your {{carriage}} — for a key.',
-        'Breakfast tomorrow morning will be in your cabins, and this will be {{served at}} about 7.30.',
-        'You’ll be able to enjoy it as we travel along the southern French {{coast}}.',
-        'When we get to the Italian border tomorrow morning, our train will change {{engines}}.',
-        'We’ll also be getting a new {{crew}}.',
-        'We’ll be taking {{advantage}} of the stop to have a look around.',
-        'Could we ask that you {{consume}} it in your cabins and not in the restaurant or lounge?',
-        'Could we also ask you to make sure your cabin {{windows}} are {{closed}} when you’re not in your cabin?',
-        'Whatever you do, don’t {{get off}} the train until we reach the Italian {{border}}.',
-        'I’d hate to {{leave}} anyone behind.'
+          {
+            english: 'The first part of our journey is from London to Paris, going through the {{Channel Tunnel}}.',
+            translation: 'Phần đầu tiên của hành trình là từ London đến Paris, đi qua Đường hầm eo biển Manche.',
+            vocabulary: [
+              { word: 'Channel Tunnel', meaning: 'Đường hầm eo biển Manche' }
+            ]
+          },
+          {
+            english: 'It will take us just over an hour to get to the Tunnel, including a short stop before we get there to {{pick up}} some more passengers.',
+            translation: 'Sẽ mất khoảng hơn một giờ để đến đường hầm, bao gồm cả một điểm dừng ngắn trước khi đến đó để đón thêm hành khách.',
+            vocabulary: [
+              { word: 'pick up', meaning: 'đón (khách)' }
+            ]
+          },
+          {
+            english: 'From there, it’ll be another three hours to Paris, so we’re looking at four hours {{altogether}}.',
+            translation: 'Từ đó, sẽ mất thêm ba giờ nữa để đến Paris, vì vậy chúng ta dự kiến tổng cộng là bốn giờ.',
+            vocabulary: [
+              { word: 'altogether', meaning: 'tổng cộng' }
+            ]
+          },
+          {
+            english: 'Ask your steward — that’s the person in charge of your {{carriage}} — for a key.',
+            translation: 'Hãy hỏi nhân viên phục vụ của bạn — đó là người phụ trách toa tàu của bạn — để lấy chìa khóa.',
+            vocabulary: [
+              { word: 'carriage', meaning: 'toa tàu' }
+            ]
+          },
+          {
+            english: 'Breakfast tomorrow morning will be in your cabins, and this will be {{served at}} about 7.30.',
+            translation: 'Bữa sáng sáng mai sẽ ở trong buồng của bạn, và sẽ được phục vụ vào khoảng 7h30.',
+            vocabulary: [
+              { word: 'served at', meaning: 'được phục vụ lúc' }
+            ]
+          },
+          {
+            english: 'You’ll be able to enjoy it as we travel along the southern French {{coast}}.',
+            translation: 'Bạn sẽ có thể thưởng thức nó khi chúng ta đi dọc theo bờ biển phía nam nước Pháp.',
+            vocabulary: [
+              { word: 'coast', meaning: 'bờ biển' }
+            ]
+          },
+          {
+            english: 'When we get to the Italian border tomorrow morning, our train will change {{engines}}.',
+            translation: 'Khi chúng ta đến biên giới Ý vào sáng mai, tàu của chúng ta sẽ thay đầu máy.',
+            vocabulary: [
+              { word: 'engines', meaning: 'đầu máy (xe lửa/tàu)' }
+            ]
+          },
+          {
+            english: 'We’ll also be getting a new {{crew}}.',
+            translation: 'Chúng ta cũng sẽ có một đội ngũ nhân viên mới.',
+            vocabulary: [
+              { word: 'crew', meaning: 'đội ngũ nhân viên' }
+            ]
+          },
+          {
+            english: 'We’ll be taking {{advantage}} of the stop to have a look around.',
+            translation: 'Chúng ta sẽ tận dụng điểm dừng này để ngắm nhìn xung quanh.',
+            vocabulary: [
+              { word: 'advantage', meaning: 'lợi thế/tận dụng' }
+            ]
+          },
+          {
+            english: 'Could we ask that you {{consume}} it in your cabins and not in the restaurant or lounge?',
+            translation: 'Chúng tôi có thể yêu cầu bạn ăn uống trong buồng của mình và không ở nhà hàng hoặc phòng chờ được không?',
+            vocabulary: [
+              { word: 'consume', meaning: 'tiêu thụ/ăn uống' }
+            ]
+          },
+          {
+            english: 'Could we also ask you to make sure your cabin {{windows}} are {{closed}} when you’re not in your cabin?',
+            translation: 'Chúng tôi cũng xin yêu cầu bạn đảm bảo rằng cửa sổ buồng của bạn đã được đóng khi bạn không ở trong buồng.',
+            vocabulary: [
+              { word: 'windows', meaning: 'cửa sổ' },
+              { word: 'closed', meaning: 'được đóng lại' }
+            ]
+          },
+          {
+            english: 'Whatever you do, don’t {{get off}} the train until we reach the Italian {{border}}.',
+            translation: 'Dù bạn làm gì, đừng xuống tàu cho đến khi chúng ta đến biên giới Ý.',
+            vocabulary: [
+              { word: 'get off', meaning: 'xuống tàu/xe' },
+              { word: 'border', meaning: 'biên giới' }
+            ]
+          },
+          {
+            english: 'I’d hate to {{leave}} anyone behind.',
+            translation: 'Tôi rất không muốn bỏ lại bất kỳ ai.',
+            vocabulary: [
+              { word: 'leave', meaning: 'bỏ lại' }
+            ]
+          }
+        ]
+      },
+      {
+        id:'completeielts-3', title:'Unit 4 WB p1', level:'B2', type:'gapfill',
+        context:'Phần 3: Một nhà nghiên cứu phỏng vấn Joe về thói quen mua sắm và thái độ đối với các sản phẩm điện tử.',
+        sentences:[
+          {
+            english: 'So how did you get on with the {{devices}} we asked you to test for us?',
+            translation: 'Vậy bạn cảm thấy thế nào về các thiết bị mà chúng tôi yêu cầu bạn dùng thử?',
+            vocabulary: [
+              { word: 'devices', meaning: 'thiết bị' }
+            ]
+          },
+          {
+            english: 'First of all, I was {{wondering}} if I could ask you a few questions about your {{attitude}} to new {{electrical}} products.',
+            translation: 'Trước hết, tôi tự hỏi liệu tôi có thể hỏi bạn vài câu về thái độ của bạn đối với các sản phẩm điện tử mới không.',
+            vocabulary: [
+              { word: 'wondering', meaning: 'tự hỏi/băn khoăn' },
+              { word: 'attitude', meaning: 'thái độ' },
+              { word: 'electrical', meaning: 'thuộc về điện/điện tử' }
+            ]
+          },
+          {
+            english: 'I don’t earn a lot, so I don’t have much left after I’ve paid for things like {{rent}}, bills, food and so on.',
+            translation: 'Tôi không kiếm được nhiều tiền, nên tôi không còn lại nhiều sau khi đã trả cho những thứ như tiền thuê nhà, hóa đơn, thức ăn, v.v.',
+            vocabulary: [
+              { word: 'rent', meaning: 'tiền thuê nhà' }
+            ]
+          },
+          {
+            english: 'Anything else is a {{luxury}}.',
+            translation: 'Bất cứ thứ gì khác đều là một sự xa xỉ.',
+            vocabulary: [
+              { word: 'luxury', meaning: 'sự xa xỉ/thứ xa xỉ' }
+            ]
+          },
+          {
+            english: 'I’d guess about 5%, maybe 10% of my monthly {{salary}}.',
+            translation: 'Tôi đoán khoảng 5%, có lẽ là 10% tiền lương hàng tháng của tôi.',
+            vocabulary: [
+              { word: 'salary', meaning: 'tiền lương' }
+            ]
+          },
+          {
+            english: 'What {{influences}} you in your choice of product? How would you {{decide}} which one to buy?',
+            translation: 'Điều gì ảnh hưởng đến lựa chọn sản phẩm của bạn? Bạn sẽ quyết định mua cái nào như thế nào?',
+            vocabulary: [
+              { word: 'influences', meaning: 'ảnh hưởng' },
+              { word: 'decide', meaning: 'quyết định' }
+            ]
+          },
+          {
+            english: 'Well, first I look at {{reviews}} on the Internet, you know, what other {{customers}} have said about the product.',
+            translation: 'Chà, đầu tiên tôi xem các đánh giá trên Internet, bạn biết đấy, những gì khách hàng khác đã nói về sản phẩm.',
+            vocabulary: [
+              { word: 'reviews', meaning: 'đánh giá/nhận xét' },
+              { word: 'customers', meaning: 'khách hàng' }
+            ]
+          },
+          {
+            english: 'Then I’ll ask my friends what they think. In fact, their {{opinions}} are probably more important than anything.',
+            translation: 'Sau đó tôi sẽ hỏi bạn bè xem họ nghĩ gì. Thực tế, ý kiến của họ có lẽ quan trọng hơn bất cứ điều gì.',
+            vocabulary: [
+              { word: 'opinions', meaning: 'ý kiến' }
+            ]
+          },
+          {
+            english: 'I think that depends on how the {{product}} is advertised.',
+            translation: 'Tôi nghĩ điều đó phụ thuộc vào cách sản phẩm được quảng cáo.',
+            vocabulary: [
+              { word: 'product', meaning: 'sản phẩm' }
+            ]
+          },
+          {
+            english: 'If it’s someone I respect, like a famous {{sportsman}} or actor, that can certainly {{make a difference}}.',
+            translation: 'Nếu đó là người mà tôi tôn trọng, như một vận động viên thể thao hoặc diễn viên nổi tiếng, điều đó chắc chắn có thể tạo ra sự khác biệt.',
+            vocabulary: [
+              { word: 'sportsman', meaning: 'vận động viên thể thao' },
+              { word: 'make a difference', meaning: 'tạo ra sự khác biệt' }
+            ]
+          },
+          {
+            english: 'Most people seem to {{avoid}} shops these days.',
+            translation: 'Ngày nay, hầu hết mọi người dường như tránh các cửa hàng.',
+            vocabulary: [
+              { word: 'avoid', meaning: 'tránh/tránh xa' }
+            ]
+          },
+          {
+            english: 'If you say to a {{shop assistant}} that you can get a camera cheaper on the Internet, they’ll often {{match}} the price.',
+            translation: 'Nếu bạn nói với nhân viên bán hàng rằng bạn có thể mua một chiếc máy ảnh rẻ hơn trên mạng, họ thường sẽ giảm giá bằng với mức đó.',
+            vocabulary: [
+              { word: 'shop assistant', meaning: 'nhân viên bán hàng' },
+              { word: 'match', meaning: 'khớp/giảm giá bằng với' }
+            ]
+          },
+          {
+            english: 'Any other {{advantages}} of buying in a shop rather than online?',
+            translation: 'Còn lợi thế nào khác của việc mua ở cửa hàng so với mua trực tuyến không?',
+            vocabulary: [
+              { word: 'advantages', meaning: 'lợi thế/ưu điểm' }
+            ]
+          },
+          {
+            english: 'You get {{personal service}} and you don’t have to wait for the product to be {{delivered}}.',
+            translation: 'Bạn nhận được dịch vụ chăm sóc cá nhân và không phải đợi sản phẩm được giao đến.',
+            vocabulary: [
+              { word: 'personal service', meaning: 'dịch vụ chăm sóc cá nhân' },
+              { word: 'delivered', meaning: 'được giao hàng' }
+            ]
+          },
+          {
+            english: '{{Ordering}} online means you have to wait, sometimes {{for ages}}.',
+            translation: 'Đặt hàng trực tuyến đồng nghĩa với việc bạn phải chờ đợi, đôi khi rất lâu.',
+            vocabulary: [
+              { word: 'Ordering', meaning: 'đặt hàng' },
+              { word: 'for ages', meaning: 'rất lâu/trong thời gian dài' }
+            ]
+          },
+          {
+            english: 'I hate waiting. I guess I’m just very {{impatient}}.',
+            translation: 'Tôi ghét việc chờ đợi. Tôi đoán tôi chỉ là người rất thiếu kiên nhẫn.',
+            vocabulary: [
+              { word: 'impatient', meaning: 'thiếu kiên nhẫn' }
+            ]
+          },
+          {
+            english: 'Do you ever see a product in a shop window and think, "I’ve absolutely got to get one of those"? It takes a lot of {{willpower}}.',
+            translation: 'Bạn có bao giờ nhìn thấy một sản phẩm trong tủ kính cửa hàng và nghĩ, "Tôi nhất định phải mua một cái" không? Cần rất nhiều ý chí (để cưỡng lại).',
+            vocabulary: [
+              { word: 'willpower', meaning: 'ý chí/nghị lực' }
+            ]
+          }
+        ]
+      },
+      {
+        id:'completeielts-4', title:'Unit 4 WB p2', level:'B2', type:'gapfill',
+        context:'Phần 4: Joe tiếp tục đánh giá điện thoại, radio kỹ thuật số và máy tính xách tay sau khi dùng thử.',
+        sentences:[
+          {
+            english: 'The purple and silver make it quite {{eye-catching}}.',
+            translation: 'Màu tím và bạc làm cho nó khá bắt mắt.',
+            vocabulary: [
+              { word: 'eye-catching', meaning: 'bắt mắt' }
+            ]
+          },
+          {
+            english: 'It can be a bit {{difficult}} to use, especially if you’ve got big hands.',
+            translation: 'Nó có thể hơi khó sử dụng một chút, đặc biệt nếu bạn có bàn tay lớn.',
+            vocabulary: [
+              { word: 'difficult', meaning: 'khó khăn' }
+            ]
+          },
+          {
+            english: 'You end up pressing another key at the {{same time}}.',
+            translation: 'Bạn rốt cuộc sẽ bấm nhầm sang phím khác cùng lúc.',
+            vocabulary: [
+              { word: 'same time', meaning: 'cùng một lúc' }
+            ]
+          },
+          {
+            english: 'Thanks to the oval design, it does fit {{comfortably}} in your hand.',
+            translation: 'Nhờ thiết kế hình bầu dục, nó vừa vặn thoải mái trong tay bạn.',
+            vocabulary: [
+              { word: 'comfortably', meaning: 'một cách thoải mái' }
+            ]
+          },
+          {
+            english: 'The screen was too small, and if you’re outside, you can {{hardly}} see anything on it.',
+            translation: 'Màn hình quá nhỏ, và nếu bạn ở ngoài trời, bạn hầu như không thể nhìn thấy bất cứ thứ gì trên đó.',
+            vocabulary: [
+              { word: 'hardly', meaning: 'hầu như không' }
+            ]
+          },
+          {
+            english: 'That noise it makes if you {{move away from}} it is really annoying.',
+            translation: 'Tiếng ồn mà nó phát ra nếu bạn di chuyển ra xa khỏi nó thực sự rất phiền phức.',
+            vocabulary: [
+              { word: 'move away from', meaning: 'di chuyển ra xa khỏi' }
+            ]
+          },
+          {
+            english: 'After a while it would {{drive me mad}}.',
+            translation: 'Sau một lúc nó sẽ làm tôi phát điên.',
+            vocabulary: [
+              { word: 'drive me mad', meaning: 'làm tôi phát điên' }
+            ]
+          },
+          {
+            english: 'There’s {{no point}} having a phone that looks good if you have to {{spend ages}} trying to make a call.',
+            translation: 'Chẳng có ích gì khi có một chiếc điện thoại trông đẹp mắt nếu bạn phải mất hàng giờ mới thực hiện được một cuộc gọi.',
+            vocabulary: [
+              { word: 'no point', meaning: 'không có ý nghĩa/tác dụng gì' },
+              { word: 'spend ages', meaning: 'mất rất nhiều thời gian' }
+            ]
+          },
+          {
+            english: 'I want a phone that doesn’t have problems {{picking up}} a signal, or doesn’t {{cut you off}} halfway through a call.',
+            translation: 'Tôi muốn một chiếc điện thoại không gặp vấn đề trong việc bắt sóng, hoặc không ngắt kết nối bạn giữa chừng cuộc gọi.',
+            vocabulary: [
+              { word: 'picking up', meaning: 'bắt/nhận (tín hiệu)' },
+              { word: 'cut you off', meaning: 'ngắt kết nối của bạn' }
+            ]
+          },
+          {
+            english: 'I really {{can’t see the point}} in all those games and other things you get on a mobile.',
+            translation: 'Tôi thực sự không hiểu mục đích của tất cả những trò chơi và những thứ khác mà bạn có trên điện thoại di động để làm gì.',
+            vocabulary: [
+              { word: 'can’t see the point', meaning: 'không thấy có tác dụng/ý nghĩa gì' }
+            ]
+          },
+          {
+            english: 'The audio quality was {{crisp}} and clear.',
+            translation: 'Chất lượng âm thanh sắc nét và rõ ràng.',
+            vocabulary: [
+              { word: 'crisp', meaning: 'rõ nét/sắc nét' }
+            ]
+          },
+          {
+            english: 'Some sound systems can sound a bit {{distorted}} at higher volumes.',
+            translation: 'Một số hệ thống âm thanh có thể nghe hơi méo tiếng ở âm lượng cao.',
+            vocabulary: [
+              { word: 'distorted', meaning: 'bị méo tiếng/biến dạng' }
+            ]
+          },
+          {
+            english: 'The choice of {{radio stations}} seemed very {{limited}}.',
+            translation: 'Lựa chọn các đài phát thanh dường như rất hạn chế.',
+            vocabulary: [
+              { word: 'radio stations', meaning: 'đài phát thanh' },
+              { word: 'limited', meaning: 'hạn chế/giới hạn' }
+            ]
+          },
+          {
+            english: 'There seemed to be a {{delay}} when you turned up the {{volume}}.',
+            translation: 'Dường như có độ trễ khi bạn tăng âm lượng.',
+            vocabulary: [
+              { word: 'delay', meaning: 'sự chậm trễ/độ trễ' },
+              { word: 'volume', meaning: 'âm lượng' }
+            ]
+          },
+          {
+            english: 'The laptop is so small, so {{compact}}, but easy to use at the same time.',
+            translation: 'Máy tính xách tay quá nhỏ, rất nhỏ gọn, nhưng đồng thời cũng dễ sử dụng.',
+            vocabulary: [
+              { word: 'compact', meaning: 'nhỏ gọn' }
+            ]
+          },
+          {
+            english: 'At £900, {{bring that down}} to, say, £400 and things might be different.',
+            translation: 'Với mức giá 900 bảng, nếu giảm xuống, giả sử còn 400 bảng, mọi thứ có thể sẽ khác.',
+            vocabulary: [
+              { word: 'bring that down', meaning: 'giảm mức đó xuống' }
+            ]
+          },
+          {
+            english: 'Three hundred {{gigabytes}} of {{memory}} is probably more than enough for most people.',
+            translation: 'Ba trăm gigabyte bộ nhớ có lẽ là quá đủ cho hầu hết mọi người.',
+            vocabulary: [
+              { word: 'gigabytes', meaning: 'gigabyte (đơn vị đo dung lượng)' },
+              { word: 'memory', meaning: 'bộ nhớ' }
+            ]
+          },
+          {
+            english: 'I’d {{include a light}} in the {{keyboard}} so you can use it when it’s dark.',
+            translation: 'Tôi sẽ thêm một chiếc đèn ở bàn phím để bạn có thể sử dụng khi trời tối.',
+            vocabulary: [
+              { word: 'include a light', meaning: 'thêm đèn/gắn thêm đèn' },
+              { word: 'keyboard', meaning: 'bàn phím' }
+            ]
+          }
+        ]
+      },
+      {
+        id:'completeielts-5', title:'Unit 8 WB p1', level:'B1 - B2', type:'gapfill',
+        context:'Hướng dẫn tham quan Palace of Kom Ombane.',
+        sentences:[
+        {
+            english:'Hello, everyone. In a few minutes we’ll be {{setting off}} on our trip to the Palace of Kom Ombane.',
+            translation:'Xin chào mọi người. Chỉ vài phút nữa chúng ta sẽ khởi hành đến Cung điện Kom Ombane.',
+            vocabulary:[
+                { word:'setting off', meaning:'khởi hành; bắt đầu chuyến đi' }
+            ]
+        },
+
+        {
+            english:'There are a few things I should mention before we go, so please pay {{careful attention}}.',
+            translation:'Có một vài điều tôi cần lưu ý trước khi chúng ta đi, vì vậy hãy chú ý lắng nghe.',
+            vocabulary:[
+                { word:'attention', meaning:'sự chú ý' }
+            ]
+        },
+
+        {
+            english:'Now, there are three groups of us on this trip, and we’ll be using three {{coaches}} to get to and from the palace.',
+            translation:'Trong chuyến đi này chúng ta được chia thành ba nhóm và sẽ sử dụng ba xe khách để đi đến và trở về từ cung điện.',
+            vocabulary:[
+                { word:'coaches', meaning:'xe khách' }
+            ]
+        },
+
+        {
+            english:'Please check that you {{board}} the right one, both at this end and when we come back.',
+            translation:'Hãy nhớ lên đúng xe của mình cả lúc đi lẫn lúc quay trở về.',
+            vocabulary:[
+                { word:'board', meaning:'lên; ngồi lên' }
+            ]
+        },
+
+        {
+            english:'{{Otherwise}} I’ll be running around looking for you.',
+            translation:'Nếu không thì tôi sẽ phải chạy khắp nơi để tìm các bạn.',
+            vocabulary:[
+                { word:'otherwise', meaning:'nếu không' }
+            ]
+        },
+
+        {
+            english:'The {{palace}} is probably going to be very busy, so please stay {{close}} to me when we get there.',
+            translation:'Cung điện có lẽ sẽ rất đông, vì vậy hãy đi sát tôi khi chúng ta đến nơi.',
+            vocabulary:[
+                { word:'close', meaning:'ở gần; sát' },
+                { word:'palace', meaning:'cung điện' }
+            ]
+        },
+
+        {
+            english:'If you lose me, head for the main gate which is opposite the {{ticket office}}, and you’ll find me there.',
+            translation:'Nếu bị lạc tôi, hãy đi đến cổng chính đối diện phòng bán vé, tôi sẽ ở đó.',
+            vocabulary:[
+                { word:'ticket office', meaning:'phòng bán vé' }
+            ]
+        },
+
+        {
+            english:'{{Alternatively}}, call me on my mobile. The number’s in your {{information pack}}.',
+            translation:'Hoặc hãy gọi vào điện thoại của tôi. Số điện thoại nằm trong bộ tài liệu của bạn.',
+            vocabulary:[
+                { word:'Alternatively', meaning:'hoặc' },
+                { word:'information pack', meaning:'bộ tài liệu thông tin' }
+            ]
+        },
+
+        {
+            english:'{{Keep hold of}} this, as you can use it to get money off in the cafés and {{restaurant}} at the palace.',
+            translation:'Hãy giữ cẩn thận chiếc thẻ này vì bạn có thể dùng nó để được giảm giá tại các quán cà phê và nhà hàng trong cung điện.',
+            vocabulary:[
+                { word:'restaurant', meaning:'nhà hàng' },
+                { word:'keep hold of', meaning:'giữ cẩn thận' }
+            ]
+        },
+        {
+    english:'Now, these days, the palace is a {{museum}}, but you’ll be {{surprised}} to hear that people still live there.',
+    translation:'Ngày nay, cung điện là một bảo tàng, nhưng bạn sẽ ngạc nhiên khi biết rằng vẫn có người sinh sống ở đó.',
+    vocabulary:[
+        { word:'museum', meaning:'bảo tàng' },
+        { word:'surprised', meaning:'ngạc nhiên' }
+    ]
+},
+
+{
+    english:'No, they’re not kings or queens but {{local people}} who work at the palace, and their families.',
+    translation:'Không, họ không phải là vua hay hoàng hậu mà là người dân địa phương làm việc tại cung điện cùng gia đình của họ.',
+    vocabulary:[
+        { word:'local people', meaning:'người dân địa phương' }
+    ]
+},
+
+{
+    english:'Many of them wear {{traditional}} clothes, so they make a {{great subject}} for a photograph.',
+    translation:'Nhiều người trong số họ mặc trang phục truyền thống, vì vậy họ là đối tượng rất đẹp để chụp ảnh.',
+    vocabulary:[
+        { word:'traditional', meaning:'truyền thống' },
+        { word:'great subject', meaning:'đối tượng rất đẹp' }
+    ]
+},
+
+{
+    english:'But please {{ask}} them if it’s OK before doing this.',
+    translation:'Nhưng hãy xin phép họ trước khi chụp ảnh.',
+    vocabulary:[
+        { word:'ask', meaning:'xin phép; hỏi' }
+    ]
+},
+
+{
+    english:'These people may also {{offer}} to sell you small wooden and stone statues that they’ve made.',
+    translation:'Họ cũng có thể đề nghị bán cho bạn những bức tượng nhỏ bằng gỗ hoặc đá do chính họ làm.',
+    vocabulary:[
+        { word:'offer', meaning:'đề nghị; chào bán' }
+    ]
+},
+
+{
+    english:'They make lovely {{souvenirs}}.',
+    translation:'Đó là những món quà lưu niệm rất đẹp.',
+    vocabulary:[
+        { word:'souvenirs', meaning:'đồ lưu niệm' }
+    ]
+},
+
+{
+    english:'They’ll probably ask you for about $20 or so for these, but it’s perfectly {{acceptable}} to offer them less.',
+    translation:'Họ có thể sẽ đòi khoảng 20 đô la, nhưng việc trả giá thấp hơn là hoàn toàn chấp nhận được.',
+    vocabulary:[
+        { word:'acceptable', meaning:'có thể chấp nhận được' }
+    ]
+},
+
+{
+    english:'It’s usually {{expected}} to offer them less.',
+    translation:'Việc trả giá thấp hơn thường được xem là điều bình thường.',
+    vocabulary:[
+        { word:'expected', meaning:'được mong đợi; là thông lệ' }
+    ]
+},
+
+{
+    english:'30 percent {{below}} the asking price would be an acceptable figure.',
+    translation:'Khoảng 30% thấp hơn giá chào bán là một mức hợp lý.',
+    vocabulary:[
+        { word:'below', meaning:'thấp hơn' }
+    ]
+},
+
+{
+    english:'The statues are a {{copy}} of the large statue of King Hupugarta which is just inside the main gate.',
+    translation:'Những bức tượng này là bản sao của bức tượng lớn Vua Hupugarta ngay bên trong cổng chính.',
+    vocabulary:[
+        { word:'copy', meaning:'bản sao' }
+    ]
+},
+
+{
+    english:'This is of {{great significance}} to the locals.',
+    translation:'Bức tượng này có ý nghĩa rất quan trọng đối với người dân địa phương.',
+    vocabulary:[
+        { word:'significance', meaning:'ý nghĩa; tầm quan trọng' }
+    ]
+},
+
+{
+    english:'While nobody will {{object}} to you photographing it, they don’t like people touching it.',
+    translation:'Mặc dù không ai phản đối việc bạn chụp ảnh, nhưng họ không thích mọi người chạm vào bức tượng.',
+    vocabulary:[
+        { word:'object', meaning:'phản đối' },
     ]
 },
 {
-    id:'completeielts-3', title:'Part 3', level:'B2', type:'gapfill',
-    context:'Phần 3: Một nhà nghiên cứu phỏng vấn Joe về thói quen mua sắm và thái độ đối với các sản phẩm điện tử.',
-    sentences:[
-        'So how did you get on with the {{devices}} we asked you to test for us?',
-        'First of all, I was {{wondering}} if I could ask you a few questions about your {{attitude}} to new {{electrical}} products.',
-        'I don’t earn a lot, so I don’t have much left after I’ve paid for things like {{rent}}, bills, food and so on.',
-        'Anything else is a {{luxury}}.',
-        'I’d guess about 5%, maybe 10% of my monthly {{salary}}.',
-        'What {{influences}} you in your choice of product? How would you {{decide}} which one to buy?',
-        'Well, first I look at {{reviews}} on the Internet, you know, what other {{customers}} have said about the product.',
-        'Then I’ll ask my friends what they think. In fact, their {{opinions}} are probably more important than anything.',
-        'I think that depends on how the {{product}} is advertised.',
-        'If it’s someone I respect, like a famous {{sportsman}} or actor, that can certainly {{make a difference}}.',
-        'Most people seem to {{avoid}} shops these days.',
-        'If you say to a {{shop assistant}} that you can get a camera cheaper on the Internet, they’ll often {{match}} the price.',
-        'Any other {{advantages}} of buying in a shop rather than online?',
-        'You get {{personal service}} and you don’t have to wait for the product to be {{delivered}}.',
-        '{{Ordering}} online means you have to wait, sometimes {{for ages}}.',
-        'I hate waiting. I guess I’m just very {{impatient}}.',
-        'Do you ever see a product in a shop window and think, "I’ve absolutely got to get one of those"? It takes a lot of {{willpower}}.'
+    english:'So, hands firmly in {{pockets}} when you walk past him, please.',
+    translation:'Vì vậy, xin hãy để tay trong túi khi đi ngang qua bức tượng.',
+    vocabulary:[
+        { word:'pockets', meaning:'túi quần; túi áo' }
     ]
+}
+]
 },
 {
-    id:'completeielts-4', title:'Part 4', level:'B2', type:'gapfill',
-    context:'Phần 4: Joe tiếp tục đánh giá điện thoại, radio kỹ thuật số và máy tính xách tay sau khi dùng thử.',
+    id:'completeielts-6', title:'Unit 8 WB p2', level:'B1 - B2', type:'gapfill',
+    context:'A tour guide introduces the main attractions inside the Palace of King Hupugarta.',
     sentences:[
-        'The purple and silver make it quite {{eye-catching}}.',
-        'It can be a bit {{difficult}} to use, especially if you’ve got big hands.',
-        'You end up pressing another key at the {{same time}}.',
-        'Thanks to the oval design, it does fit {{comfortably}} in your hand.',
-        'The screen was too small, and if you’re outside, you can {{hardly}} see anything on it.',
-        'That noise it makes if you {{move away from}} it is really annoying.',
-        'After a while it would {{drive me mad}}.',
-        'There’s {{no point}} having a phone that looks good if you have to {{spend ages}} trying to make a call.',
-        'I want a phone that doesn’t have problems {{picking up}} a signal, or doesn’t {{cut you off}} halfway through a call.',
-        'I really {{can’t see the point}} in all those games and other things you get on a mobile.',
-        'The audio quality was {{crisp}} and clear.',
-        'Some sound systems can sound a bit {{distorted}} at higher volumes.',
-        'The choice of {{radio stations}} seemed very {{limited}}.',
-        'There seemed to be a {{delay}} when you turned up the {{volume}}.',
-        'The laptop is so small, so {{compact}}, but easy to use at the same time.',
-        'At £900, {{bring that down}} to, say, £400 and things might be different.',
-        'Three hundred {{gigabytes}} of {{memory}} is probably more than enough for most people.',
-        'I’d {{include a light}} in the {{keyboard}} so you can use it when it’s dark.'
+
+        {
+            english:'I’d like to briefly tell you about a few of the main {{attractions}} at the palace.',
+            translation:'Tôi muốn giới thiệu ngắn gọn với các bạn về một vài điểm tham quan chính trong cung điện.',
+            vocabulary:[
+                { word:'attractions', meaning:'điểm tham quan; điểm thu hút' }
+            ]
+        },
+
+        {
+            english:'One of the first things you’ll see is the {{statue}} of King Hupugarta.',
+            translation:'Một trong những điều đầu tiên bạn sẽ thấy là bức tượng của Vua Hupugarta.',
+            vocabulary:[
+                { word:'statue', meaning:'tượng' }
+            ]
+        },
+
+        {
+            english:'This is on the right-hand side of Monument Court, the main {{square}} inside the palace grounds.',
+            translation:'Bức tượng nằm ở phía bên phải của Quảng trường Monument Court, quảng trường chính bên trong khuôn viên cung điện.',
+            vocabulary:[
+                { word:'square', meaning:'quảng trường' }
+            ]
+        },
+
+        {
+            english:'Monument Court is so called because of the many statues of kings, queens and other {{historical figures}} there.',
+            translation:'Monument Court có tên như vậy vì nơi đây có rất nhiều bức tượng của các vị vua, hoàng hậu và các nhân vật lịch sử khác.',
+            vocabulary:[
+                { word:'historical figures', meaning:'nhân vật lịch sử' }
+            ]
+        },
+
+        {
+            english:'The king’s statue is 6 metres high, made of stone with a {{layer}} of gold.',
+            translation:'Bức tượng của nhà vua cao 6 mét, được làm bằng đá và phủ một lớp vàng.',
+            vocabulary:[
+                { word:'layer', meaning:'lớp; tầng' }
+            ]
+        },
+
+        {
+            english:'It is {{dotted with}} jewels.',
+            translation:'Bức tượng được đính nhiều đá quý.',
+            vocabulary:[
+                { word:'dotted with', meaning:'được đính với; rải rác với' }
+            ]
+        },
+
+        {
+            english:'That’s {{genuine gold}}, by the way, not just paint.',
+            translation:'Nhân tiện, đó là vàng thật chứ không chỉ là sơn màu vàng.',
+            vocabulary:[
+                { word:'genuine gold', meaning:'vàng thật' }
+            ]
+        },
+
+        {
+            english:'{{Unfortunately}}, the {{jewels}} are made of glass.',
+            translation:'Đáng tiếc là những viên đá quý này được làm bằng thủy tinh.',
+            vocabulary:[
+                { word:'jewels', meaning:'đá quý; châu báu' },
+                { word:'Unfortunately', meaning:'đáng tiếc' }
+            ]
+        },
+
+        {
+            english:'The {{originals}} were stolen many centuries ago.',
+            translation:'Những hiện vật gốc đã bị đánh cắp từ nhiều thế kỷ trước.',
+            vocabulary:[
+                { word:'originals', meaning:'bản gốc; hiện vật gốc' }
+            ]
+        },
+
+        {
+            english:'This is the oldest part of the palace, and is {{estimated}} to be about 2,700 years old.',
+            translation:'Đây là phần cổ nhất của cung điện và được ước tính khoảng 2.700 năm tuổi.',
+            vocabulary:[
+                { word:'estimated', meaning:'được ước tính' }
+            ]
+        },
+
+        {
+            english:'It originally had a {{roof}}, but now there are just the columns that supported it.',
+            translation:'Ban đầu nơi đây có mái che, nhưng hiện nay chỉ còn lại các cột chống.',
+            vocabulary:[
+                { word:'roof', meaning:'mái nhà' }
+            ]
+        },
+
+        {
+            english:'Each column rises between 20 and 25 metres to support a {{frame}} of {{iron bars}}.',
+            translation:'Mỗi cột cao từ 20 đến 25 mét để đỡ một khung bằng các thanh sắt.',
+            vocabulary:[
+                { word:'frame', meaning:'khung; bộ khung' },
+                { word:'iron bars', meaning:'các thanh sắt' }
+            ]
+        },
+
+        {
+            english:'To the left of the Temple of the Sun is the {{New Palace}}.',
+            translation:'Ở bên trái Đền thờ Mặt Trời là Tân Cung điện.',
+            vocabulary:[
+                { word:'New Palace', meaning:'Tân Cung điện' }
+            ]
+        },
+
+        {
+            english:'It’s here that you’ll find the Royal {{Chambers}}.',
+            translation:'Đây là nơi bạn sẽ tìm thấy Khu phòng Hoàng gia.',
+            vocabulary:[
+                { word:'Chambers', meaning:'phòng; gian phòng' }
+            ]
+        },
+
+        {
+            english:'It’s called the New Palace because it’s the newest part of the palace {{complex}}.',
+            translation:'Nó được gọi là Tân Cung điện vì đây là phần mới nhất của quần thể cung điện.',
+            vocabulary:[
+                { word:'complex', meaning:'quần thể; khu phức hợp' }
+            ]
+        },
+
+        {
+            english:'The palace {{museum}} is also worth a visit.',
+            translation:'Bảo tàng của cung điện cũng rất đáng để tham quan.',
+            vocabulary:[
+                { word:'museum', meaning:'bảo tàng' }
+            ]
+        },
+
+        {
+            english:'As well as valuables like jewellery and other historical objects,...',
+            translation:'Nó có một bộ sưu tập các hiện vật từ lịch sử lâu đời của cung điện.',
+            vocabulary:[
+                { word:'artifacts', meaning:'hiện vật; cổ vật' }
+            ]
+        },
+
+        {
+            english:'The museum houses an impressive collection of {{weapons}}, including a {{sword}} that is said to have belonged to King Hupugarta himself.',
+            translation:'Bảo tàng trưng bày một bộ sưu tập vũ khí ấn tượng, bao gồm một thanh kiếm được cho là từng thuộc về chính Vua Hupugarta.',
+            vocabulary:[
+                { word:'weapons', meaning:'vũ khí' },
+                { word:'sword', meaning:'kiếm' }
+            ]
+        }
     ]
 },
     ]
@@ -1386,50 +2285,248 @@ const PASSAGES = [
         id: 'restaurant-1', title: 'Part 1', level: 'A2 – B1', type: 'gapfill',
         context: 'Phần 1: Những điều cơ bản khi đến nhà hàng, đặt bàn và gọi món.',
         sentences: [
-          'When you go to a restaurant you might see a sign that says, "Please wait to be {{seated}}."',
-          'A {{host}} or {{hostess}} will ask you how many people are in your {{party}}.',
-          'Then they will want to know if you want to sit in the {{smoking or non-smoking}} section.',
-          'The host or hostess will take you to your seat.',
-          'You might sit at a table or at a {{booth}}.',
-          'The host or hostess will give you a menu {{to look at}}.',
-          'Sometimes, there are different menus for {{different meals}}.',
-          'There can be a breakfast menu, a lunch menu and a {{dinner}} menu.',
-          'Sometimes, there is also a wine list and a {{dessert}} menu.',
-          'The {{food}} and the prices of the food are {{listed}} on the menu.',
-          'On your table, there will be {{cutlery}}.',
-          'Cutlery is the knives, forks and spoons.',
-          'There will also be a {{napkin}}.',
-          'You are supposed to put your napkin on your {{lap}} when you eat.',
-          'Your waiter or waitress will take your {{order}}.',
-          'You might want an {{appetizer}} before your meal.',
-          'Some people want a salad or soup before their meal.',
-          'After your meal, you might have a {{dessert}}, or tea, or coffee.',
-          'When it is time to go, you will pay your {{bill}} and leave {{a tip}} for the waiter or waitress.'
+          {
+            english: 'When you go to a restaurant you might see a sign that says, "Please wait to be {{seated}}."',
+            translation: 'Khi bạn đến một nhà hàng, bạn có thể thấy một biển báo ghi là "Vui lòng chờ để được xếp chỗ".',
+            vocabulary: [
+              { word: 'seated', meaning: 'được xếp chỗ ngồi' }
+            ]
+          },
+          {
+            english: 'A {{host}} or {{hostess}} will ask you how many people are in your {{party}}.',
+            translation: 'Một nam hoặc nữ nhân viên tiếp đón sẽ hỏi bạn có bao nhiêu người trong nhóm của bạn.',
+            vocabulary: [
+              { word: 'host', meaning: 'nam tiếp đón' },
+              { word: 'hostess', meaning: 'nữ tiếp đón' },
+              { word: 'party', meaning: 'nhóm/đoàn người' }
+            ]
+          },
+          {
+            english: 'Then they will want to know if you want to sit in the {{smoking or non-smoking}} section.',
+            translation: 'Sau đó họ sẽ muốn biết liệu bạn muốn ngồi ở khu vực hút thuốc hay không hút thuốc.',
+            vocabulary: [
+              { word: 'smoking or non-smoking', meaning: 'hút thuốc hoặc không hút thuốc' }
+            ]
+          },
+          {
+            english: 'The host or hostess will take you to your seat.',
+            translation: 'Nhân viên tiếp đón sẽ dẫn bạn đến chỗ ngồi của mình.',
+            vocabulary: []
+          },
+          {
+            english: 'You might sit at a table or at a {{booth}}.',
+            translation: 'Bạn có thể ngồi ở bàn thông thường hoặc ở buồng ghế salon.',
+            vocabulary: [
+              { word: 'booth', meaning: 'buồng ghế salon / khoang ngồi riêng' }
+            ]
+          },
+          {
+            english: 'The host or hostess will give you a menu {{to look at}}.',
+            translation: 'Nhân viên tiếp đón sẽ đưa cho bạn một thực đơn để xem.',
+            vocabulary: [
+              { word: 'to look at', meaning: 'để xem' }
+            ]
+          },
+          {
+            english: 'Sometimes, there are different menus for {{different meals}}.',
+            translation: 'Đôi khi, có các thực đơn khác nhau cho các bữa ăn khác nhau.',
+            vocabulary: [
+              { word: 'different meals', meaning: 'các bữa ăn khác nhau' }
+            ]
+          },
+          {
+            english: 'There can be a breakfast menu, a lunch menu and a {{dinner}} menu.',
+            translation: 'Có thể có thực đơn bữa sáng, thực đơn bữa trưa và thực đơn bữa tối.',
+            vocabulary: [
+              { word: 'dinner', meaning: 'bữa tối' }
+            ]
+          },
+          {
+            english: 'Sometimes, there is also a wine list and a {{dessert}} menu.',
+            translation: 'Thỉnh thoảng, cũng có một danh sách rượu vang và một thực đơn tráng miệng.',
+            vocabulary: [
+              { word: 'dessert', meaning: 'món tráng miệng' }
+            ]
+          },
+          {
+            english: 'The {{food}} and the prices of the food are {{listed}} on the menu.',
+            translation: 'Thức ăn và giá cả của thức ăn được liệt kê trên thực đơn.',
+            vocabulary: [
+              { word: 'food', meaning: 'thức ăn' },
+              { word: 'listed', meaning: 'được liệt kê' }
+            ]
+          },
+          {
+            english: 'On your table, there will be {{cutlery}}.',
+            translation: 'Trên bàn của bạn, sẽ có bộ dao nĩa.',
+            vocabulary: [
+              { word: 'cutlery', meaning: 'bộ dao nĩa' }
+            ]
+          },
+          {
+            english: 'Cutlery is the knives, forks and spoons.',
+            translation: 'Bộ dao nĩa bao gồm dao, nĩa và thìa.',
+            vocabulary: []
+          },
+          {
+            english: 'There will also be a {{napkin}}.',
+            translation: 'Sẽ có cả một chiếc khăn ăn.',
+            vocabulary: [
+              { word: 'napkin', meaning: 'khăn ăn' }
+            ]
+          },
+          {
+            english: 'You are supposed to put your napkin on your {{lap}} when you eat.',
+            translation: 'Bạn được cho là nên đặt khăn ăn lên đùi khi ăn.',
+            vocabulary: [
+              { word: 'lap', meaning: 'đùi' }
+            ]
+          },
+          {
+            english: 'Your waiter or waitress will take your {{order}}.',
+            translation: 'Nam hoặc nữ bồi bàn sẽ nhận gọi món của bạn.',
+            vocabulary: [
+              { word: 'order', meaning: 'sự gọi món/đơn đặt hàng' }
+            ]
+          },
+          {
+            english: 'You might want an {{appetizer}} before your meal.',
+            translation: 'Bạn có thể muốn một món khai vị trước bữa ăn của mình.',
+            vocabulary: [
+              { word: 'appetizer', meaning: 'món khai vị' }
+            ]
+          },
+          {
+            english: 'Some people want a salad or soup before their meal.',
+            translation: 'Một số người muốn ăn salad hoặc súp trước bữa ăn.',
+            vocabulary: []
+          },
+          {
+            english: 'After your meal, you might have a {{dessert}}, or tea, or coffee.',
+            translation: 'Sau bữa ăn, bạn có thể dùng món tráng miệng, hoặc trà, hoặc cà phê.',
+            vocabulary: [
+              { word: 'dessert', meaning: 'món tráng miệng' }
+            ]
+          },
+          {
+            english: 'When it is time to go, you will pay your {{bill}} and leave {{a tip}} for the waiter or waitress.',
+            translation: 'Khi đến lúc phải đi, bạn sẽ thanh toán hóa đơn và để lại tiền boa cho người bồi bàn.',
+            vocabulary: [
+              { word: 'bill', meaning: 'hóa đơn' },
+              { word: 'a tip', meaning: 'một khoản tiền boa' }
+            ]
+          }
         ]
       },
       {
         id: 'restaurant-2', title: 'Part 2', level: 'A2 – B1', type: 'gapfill',
         context: 'Phần 2: Sở thích đi ăn nhà hàng và những trải nghiệm cá nhân.',
         sentences: [
-          'I love {{restaurants}}.',
-          'I {{never}} get tired of going to them.',
-          'I go to restaurants a lot, maybe three times a week. I have my favourite restaurants, which I go to {{regularly}}.',
-          'The waiters know me and I usually get very good {{service}}. But I also like trying {{new}} restaurants.',
-          "It’s exciting to see {{what's on the}} menu and how the food will taste. Most of the time a visit to a new restaurant is a great {{experience}}.",
-          'But sometimes, I wonder why my friend recommended a restaurant. I’ve been to a few restaurants where the food was so bad, so {{tasteless}}, I didn’t want to pay.',
-          'My favourite restaurants are Indian. I can’t get enough of Indian food. I love the smells inside Indian restaurants. And of course the tastes.'
+          {
+            english: 'I love {{restaurants}}.',
+            translation: 'Tôi yêu các nhà hàng.',
+            vocabulary: [
+              { word: 'restaurants', meaning: 'nhà hàng' }
+            ]
+          },
+          {
+            english: 'I {{never}} get tired of going to them.',
+            translation: 'Tôi không bao giờ thấy chán khi đến đó.',
+            vocabulary: [
+              { word: 'never', meaning: 'không bao giờ' }
+            ]
+          },
+          {
+            english: 'I go to restaurants a lot, maybe three times a week. I have my favourite restaurants, which I go to {{regularly}}.',
+            translation: 'Tôi đi nhà hàng rất nhiều, có lẽ ba lần một tuần. Tôi có những nhà hàng yêu thích mà tôi thường xuyên tới.',
+            vocabulary: [
+              { word: 'regularly', meaning: 'thường xuyên' }
+            ]
+          },
+          {
+            english: 'The waiters know me and I usually get very good {{service}}. But I also like trying {{new}} restaurants.',
+            translation: 'Những người bồi bàn biết tôi và tôi thường nhận được dịch vụ rất tốt. Nhưng tôi cũng thích thử các nhà hàng mới.',
+            vocabulary: [
+              { word: 'service', meaning: 'dịch vụ' },
+              { word: 'new', meaning: 'mới' }
+            ]
+          },
+          {
+            english: "It’s exciting to see {{what's on the}} menu and how the food will taste. Most of the time a visit to a new restaurant is a great {{experience}}.",
+            translation: 'Thật thú vị khi xem có gì trên thực đơn và thức ăn sẽ có vị ra sao. Hầu hết thời gian, việc ghé thăm một nhà hàng mới là một trải nghiệm tuyệt vời.',
+            vocabulary: [
+              { word: "what's on the", meaning: 'có gì trên' },
+              { word: 'experience', meaning: 'trải nghiệm' }
+            ]
+          },
+          {
+            english: 'But sometimes, I wonder why my friend recommended a restaurant. I’ve been to a few restaurants where the food was so bad, so {{tasteless}}, I didn’t want to pay.',
+            translation: 'Nhưng thỉnh thoảng, tôi tự hỏi tại sao bạn tôi lại giới thiệu một nhà hàng. Tôi đã từng đến một vài nhà hàng nơi thức ăn quá tệ, quá vô vị, tôi chẳng muốn trả tiền.',
+            vocabulary: [
+              { word: 'tasteless', meaning: 'vô vị/không có vị' }
+            ]
+          },
+          {
+            english: 'My favourite restaurants are Indian. I can’t get enough of Indian food. I love the smells inside Indian restaurants. And of course the tastes.',
+            translation: 'Các nhà hàng yêu thích của tôi là nhà hàng Ấn Độ. Tôi ăn món Ấn bao nhiêu cũng không thấy đủ. Tôi yêu những mùi hương bên trong các nhà hàng Ấn Độ. Và dĩ nhiên là cả hương vị nữa.',
+            vocabulary: []
+          }
         ]
       },
       {
         id: 'restaurant-3', title: 'Part 3', level: 'A2 – B1', type: 'gapfill',
         context: 'Phần 3: Thói quen ăn uống và các lựa chọn thực đơn.',
         sentences: [
-          'I eat {{out}} at least once a week. There are many restaurants in my {{neighborhood}}. It is very {{convenient}}.',
-          'I am always {{interested}} in trying new places. Some restaurants have meals for just {{$5}}.',
-          'I love {{spicy}} food. The {{servers}} are usually very {{helpful}}.',
-          'I only eat there {{once}} or twice a month. Some people are {{concerned}} about eating too much.',
-          'People {{on diet}} often choose healthier meals. Price {{matters}} to many customers.',
-          'We are {{big fans}} of Italian food. They do not drink {{alcohol}}.'
+          {
+            english: 'I eat {{out}} at least once a week. There are many restaurants in my {{neighborhood}}. It is very {{convenient}}.',
+            translation: 'Tôi đi ăn ngoài ít nhất một lần một tuần. Có rất nhiều nhà hàng trong khu phố của tôi. Nó rất tiện lợi.',
+            vocabulary: [
+              { word: 'out', meaning: 'ngoài/ra ngoài' },
+              { word: 'neighborhood', meaning: 'khu phố/khu dân cư' },
+              { word: 'convenient', meaning: 'tiện lợi' }
+            ]
+          },
+          {
+            english: 'I am always {{interested}} in trying new places. Some restaurants have meals for just {{$5}}.',
+            translation: 'Tôi luôn thích thú với việc thử những địa điểm mới. Một số nhà hàng có các bữa ăn chỉ với 5 đô la.',
+            vocabulary: [
+              { word: 'interested', meaning: 'thích thú/quan tâm' },
+              { word: '$5', meaning: '5 đô la' }
+            ]
+          },
+          {
+            english: 'I love {{spicy}} food. The {{servers}} are usually very {{helpful}}.',
+            translation: 'Tôi yêu thức ăn cay. Những người phục vụ thường rất nhiệt tình giúp đỡ.',
+            vocabulary: [
+              { word: 'spicy', meaning: 'cay' },
+              { word: 'servers', meaning: 'người phục vụ' },
+              { word: 'helpful', meaning: 'hữu ích/nhiệt tình giúp đỡ' }
+            ]
+          },
+          {
+            english: 'I only eat there {{once}} or twice a month. Some people are {{concerned}} about eating too much.',
+            translation: 'Tôi chỉ ăn ở đó một hoặc hai lần một tháng. Một số người lo lắng về việc ăn quá nhiều.',
+            vocabulary: [
+              { word: 'once', meaning: 'một lần' },
+              { word: 'concerned', meaning: 'lo lắng/quan tâm' }
+            ]
+          },
+          {
+            english: 'People {{on diet}} often choose healthier meals. Price {{matters}} to many customers.',
+            translation: 'Những người đang ăn kiêng thường chọn các bữa ăn lành mạnh hơn. Giá cả quan trọng đối với nhiều khách hàng.',
+            vocabulary: [
+              { word: 'on diet', meaning: 'đang ăn kiêng' },
+              { word: 'matters', meaning: 'có ý nghĩa/quan trọng' }
+            ]
+          },
+          {
+            english: 'We are {{big fans}} of Italian food. They do not drink {{alcohol}}.',
+            translation: 'Chúng tôi là những người rất hâm mộ thức ăn Ý. Họ không uống rượu bia.',
+            vocabulary: [
+              { word: 'big fans', meaning: 'người hâm mộ lớn/rất thích' },
+              { word: 'alcohol', meaning: 'rượu bia/đồ uống có cồn' }
+            ]
+          }
         ]
       },
       {
@@ -1502,59 +2599,258 @@ const PASSAGES = [
   { id:'winter', title:'Winter', level:'A2 – B1', type:'gapfill',
     context:'Bài nghe về những hoạt động, khung cảnh và trải nghiệm mùa đông. Nghe từng câu rồi điền từ còn thiếu vào chỗ trống — phù hợp cho học sinh trình độ A2 tới B1.',
     sentences:[
-      'Once the {{fall}} is over and the {{snowflakes}} start to fall I get very excited.',
-      'I can hardly wait for the ground to be covered with a blanket of white {{snow}}.',
-      'I put on my mittens, my scarf, my hat, coat and winter boots,',
-      'and I run out into the fluffy {{snow}}.',
-      'I have to be careful not to slip on the {{ice}}.',
-      'It can get very icy and cold in the {{winter}}.',
-      'The first thing that I do is to build a {{snowman}}.',
-      'I sometimes build a snow {{fort}} too.',
-      'My friends and I have a good snowball {{fight}}.',
-      'We laugh a lot, and our cheeks and noses get very {{red}}.',
-      'When we get too cold, we go into the house and have a cup of hot {{chocolate}}.',
-      'My father fills the backyard with water that freezes and turns into an ice {{rink}}.',
-      'When the ice is hard enough, my friends and I get our skates and we go out on the ice to play {{hockey}}.',
-      'All of my friends own hockey {{sticks}}.',
-      'I am usually the {{goalie}}, and I have to keep the puck from going into the net.',
-      'My sister and her friends don\'t really like to play hockey.',
-      'They would rather just {{skate}} around on the ice.',
-      'I took skating lessons, so I don\'t usually fall {{down}}.',
-      'My little brother is just learning to skate, so he falls down a {{lot}}.',
-      'My father has to shovel the snow off the paths and the {{driveway}} in the winter.',
-      'I help {{him}}.',
-      'Shovelling snow is hard {{work}}.',
-      'When my dad and I finish shovelling the driveway, we go into the house and warm our hands and feet in front of the {{fireplace}}.',
-      'There is probably nothing more beautiful than fresh fallen snow on the {{trees}}.',
-      'In the morning, when the sun shines on the snow, it {{glistens}}.',
-      'I like to leave my {{footprints}} in the snow.',
-      'Winter can be very beautiful and {{exciting}}.',
+        {
+          english: 'Once the {{fall}} is over and the {{snowflakes}} start to fall I get very excited.',
+          translation: 'Khi mùa thu qua đi và những bông tuyết bắt đầu rơi, tôi cảm thấy rất háo hức.',
+          vocabulary: [
+            { word: 'fall', meaning: 'mùa thu' },
+            { word: 'snowflakes', meaning: 'bông tuyết' }
+          ]
+        },
+        {
+          english: 'I can hardly wait for the ground to be covered with a blanket of white {{snow}}.',
+          translation: 'Tôi khó có thể chờ đợi thêm để thấy mặt đất được bao phủ bởi một lớp tuyết trắng xóa.',
+          vocabulary: [ { word: 'snow', meaning: 'tuyết' } ]
+        },
+        {
+          english: 'I put on my mittens, my scarf, my hat, coat and winter boots,',
+          translation: 'Tôi đeo găng tay, quàng khăn, đội mũ, mặc áo khoác và đi ủng mùa đông,',
+          vocabulary: []
+        },
+        {
+          english: 'and I run out into the fluffy {{snow}}.',
+          translation: 'và tôi chạy ùa ra lớp tuyết xốp mềm.',
+          vocabulary: [ { word: 'snow', meaning: 'tuyết' } ]
+        },
+        {
+          english: 'I have to be careful not to slip on the {{ice}}.',
+          translation: 'Tôi phải cẩn thận để không bị trượt ngã trên băng.',
+          vocabulary: [ { word: 'ice', meaning: 'băng' } ]
+        },
+        {
+          english: 'It can get very icy and cold in the {{winter}}.',
+          translation: 'Trời có thể trở nên rất lạnh và đóng băng vào mùa đông.',
+          vocabulary: [ { word: 'winter', meaning: 'mùa đông' } ]
+        },
+        {
+          english: 'The first thing that I do is to build a {{snowman}}.',
+          translation: 'Việc đầu tiên mà tôi làm là đắp một người tuyết.',
+          vocabulary: [ { word: 'snowman', meaning: 'người tuyết' } ]
+        },
+        {
+          english: 'I sometimes build a snow {{fort}} too.',
+          translation: 'Thỉnh thoảng tôi cũng xây một pháo đài bằng tuyết.',
+          vocabulary: [ { word: 'fort', meaning: 'pháo đài' } ]
+        },
+        {
+          english: 'My friends and I have a good snowball {{fight}}.',
+          translation: 'Tôi và các bạn chơi ném bóng tuyết rất vui.',
+          vocabulary: [ { word: 'fight', meaning: 'trận chiến (ở đây là trận ném tuyết)' } ]
+        },
+        {
+          english: 'We laugh a lot, and our cheeks and noses get very {{red}}.',
+          translation: 'Chúng tôi cười rất nhiều, và má cũng như mũi đều trở nên rất đỏ.',
+          vocabulary: [ { word: 'red', meaning: 'màu đỏ' } ]
+        },
+        {
+          english: 'When we get too cold, we go into the house and have a cup of hot {{chocolate}}.',
+          translation: 'Khi quá lạnh, chúng tôi đi vào nhà và uống một cốc sô-cô-la nóng.',
+          vocabulary: [ { word: 'chocolate', meaning: 'sô-cô-la' } ]
+        },
+        {
+          english: 'My father fills the backyard with water that freezes and turns into an ice {{rink}}.',
+          translation: 'Bố tôi bơm nước đầy sân sau, nước đóng băng và biến thành một sân trượt băng.',
+          vocabulary: [ { word: 'rink', meaning: 'sân trượt băng' } ]
+        },
+        {
+          english: 'When the ice is hard enough, my friends and I get our skates and we go out on the ice to play {{hockey}}.',
+          translation: 'Khi lớp băng đủ cứng, bạn bè và tôi xỏ giày trượt và ra sân băng để chơi khúc côn cầu.',
+          vocabulary: [ { word: 'hockey', meaning: 'khúc côn cầu' } ]
+        },
+        {
+          english: 'All of my friends own hockey {{sticks}}.',
+          translation: 'Tất cả bạn bè của tôi đều có gậy chơi khúc côn cầu.',
+          vocabulary: [ { word: 'sticks', meaning: 'gậy' } ]
+        },
+        {
+          english: 'I am usually the {{goalie}}, and I have to keep the puck from going into the net.',
+          translation: 'Tôi thường làm thủ môn, và tôi phải cản không cho quả bóng lưới lọt vào khung thành.',
+          vocabulary: [ { word: 'goalie', meaning: 'thủ môn' } ]
+        },
+        {
+          english: 'My sister and her friends don\'t really like to play hockey.',
+          translation: 'Chị gái tôi và bạn bè của chị ấy không thực sự thích chơi khúc côn cầu.',
+          vocabulary: []
+        },
+        {
+          english: 'They would rather just {{skate}} around on the ice.',
+          translation: 'Họ thà chỉ trượt băng loanh quanh trên sân băng.',
+          vocabulary: [ { word: 'skate', meaning: 'trượt băng' } ]
+        },
+        {
+          english: 'I took skating lessons, so I don\'t usually fall {{down}}.',
+          translation: 'Tôi đã từng học trượt băng, nên tôi thường không bị vấp ngã.',
+          vocabulary: [ { word: 'down', meaning: 'xuống (fall down: vấp ngã)' } ]
+        },
+        {
+          english: 'My little brother is just learning to skate, so he falls down a {{lot}}.',
+          translation: 'Em trai nhỏ của tôi chỉ mới đang học trượt băng, nên em ấy ngã rất nhiều.',
+          vocabulary: [ { word: 'lot', meaning: 'nhiều' } ]
+        },
+        {
+          english: 'My father has to shovel the snow off the paths and the {{driveway}} in the winter.',
+          translation: 'Bố tôi phải xúc tuyết khỏi các lối đi và đường lái xe vào nhà trong mùa đông.',
+          vocabulary: [ { word: 'driveway', meaning: 'đường lái xe vào nhà' } ]
+        },
+        {
+          english: 'I help {{him}}.',
+          translation: 'Tôi giúp ông ấy.',
+          vocabulary: [ { word: 'him', meaning: 'ông ấy (bố)' } ]
+        },
+        {
+          english: 'Shovelling snow is hard {{work}}.',
+          translation: 'Xúc tuyết là một công việc vất vả.',
+          vocabulary: [ { word: 'work', meaning: 'công việc' } ]
+        },
+        {
+          english: 'When my dad and I finish shovelling the driveway, we go into the house and warm our hands and feet in front of the {{fireplace}}.',
+          translation: 'Khi hai bố con tôi xúc tuyết xong ở đường lái xe, chúng tôi đi vào nhà và hơ ấm tay chân trước lò sưởi.',
+          vocabulary: [ { word: 'fireplace', meaning: 'lò sưởi' } ]
+        },
+        {
+          english: 'There is probably nothing more beautiful than fresh fallen snow on the {{trees}}.',
+          translation: 'Có lẽ không có gì đẹp hơn lớp tuyết mới rơi đọng trên những cái cây.',
+          vocabulary: [ { word: 'trees', meaning: 'cây cối' } ]
+        },
+        {
+          english: 'In the morning, when the sun shines on the snow, it {{glistens}}.',
+          translation: 'Vào buổi sáng, khi ánh mặt trời chiếu lên tuyết, nó lấp lánh.',
+          vocabulary: [ { word: 'glistens', meaning: 'lấp lánh' } ]
+        },
+        {
+          english: 'I like to leave my {{footprints}} in the snow.',
+          translation: 'Tôi thích để lại dấu chân của mình trên tuyết.',
+          vocabulary: [ { word: 'footprints', meaning: 'dấu chân' } ]
+        },
+        {
+          english: 'Winter can be very beautiful and {{exciting}}.',
+          translation: 'Mùa đông có thể rất đẹp và thú vị.',
+          vocabulary: [ { word: 'exciting', meaning: 'thú vị, hào hứng' } ]
+        }
     ] },
   { id:'housework', title:'Housework', level:'A2 – B1', type:'gapfill',
     context:'Bài nghe về những công việc nhà thường ngày: dọn dẹp, giặt giũ, nấu ăn và chăm sóc không gian sống. Nghe từng câu rồi điền từ còn thiếu vào chỗ trống — phù hợp cho học sinh trình độ A2 tới B1.',
     sentences:[
-      'There is always {{housework}} to do when you live in a house.',
-      'You have to wash the {{windows}} so that you can see outside.',
-      'The floors and the carpets need to be {{vacuumed}}.',
-      'The floors also need to be {{washed}}, and some of them need to be waxed.',
-      'The furniture has to be {{polished}}.',
-      'The {{bathroom}} has to be kept clean.',
-      'After you have a bath, you need to clean out the {{bathtub}}.',
-      'Laundry needs to be done regularly, or you will run out of clothes to {{wear}}.',
-      'The clothes go into the washing {{machine}}, and then they have to be dried in the dryer.',
-      'Sometimes, we hang the clothes out on the {{line}} to be dried.',
-      'Some of the clothes need to be {{ironed}}.',
-      'You have to buy {{groceries}} and put them away.',
-      'Meals need to be {{made}}.',
-      'You can\'t let the dishes pile up in the {{kitchen}}.',
-      'The dishes have to be washed, and the counters need to be {{wiped}}.',
-      'The stove needs to be cleaned, and sometimes the refrigerator and the cupboards need to be cleaned {{out}}.',
-      'You can dust the furniture and sweep up the {{dirt}}.',
-      'You can make the {{beds}}.',
-      'The beds have to be {{changed}} too.',
-      'They need to have clean {{sheets}} put on them.',
-      'There are just so many things to {{do}}.',
-      'Household {{chores}} take up a lot of time.',
+        {
+          english: 'There is always {{housework}} to do when you live in a house.',
+          translation: 'Luôn luôn có công việc nhà để làm khi bạn sống trong một ngôi nhà.',
+          vocabulary: [ { word: 'housework', meaning: 'công việc nhà' } ]
+        },
+        {
+          english: 'You have to wash the {{windows}} so that you can see outside.',
+          translation: 'Bạn phải lau cửa sổ để có thể nhìn ra bên ngoài.',
+          vocabulary: [ { word: 'windows', meaning: 'cửa sổ' } ]
+        },
+        {
+          english: 'The floors and the carpets need to be {{vacuumed}}.',
+          translation: 'Sàn nhà và thảm cần được hút bụi.',
+          vocabulary: [ { word: 'vacuumed', meaning: 'được hút bụi' } ]
+        },
+        {
+          english: 'The floors also need to be {{washed}}, and some of them need to be waxed.',
+          translation: 'Sàn nhà cũng cần được lau rửa, và một số sàn cần được đánh bóng.',
+          vocabulary: [ { word: 'washed', meaning: 'được lau rửa' } ]
+        },
+        {
+          english: 'The furniture has to be {{polished}}.',
+          translation: 'Đồ nội thất phải được đánh bóng.',
+          vocabulary: [ { word: 'polished', meaning: 'được đánh bóng' } ]
+        },
+        {
+          english: 'The {{bathroom}} has to be kept clean.',
+          translation: 'Phòng tắm phải được giữ gìn sạch sẽ.',
+          vocabulary: [ { word: 'bathroom', meaning: 'phòng tắm' } ]
+        },
+        {
+          english: 'After you have a bath, you need to clean out the {{bathtub}}.',
+          translation: 'Sau khi bạn tắm bồn xong, bạn cần dọn sạch bồn tắm.',
+          vocabulary: [ { word: 'bathtub', meaning: 'bồn tắm' } ]
+        },
+        {
+          english: 'Laundry needs to be done regularly, or you will run out of clothes to {{wear}}.',
+          translation: 'Việc giặt giũ cần được làm thường xuyên, nếu không bạn sẽ hết quần áo để mặc.',
+          vocabulary: [ { word: 'wear', meaning: 'mặc' } ]
+        },
+        {
+          english: 'The clothes go into the washing {{machine}}, and then they have to be dried in the dryer.',
+          translation: 'Quần áo được cho vào máy giặt, và sau đó chúng phải được sấy khô trong máy sấy.',
+          vocabulary: [ { word: 'machine', meaning: 'máy móc (máy giặt)' } ]
+        },
+        {
+          english: 'Sometimes, we hang the clothes out on the {{line}} to be dried.',
+          translation: 'Thỉnh thoảng, chúng tôi phơi quần áo ngoài dây phơi để cho khô.',
+          vocabulary: [ { word: 'line', meaning: 'dây (phơi)' } ]
+        },
+        {
+          english: 'Some of the clothes need to be {{ironed}}.',
+          translation: 'Một số quần áo cần được ủi (là).',
+          vocabulary: [ { word: 'ironed', meaning: 'được ủi, được là' } ]
+        },
+        {
+          english: 'You have to buy {{groceries}} and put them away.',
+          translation: 'Bạn phải đi mua tạp hóa và cất chúng đi.',
+          vocabulary: [ { word: 'groceries', meaning: 'đồ tạp hóa, thực phẩm' } ]
+        },
+        {
+          english: 'Meals need to be {{made}}.',
+          translation: 'Các bữa ăn cần được nấu nướng.',
+          vocabulary: [ { word: 'made', meaning: 'được chuẩn bị, được làm' } ]
+        },
+        {
+          english: 'You can\'t let the dishes pile up in the {{kitchen}}.',
+          translation: 'Bạn không thể để chén bát chất đống trong nhà bếp được.',
+          vocabulary: [ { word: 'kitchen', meaning: 'nhà bếp' } ]
+        },
+        {
+          english: 'The dishes have to be washed, and the counters need to be {{wiped}}.',
+          translation: 'Chén bát phải được rửa sạch, và mặt bếp cần được lau chùi.',
+          vocabulary: [ { word: 'wiped', meaning: 'được lau chùi' } ]
+        },
+        {
+          english: 'The stove needs to be cleaned, and sometimes the refrigerator and the cupboards need to be cleaned {{out}}.',
+          translation: 'Bếp đun cần được làm sạch, và đôi khi tủ lạnh và tủ bát cần được dọn dẹp sạch sẽ.',
+          vocabulary: [ { word: 'out', meaning: 'sạch sẽ (clean out: dọn sạch)' } ]
+        },
+        {
+          english: 'You can dust the furniture and sweep up the {{dirt}}.',
+          translation: 'Bạn có thể phủi bụi đồ nội thất và quét sạch bụi bẩn.',
+          vocabulary: [ { word: 'dirt', meaning: 'bụi bẩn' } ]
+        },
+        {
+          english: 'You can make the {{beds}}.',
+          translation: 'Bạn có thể dọn dẹp giường ngủ.',
+          vocabulary: [ { word: 'beds', meaning: 'giường ngủ' } ]
+        },
+        {
+          english: 'The beds have to be {{changed}} too.',
+          translation: 'Giường ngủ cũng phải được thay ga nệm.',
+          vocabulary: [ { word: 'changed', meaning: 'được thay đổi' } ]
+        },
+        {
+          english: 'They need to have clean {{sheets}} put on them.',
+          translation: 'Chúng cần được trải những tấm ga giường sạch sẽ lên trên.',
+          vocabulary: [ { word: 'sheets', meaning: 'ga trải giường' } ]
+        },
+        {
+          english: 'There are just so many things to {{do}}.',
+          translation: 'Thật sự có quá nhiều việc phải làm.',
+          vocabulary: [ { word: 'do', meaning: 'làm' } ]
+        },
+        {
+          english: 'Household {{chores}} take up a lot of time.',
+          translation: 'Các công việc vặt trong nhà chiếm rất nhiều thời gian.',
+          vocabulary: [ { word: 'chores', meaning: 'công việc vặt' } ]
+        }
     ] }
 ];
 
@@ -1597,22 +2893,15 @@ function getStoredStudent(){
 }
 
 async function saveStudentResult(result){
-  console.log("=== saveStudentResult ===");
-  console.log("RESULTS_ENDPOINT =", RESULTS_ENDPOINT);
-  console.log("state.student =", state.student);
-
   if(!RESULTS_ENDPOINT || !state.student){
-    console.log("RETURN HERE");
     return;
   }
-
   const payload = {
     student_name: state.student.name,
     student_class: state.student.className,
     completed_at: new Date().toISOString(),
     ...result
   };
-  console.log(payload);
   try{
     await fetch(RESULTS_ENDPOINT, {
       method:'POST',
@@ -1622,7 +2911,6 @@ async function saveStudentResult(result){
       },
       body:JSON.stringify(payload)
     });
-    console.log("FETCH SENT");
   }catch(e){ 
     console.error(e);
   }
@@ -1684,9 +2972,10 @@ document.getElementById('btn-change-student').addEventListener('click', ()=>{
 });
 
 /* ===================== GAP-FILL PASSAGE ===================== */
-let gf = { passage:null, currentGroup:null, sentences:[], index:0, correctBlanks:0, wrongBlanks:0, totalBlanks:0, missedSentences:[], rate:1, awaitingNext:false };
+let gf = { passage:null, currentGroup:null, sentences:[], index:0, correctBlanks:0, wrongBlanks:0, totalBlanks:0, missedSentences:[], sentenceResults:[], rate:1, awaitingNext:false, startTime:null };
 
-function parseTemplate(t){
+function parseTemplate(item){
+  const t = typeof item === 'string' ? item : item.english;
   const regex = /\{\{(.*?)\}\}/g;
   const parts = []; let lastIndex = 0; let m;
   while((m = regex.exec(t)) !== null){
@@ -1696,7 +2985,14 @@ function parseTemplate(t){
   }
   if(lastIndex < t.length) parts.push({type:'text', value:t.slice(lastIndex)});
   const full = t.replace(/\{\{(.*?)\}\}/g, (_, a) => a);
-  return { parts, full, template:t };
+  return { 
+    parts, 
+    full, 
+    template: t, 
+    original: item, 
+    translation: item.translation || null, 
+    vocabulary: item.vocabulary || null 
+  };
 }
 
 function getPassageById(id){
@@ -1723,12 +3019,28 @@ function renderGapfillHome(){
             totalSentences += l.activities.length;
         } else {
             totalSentences += l.sentences.length;
-            totalBlanks += (l.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+            totalBlanks += l.sentences.reduce((acc, s) => {
+              if (!s || !s.english) {
+    console.log('Lỗi ở lesson:', l.id);
+    console.log(s);
+    return acc;
+}
+                let text = typeof s === 'string' ? s : s.english;
+                return acc + (text.match(/\{\{.*?\}\}/g) || []).length;
+            }, 0);
         }
       });
     } else {
       totalSentences = p.sentences.length;
-      totalBlanks = (p.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+      totalBlanks = p.sentences.reduce((acc, s) => {
+          if (!s || !s.english) {
+    console.log('Lỗi ở passage:', p.id);
+    console.log(s);
+    return acc;
+}
+          let text = typeof s === 'string' ? s : s.english;
+          return acc + (text.match(/\{\{.*?\}\}/g) || []).length;
+      }, 0);
     }
 
     const card = document.createElement('button');
@@ -1761,7 +3073,10 @@ function openGroupSelect(groupId) {
     if(l.type === 'quiz'){
         metaText = `${l.activities.length} phần · Listening Quiz`;
     } else {
-        const blanks = (l.sentences.join(' ').match(/\{\{.*?\}\}/g) || []).length;
+        const blanks = l.sentences.reduce((acc, s) => {
+            let text = typeof s === 'string' ? s : s.english;
+            return acc + (text.match(/\{\{.*?\}\}/g) || []).length;
+        }, 0);
         metaText = `${l.sentences.length} câu · ${blanks} chỗ trống`;
     }
 
@@ -1822,10 +3137,14 @@ document.getElementById('btn-back-home-2').addEventListener('click', ()=> {
 
 document.getElementById('btn-listen-full').addEventListener('click', ()=>{
   if(gf.passage && gf.passage.type !== 'quiz'){
-      const fullText = gf.passage.sentences.map(s=>s.replace(/\{\{(.*?)\}\}/g,'$1')).join(' ');
+      const fullText = gf.passage.sentences.map(item => {
+          let t = typeof item === 'string' ? item : item.english;
+          return t.replace(/\{\{(.*?)\}\}/g,'$1');
+      }).join(' ');
       speak(fullText, 1);
   }
 });
+
 document.getElementById('btn-start-gapfill').addEventListener('click', ()=> {
     if(gf.passage.type === 'quiz'){
         startQuiz(gf.passage);
@@ -1842,6 +3161,8 @@ function startGapfill(passage){
   gf.wrongBlanks = 0;
   gf.totalBlanks = gf.sentences.reduce((sum, s)=> sum + s.parts.filter(p=>p.type==='blank').length, 0);
   gf.missedSentences = [];
+  gf.sentenceResults = [];
+  gf.startTime = Date.now();
   gf.rate = parseFloat(document.getElementById('speed-slider-gf').value);
   updateGfStrip();
   showScreen('screen-gapfill');
@@ -1905,29 +3226,57 @@ function checkGapfillAnswer(){
   const inputs = Array.from(document.querySelectorAll('#gf-sentence .blank-input'));
   const blanks = item.parts.filter(p=>p.type==='blank');
   let sentenceHasWrong = false;
+  let studentAnswers = [];
+  let expectedAnswers = [];
 
   inputs.forEach((inp, i)=>{
     const expected = blanks[i].answer;
-    const ok = normalizeGf(inp.value) === normalizeGf(expected) && inp.value.trim().length>0;
+    const typed = inp.value.trim();
+    studentAnswers.push(typed);
+    expectedAnswers.push(expected);
+
+    const ok = normalizeGf(typed) === normalizeGf(expected) && typed.length>0;
     inp.classList.remove('correct','wrong');
     inp.classList.add(ok ? 'correct' : 'wrong');
     inp.disabled = true;
     if(ok){ gf.correctBlanks++; } else { gf.wrongBlanks++; sentenceHasWrong = true; inp.value = expected; }
   });
 
+  gf.sentenceResults.push({
+    item: item,
+    isCorrect: !sentenceHasWrong,
+    studentAnswers: studentAnswers,
+    expectedAnswers: expectedAnswers
+  });
+
   if(sentenceHasWrong){
-    gf.missedSentences.push({ template:item.template, full:item.full });
+    gf.missedSentences.push(item.original);
   }
 
   const fb = document.getElementById('feedback-gf');
   fb.classList.add('show');
+
+  let contentHtml = `<div style="margin-top: 8px; font-weight: normal; color: var(--text); font-size: 15px; line-height: 1.6;">`;
+  contentHtml += `<div style="margin-bottom: 8px;">📖 <b>${item.full}</b></div>`;
+  if (item.translation) {
+    contentHtml += `<div style="margin-bottom: 8px; color: var(--text-secondary);">🇻🇳 ${item.translation}</div>`;
+  }
+  if (item.vocabulary) {
+    let vList = Array.isArray(item.vocabulary) ? item.vocabulary : [item.vocabulary];
+    vList.forEach(v => {
+      if (v.word) contentHtml += `<div style="color: var(--primary); margin-bottom: 4px;">💡 <b>${v.word}</b>: ${v.meaning}</div>`;
+    });
+  }
+  contentHtml += `</div>`;
+
   if(!sentenceHasWrong){
     fb.className = 'feedback show correct';
-    fb.innerHTML = `<b>Chính xác!</b> ${item.full}`;
+    fb.innerHTML = contentHtml;
   } else {
     fb.className = 'feedback show wrong';
-    fb.innerHTML = `<b>Xem lại câu đúng</b> ${item.full}`;
+    fb.innerHTML = contentHtml;
   }
+  
   updateGfStrip();
   document.getElementById('btn-skip-gf').disabled = true;
   document.getElementById('btn-check-gf').textContent = gf.index+1 < gf.sentences.length ? 'Câu tiếp theo →' : 'Xem kết quả';
@@ -1938,7 +3287,15 @@ function skipGapfillItem(){
   const item = gf.sentences[gf.index];
   const blanks = item.parts.filter(p=>p.type==='blank');
   gf.wrongBlanks += blanks.length;
-  gf.missedSentences.push({ template:item.template, full:item.full });
+  
+  gf.sentenceResults.push({
+    item: item,
+    isCorrect: false,
+    studentAnswers: blanks.map(() => '(bỏ qua)'),
+    expectedAnswers: blanks.map(b => b.answer)
+  });
+
+  gf.missedSentences.push(item.original);
   updateGfStrip();
   nextGapfillItem();
 }
@@ -1953,6 +3310,7 @@ async function finishGapfill(){
   document.getElementById('gf-progress-fill').style.width = '100%';
   const total = gf.totalBlanks;
   const pct = total>0 ? Math.round((gf.correctBlanks/total)*100) : 0;
+  
   document.getElementById('score-pct').textContent = pct + '%';
   const ring = document.getElementById('score-ring');
   const color = pct>=80 ? 'var(--success)' : pct>=50 ? 'var(--warning)' : 'var(--danger)';
@@ -1962,21 +3320,177 @@ async function finishGapfill(){
   const displayTitle = gf.currentGroup ? `${gf.currentGroup.title} – ${gf.passage.title}` : gf.passage.title;
   document.getElementById('results-sub').textContent = `${gf.correctBlanks}/${total} từ đúng — ${displayTitle} · ${gf.passage.level}`;
 
-  const missedBox = document.getElementById('missed-list');
-  const missedRows = document.getElementById('missed-rows');
-  missedRows.innerHTML = '';
-  if(gf.missedSentences.length>0){
-    missedBox.style.display='block';
-    document.querySelector('#missed-list h4').textContent = 'Các câu cần ôn lại';
-    gf.missedSentences.forEach(m=>{
-      const row = document.createElement('div');
-      row.className = 'missed-row';
-      row.innerHTML = `<span class="typed" style="text-decoration:none; color:var(--text-secondary);">${m.full}</span>`;
-      missedRows.appendChild(row);
+  // Hide the existing missed-list used in general practice
+  document.getElementById('missed-list').style.display = 'none';
+
+  // Calculate Lesson Summary Time
+  const timeSpentMs = Date.now() - gf.startTime;
+  const mins = Math.floor(timeSpentMs / 60000);
+  const secs = Math.floor((timeSpentMs % 60000) / 1000);
+  const timeStr = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+
+  // Render Lesson Summary
+  const summaryEl = document.getElementById('gf-lesson-summary');
+  summaryEl.innerHTML = `
+    <h3>⭐ Lesson Summary</h3>
+    <div class="summary-grid">
+      <div class="summary-item"><span>Accuracy</span><span>${pct}%</span></div>
+      <div class="summary-item"><span>Words Learned</span><span>${gf.correctBlanks}</span></div>
+      <div class="summary-item"><span>Incorrect Words</span><span>${gf.wrongBlanks}</span></div>
+      <div class="summary-item"><span>Time Spent</span><span>${timeStr}</span></div>
+    </div>
+  `;
+  summaryEl.style.display = 'block';
+
+  // Render Gap-Fill Learning Cards
+  const cardsContainer = document.getElementById('gf-learning-container');
+  cardsContainer.innerHTML = '';
+  cardsContainer.style.display = 'block';
+
+  gf.sentenceResults.forEach((res, idx) => {
+    const isCorrect = res.isCorrect;
+    const statusIcon = isCorrect ? '✅ Correct' : '❌ Incorrect';
+    const statusClass = isCorrect ? 'status-correct' : 'status-wrong';
+
+    // Student Answers mapping
+    const typedText = res.studentAnswers.map(a => a || '(trống)').join(', ');
+    
+    // Correct Answers highlighted
+    const expectedText = res.expectedAnswers.map(a => `<span class="highlight-green">${a}</span>`).join(', ');
+
+    // Complete Sentence with highlights
+    const completeSentenceHighlighted = res.item.template.replace(/\{\{(.*?)\}\}/g, '<span class="highlight-green">$1</span>');
+
+    const card = document.createElement('div');
+    card.className = 'learning-card';
+
+    let html = `
+      <div class="learning-card-header">
+        <span class="item-tag" style="margin: 0;">Câu ${idx + 1}</span>
+        <span class="learning-card-status ${statusClass}">${statusIcon}</span>
+      </div>
+      
+      <div class="learning-section">
+        <div class="learning-label">Student Answer</div>
+        <div style="${isCorrect ? 'color: var(--text);' : 'color: var(--danger); text-decoration: line-through;'}">${typedText}</div>
+      </div>
+      
+      <div class="learning-section">
+        <div class="learning-label">Correct Answer</div>
+        <div>${expectedText}</div>
+      </div>
+
+      <div class="learning-section">
+        <div class="learning-label">Complete English Sentence</div>
+        <div style="font-size: 16px; font-weight: 500; line-height: 1.6;">${completeSentenceHighlighted}</div>
+      </div>
+    `;
+
+    // Vietnamese Translation
+    if (res.item.translation) {
+      html += `
+        <div class="learning-section">
+          <div class="learning-label">Vietnamese Translation</div>
+          <div style="color: var(--text-secondary);">${res.item.translation}</div>
+        </div>
+      `;
+    }
+
+    // Vocabulary Section
+    if (res.item.vocabulary) {
+      let vocabArray = Array.isArray(res.item.vocabulary) ? res.item.vocabulary : [res.item.vocabulary];
+      vocabArray.forEach(v => {
+          html += `<div class="vocab-box">`;
+          
+          if (v.word) {
+            html += `
+              <div class="learning-section">
+                <div class="learning-label">Word</div>
+                <div style="font-size: 18px; font-weight: 700; color: var(--primary);">${v.word}</div>
+              </div>
+            `;
+          }
+          if (v.meaning) {
+            html += `
+              <div class="learning-section">
+                <div class="learning-label">Meaning</div>
+                <div>${v.meaning}</div>
+              </div>
+            `;
+          }
+          if (v.partOfSpeech) {
+            html += `
+              <div class="learning-section">
+                <div class="learning-label">Word Type</div>
+                <div>${v.partOfSpeech}</div>
+              </div>
+            `;
+          }
+          if (v.example) {
+            html += `
+              <div class="learning-section">
+                <div class="learning-label">Example Sentence</div>
+                <div>${v.example}</div>
+                ${v.exampleTranslation ? `<div style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;">${v.exampleTranslation}</div>` : ''}
+              </div>
+            `;
+          }
+          if (v.ipa) {
+            html += `
+              <div class="learning-section">
+                <div class="learning-label">Pronunciation</div>
+                <div style="color: var(--text-secondary); font-family: monospace; font-size: 15px;">${v.ipa}</div>
+              </div>
+            `;
+          }
+          if (v.collocations && Array.isArray(v.collocations) && v.collocations.length > 0) {
+            html += `
+              <div class="learning-section">
+                <div class="learning-label">Common Collocations</div>
+                <ul style="margin-left: 20px; color: var(--text-secondary);">
+                  ${v.collocations.map(c => `<li>${c}</li>`).join('')}
+                </ul>
+              </div>
+            `;
+          }
+          if (v.note) {
+            html += `
+              <div class="learning-section">
+                <div class="learning-label">Notes</div>
+                <div style="background: #EFF6FF; padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary); font-size: 14px;">${v.note}</div>
+              </div>
+            `;
+          }
+          html += `</div>`; // Close vocab box
+      });
+    }
+
+    // Action Buttons
+    html += `
+      <div class="card-actions">
+        <button class="btn btn-ghost btn-listen-card">🔊 Listen Again</button>
+        <button class="btn btn-ghost btn-copy-card">📋 Copy Sentence</button>
+      </div>
+    `;
+
+    card.innerHTML = html;
+
+    // Attach local event listeners for the newly created buttons
+    card.querySelector('.btn-listen-card').addEventListener('click', () => {
+      speak(res.item.full, gf.rate);
     });
-  } else {
-    missedBox.style.display='none';
-  }
+
+    card.querySelector('.btn-copy-card').addEventListener('click', (e) => {
+      navigator.clipboard.writeText(res.item.full);
+      const btn = e.target;
+      const oldText = btn.innerHTML;
+      btn.innerHTML = '✅ Copied!';
+      setTimeout(() => btn.innerHTML = oldText, 2000);
+    });
+
+    cardsContainer.appendChild(card);
+  });
+  
   document.getElementById('btn-retry-missed').disabled = gf.missedSentences.length===0;
   document.getElementById('btn-retry-all').style.display = 'inline-flex';
 
@@ -1993,7 +3507,7 @@ function retryGapfillMissed(){
   if(gf.missedSentences.length===0){ showScreen('screen-home'); return; }
   const tempPassage = {
     id: gf.passage.id, title: gf.passage.title + ' (ôn lại câu sai)', level: gf.passage.level, context: gf.passage.context,
-    sentences: gf.missedSentences.map(m=>m.template)
+    sentences: gf.missedSentences
   };
   startGapfill(tempPassage);
 }
@@ -2259,7 +3773,11 @@ async function finishQuiz() {
   const displayTitle = gf.currentGroup ? `${gf.currentGroup.title} – ${qz.passage.title}` : qz.passage.title;
   document.getElementById('results-sub').textContent = `${qz.correct}/${qz.total} đáp án đúng — ${displayTitle} · ${qz.passage.level}`;
 
-  document.getElementById('missed-list').style.display='none';
+  // Hide the lists when finishing Quiz Mode
+  document.getElementById('missed-list').style.display = 'none';
+  document.getElementById('gf-lesson-summary').style.display = 'none';
+  document.getElementById('gf-learning-container').style.display = 'none';
+  
   document.getElementById('btn-retry-missed').disabled = true;
   document.getElementById('btn-retry-missed').style.display = 'none'; // Not applicable for Quiz
   document.getElementById('btn-retry-all').style.display = 'inline-flex';
@@ -2454,7 +3972,7 @@ function nextItem(){
 async function finishPractice(){
   resultsMode = 'vocab';
   document.getElementById('btn-retry-missed').style.display = 'inline-flex';
-  document.querySelector('#missed-list h4').textContent = 'Các từ cần ôn lại';
+  document.querySelector('#missed-list-title').textContent = 'Các từ cần ôn lại';
   document.getElementById('progress-fill').style.width = '100%';
   const total = state.correct + state.wrong;
   const pct = total>0 ? Math.round((state.correct/total)*100) : 0;
@@ -2464,6 +3982,10 @@ async function finishPractice(){
   ring.style.background = `conic-gradient(${color} ${pct*3.6}deg, var(--border) 0deg)`;
   document.getElementById('results-title').textContent = pct>=80 ? 'Xuất sắc!' : pct>=50 ? 'Khá tốt, cố thêm chút nữa!' : 'Cần luyện thêm nhé!';
   document.getElementById('results-sub').textContent = `${state.correct}/${total} câu đúng — ${state.topic.name} · ${LEVEL_META[state.level].label}`;
+
+  // Make sure to hide the Gapfill-specific panels
+  document.getElementById('gf-lesson-summary').style.display = 'none';
+  document.getElementById('gf-learning-container').style.display = 'none';
 
   const missedBox = document.getElementById('missed-list');
   const missedRows = document.getElementById('missed-rows');
