@@ -535,7 +535,7 @@ button {
 
 .deck {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 360px 1fr;
   gap: 32px;
   align-items: start;
 }
@@ -544,179 +544,267 @@ button {
   .deck { grid-template-columns: 1fr; }
 }
 
-/* LEFT: Modern Audio Controls */
-.cassette {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px 24px;
-  box-shadow: var(--shadow-soft);
+/* =========================================================
+   MODERN AUDIO WIDGET (REDESIGN)
+   ========================================================= */
+.modern-audio-widget {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 36px 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid #E5E7EB;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
   text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.audio-arc-container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-}
-
-.reels {
-  display: flex;
-  justify-content: center;
+  align-items: center;
   gap: 16px;
-}
-
-.reel {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #F3F4F6;
-  border: 2px solid var(--border);
   position: relative;
+}
+
+.arc-top-row {
+  display: flex;
+  gap: 110px;
+  margin-bottom: -20px;
+  z-index: 1;
+}
+
+.arc-middle-row {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 24px;
+  z-index: 2;
 }
 
-.reel::before {
-  content: "";
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  border: 2px dashed #D1D5DB;
-  border-radius: 50%;
-}
-
-.reel.spin { animation: spin 2s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.tape-window { display: none; }
-
-.play-controls {
+.ctrl-btn {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  align-items: center;
-}
-.audio-primary-controls, .audio-secondary-controls, .audio-utility-controls {
-  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease, color 200ms ease;
+  font-family: inherit;
+  outline: none;
+  color: #4F6EF7;
 }
-.audio-secondary-controls { gap: 24px; }
-.audio-utility-controls { gap: 8px; }
-.audio-primary-controls .audio-seek-btn {
+
+.ctrl-btn:hover { transform: scale(1.05); }
+.ctrl-btn:active { transform: scale(0.95); }
+.ctrl-btn svg { fill: currentColor; }
+
+.btn-10s {
   width: 64px;
   height: 64px;
-  padding: 0;
-  border: 1px solid #EDF0F4;
-  background: #FBFCFD;
-  border-radius: 50%;
-  color: #AEB7C4;
+  border: 2px dashed #4F6EF7;
+  font-weight: 600;
+  font-size: 13px;
+}
+.btn-10s svg { width: 22px; height: 22px; margin-bottom: 2px; }
+
+.btn-5s {
+  width: 80px;
+  height: 80px;
+  border: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  font-weight: 600;
   font-size: 15px;
 }
-.audio-secondary-controls .audio-seek-btn {
-  width: 52px;
-  height: 52px;
-  padding: 0;
-  border: 2px dashed #D7DEE8;
-  background: #F8FAFC;
-  border-radius: 50%;
-  color: #B8C0CC;
-  font-size: 12px;
+.btn-5s svg { width: 26px; height: 26px; margin-bottom: 2px; }
+
+.btn-play {
+  width: 100px;
+  height: 100px;
+  border: none;
+  background: linear-gradient(135deg, #4F6EF7, #3163F3);
+  color: white;
+  box-shadow: 0 10px 24px rgba(79, 110, 247, 0.3);
 }
-.audio-primary-controls .audio-seek-btn:hover, .audio-secondary-controls .audio-seek-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: #EFF6FF;
+.btn-play svg { width: 44px; height: 44px; margin-left: 4px; }
+
+.secondary-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
 }
 
-.play-btn {
-  width: 92px;
-  height: 92px;
-  border-radius: 50%;
+.sec-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 200ms ease, background 200ms ease;
+  font-family: inherit;
+  outline: none;
+}
+.sec-btn:hover { transform: scale(1.05); }
+.sec-btn:active { transform: scale(0.95); }
+.sec-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+.btn-pause {
+  border: 2px solid #4F6EF7;
+  background: transparent;
+  color: #3163F3;
+}
+.btn-pause:hover { background: #F7F8FC; }
+
+.btn-replay {
   border: none;
-  background: var(--primary);
+  background: #F7F8FC;
+  color: #4F6EF7;
+}
+.btn-replay:hover { background: #EEF2FF; }
+
+/* =========================================================
+   MODERN PLAYBACK SPEED CONTROLS
+   ========================================================= */
+.speed-controls {
+  background: #F7F8FC;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: left;
+  border: 1px solid var(--border);
+}
+
+.speed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.speed-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #374151;
+}
+
+.speed-title svg {
+  width: 20px; 
+  height: 20px; 
+  fill: #4F6EF7;
+}
+
+.speed-val {
+  font-family: 'Inter', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  color: #4F6EF7;
+  background: #EFF6FF;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+/* Modern Flat Slider with Blue Fill Hack */
+.modern-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: 4px;
+  outline: none;
+  margin-bottom: 28px;
+  cursor: pointer;
+  overflow: hidden; /* Required for the track fill trick */
+}
+
+.modern-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #FFFFFF;
+  border: 3px solid #4F6EF7;
+  border-radius: 50%;
+  cursor: pointer;
+  /* This giant box-shadow fills the track to the left of the thumb with blue */
+  box-shadow: -10010px 0 0 10000px #4F6EF7;
+  transition: transform 200ms ease;
+}
+
+.modern-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #FFFFFF;
+  border: 3px solid #4F6EF7;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 200ms ease;
+}
+
+.modern-slider::-moz-range-progress {
+  background: #4F6EF7;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.modern-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+.modern-slider:hover::-moz-range-thumb {
+  transform: scale(1.15);
+}
+
+/* Speed Pills Grid */
+.speed-pills {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.speed-pill {
+  padding: 10px 0;
+  border-radius: 10px;
+  border: 1px solid white;
+  background: white;
+  color: #6B7280;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 200ms ease;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.speed-pill:hover {
+  border-color: #4F6EF7;
+  color: #4F6EF7;
+}
+
+/* Uses :focus to stay blue when clicked. Automatically drops when slider is dragged */
+.speed-pill:focus {
+  background: #4F6EF7;
+  border-color: #4F6EF7;
   color: white;
-  font-size: 24px;
+  box-shadow: 0 4px 12px rgba(79, 110, 247, 0.3);
+}
+
+.audio-hint {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-  padding-left: 4px; 
-}
-
-.play-btn:hover { transform: scale(1.05); background: var(--primary-hover); }
-.play-btn:active { transform: scale(0.95); }
-
-.audio-seek-btn, .audio-pause-btn {
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 700;
-  padding: 8px 6px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.audio-seek-btn:hover, .audio-pause-btn:hover { background: rgba(0,0,0,0.05); color: var(--text); }
-.quick-rate-buttons { display: flex; gap: 8px; margin-top: 10px; }
-.quick-rate-btn {
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #FFF;
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-.quick-rate-btn:hover { border-color: var(--primary); color: var(--primary); }
-
-.replay-btn {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
+  gap: 8px;
+  color: #6B7280;
   font-size: 14px;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 20px;
+  font-weight: 500;
 }
-.audio-pause-btn {
-  background: #F8FAFC;
-  border: 1px solid var(--border);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 7px 12px;
-}
-
-.replay-btn:hover { background: rgba(0,0,0,0.04); color: var(--text); }
-
-.speed-row {
-  text-align: left;
-  background: #F9FAFB;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-}
-
-.speed-row label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.speed-row input[type=range] {
-  width: 100%;
-  accent-color: var(--primary);
-}
-
-.hint-text {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
+.audio-hint svg { width: 20px; height: 20px; fill: #4F6EF7; }
 
 /* RIGHT: Answer Sheet */
 .answer-sheet {
@@ -1280,37 +1368,76 @@ footer.note {
     <div class="progress-track"><div class="progress-fill" id="gf-progress-fill"></div></div>
 
     <div class="deck">
-      <div class="cassette">
-        <div class="reels">
-          <div class="reel"></div>
-          <div class="reel"></div>
+      
+      <div class="modern-audio-widget">
+        <!-- HIDDEN REQUIRED ELEMENTS FOR JS COMPATIBILITY -->
+        <div style="display: none;">
+          <div class="reels"><div class="reel"></div><div class="reel"></div></div>
+          <div class="tape-window"></div>
         </div>
-        <div class="tape-window"></div>
-        <div class="play-controls">
-          <div class="audio-secondary-controls">
-            <button class="audio-seek-btn" id="btn-back-10-gf" title="Lùi 10 giây">↶10</button>
-            <button class="audio-seek-btn" id="btn-forward-10-gf" title="Tới 10 giây">10↷</button>
+
+        <div class="audio-arc-container">
+          <div class="arc-top-row">
+            <button class="ctrl-btn btn-10s" id="btn-back-10-gf" title="Lùi 10 giây">
+              <svg viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+              <span>-10s</span>
+            </button>
+            <button class="ctrl-btn btn-10s" id="btn-forward-10-gf" title="Tới 10 giây">
+              <svg viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+              <span>+10s</span>
+            </button>
           </div>
-          <div class="audio-primary-controls">
-            <button class="audio-seek-btn" id="btn-back-5-gf" title="Lùi 5 giây">↶ 5s</button>
-            <button class="play-btn" id="btn-play-gf" title="Nghe câu này">▶</button>
-            <button class="audio-seek-btn" id="btn-forward-5-gf" title="Tới 5 giây">5s ↷</button>
-          </div>
-          <div class="audio-utility-controls">
-            <button class="audio-pause-btn" id="btn-pause-gf" title="Tạm dừng / tiếp tục">⏸ Tạm dừng</button>
-            <button class="replay-btn" id="btn-replay-gf">↻ Nghe lại</button>
+          <div class="arc-middle-row">
+            <button class="ctrl-btn btn-5s" id="btn-back-5-gf" title="Lùi 5 giây">
+              <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+              <span>5s</span>
+            </button>
+            <button class="ctrl-btn btn-play" id="btn-play-gf" title="Nghe câu này">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="ctrl-btn btn-5s" id="btn-forward-5-gf" title="Tới 5 giây">
+              <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h-2c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4z"/></svg>
+              <span>5s</span>
+            </button>
           </div>
         </div>
-        <div class="speed-row">
-          <label><span>Tốc độ đọc</span><span id="speed-val-gf">1.0×</span></label>
-          <input type="range" id="speed-slider-gf" min="0.6" max="3" step="0.1" value="1">
-          <div class="quick-rate-buttons">
-            <button class="quick-rate-btn" data-rate="1" data-target="gf">1×</button>
-            <button class="quick-rate-btn" data-rate="2" data-target="gf">2×</button>
-            <button class="quick-rate-btn" data-rate="3" data-target="gf">3×</button>
+
+        <div class="secondary-actions">
+          <button class="sec-btn btn-pause" id="btn-pause-gf">
+            <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            Tạm dừng
+          </button>
+          <button class="sec-btn btn-replay" id="btn-replay-gf">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+            Nghe lại
+          </button>
+        </div>
+
+        <div class="speed-controls">
+          <div class="speed-header">
+            <div class="speed-title">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.22 2.61 7.84 6.36 9.38l1.41-2.12C7.11 18.23 5 15.36 5 12c0-3.86 3.14-7 7-7s7 3.14 7 7c0 3.36-2.11 6.23-4.77 7.26l1.41 2.12C19.39 19.84 22 16.22 22 12c0-5.52-4.48-10-10-10zm2.74 8.63L11 14.36V9h2v4.13l2.87-2.86-1.13-1.64z"/></svg>
+              Tốc độ đọc
+            </div>
+            <span class="speed-val" id="speed-val-gf">1.0×</span>
+          </div>
+          
+          <input type="range" class="modern-slider" id="speed-slider-gf" min="0.6" max="3" step="0.1" value="1">
+
+          <div class="speed-pills">
+            <button class="speed-pill quick-rate-btn" data-rate="0.75" data-target="gf">0.75×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="1" data-target="gf">1×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="1.25" data-target="gf">1.25×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="1.5" data-target="gf">1.5×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="2" data-target="gf">2×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="3" data-target="gf">3×</button>
           </div>
         </div>
-        <div class="hint-text">Nghe câu, sau đó điền từ còn thiếu vào (các) ô trống ngay trong câu.</div>
+
+        <div class="audio-hint">
+          <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7c0-4.97-4.03-9-9-9z"/></svg>
+          Lắng nghe đoạn hội thoại và chọn đáp án chính xác.
+        </div>
       </div>
 
       <div class="answer-sheet">
@@ -1338,37 +1465,76 @@ footer.note {
     <div class="progress-track"><div class="progress-fill" id="quiz-progress-fill"></div></div>
 
     <div class="deck">
-      <div class="cassette">
-        <div class="reels">
-          <div class="reel"></div>
-          <div class="reel"></div>
+      
+      <div class="modern-audio-widget">
+        <!-- HIDDEN REQUIRED ELEMENTS FOR JS COMPATIBILITY -->
+        <div style="display: none;">
+          <div class="reels"><div class="reel"></div><div class="reel"></div></div>
+          <div class="tape-window"></div>
         </div>
-        <div class="tape-window"></div>
-        <div class="play-controls">
-          <div class="audio-secondary-controls">
-            <button class="audio-seek-btn" id="btn-back-10-quiz" title="Lùi 10 giây">↶10</button>
-            <button class="audio-seek-btn" id="btn-forward-10-quiz" title="Tới 10 giây">10↷</button>
+
+        <div class="audio-arc-container">
+          <div class="arc-top-row">
+            <button class="ctrl-btn btn-10s" id="btn-back-10-quiz" title="Lùi 10 giây">
+              <svg viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+              <span>-10s</span>
+            </button>
+            <button class="ctrl-btn btn-10s" id="btn-forward-10-quiz" title="Tới 10 giây">
+              <svg viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+              <span>+10s</span>
+            </button>
           </div>
-          <div class="audio-primary-controls">
-            <button class="audio-seek-btn" id="btn-back-5-quiz" title="Lùi 5 giây">↶ 5s</button>
-            <button class="play-btn" id="btn-play-quiz" title="Nghe âm thanh">▶</button>
-            <button class="audio-seek-btn" id="btn-forward-5-quiz" title="Tới 5 giây">5s ↷</button>
-          </div>
-          <div class="audio-utility-controls">
-            <button class="audio-pause-btn" id="btn-pause-quiz" title="Tạm dừng / tiếp tục">⏸ Tạm dừng</button>
-            <button class="replay-btn" id="btn-replay-quiz">↻ Nghe lại</button>
+          <div class="arc-middle-row">
+            <button class="ctrl-btn btn-5s" id="btn-back-5-quiz" title="Lùi 5 giây">
+              <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+              <span>5s</span>
+            </button>
+            <button class="ctrl-btn btn-play" id="btn-play-quiz" title="Nghe âm thanh">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="ctrl-btn btn-5s" id="btn-forward-5-quiz" title="Tới 5 giây">
+              <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h-2c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4z"/></svg>
+              <span>5s</span>
+            </button>
           </div>
         </div>
-        <div class="speed-row">
-          <label><span>Tốc độ đọc</span><span id="speed-val-quiz">1.0×</span></label>
-          <input type="range" id="speed-slider-quiz" min="0.6" max="3" step="0.1" value="1">
-          <div class="quick-rate-buttons">
-            <button class="quick-rate-btn" data-rate="1" data-target="quiz">1×</button>
-            <button class="quick-rate-btn" data-rate="2" data-target="quiz">2×</button>
-            <button class="quick-rate-btn" data-rate="3" data-target="quiz">3×</button>
+
+        <div class="secondary-actions">
+          <button class="sec-btn btn-pause" id="btn-pause-quiz">
+            <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            Tạm dừng
+          </button>
+          <button class="sec-btn btn-replay" id="btn-replay-quiz">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+            Nghe lại
+          </button>
+        </div>
+
+        <div class="speed-controls">
+          <div class="speed-header">
+            <div class="speed-title">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.22 2.61 7.84 6.36 9.38l1.41-2.12C7.11 18.23 5 15.36 5 12c0-3.86 3.14-7 7-7s7 3.14 7 7c0 3.36-2.11 6.23-4.77 7.26l1.41 2.12C19.39 19.84 22 16.22 22 12c0-5.52-4.48-10-10-10zm2.74 8.63L11 14.36V9h2v4.13l2.87-2.86-1.13-1.64z"/></svg>
+              Tốc độ đọc
+            </div>
+            <span class="speed-val" id="speed-val-quiz">1.0×</span>
+          </div>
+          
+          <input type="range" class="modern-slider" id="speed-slider-quiz" min="0.6" max="3" step="0.1" value="1">
+
+          <div class="speed-pills">
+            <button class="speed-pill quick-rate-btn" data-rate="0.75" data-target="quiz">0.75×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="1" data-target="quiz">1×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="1.25" data-target="quiz">1.25×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="1.5" data-target="quiz">1.5×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="2" data-target="quiz">2×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="3" data-target="quiz">3×</button>
           </div>
         </div>
-        <div class="hint-text">Lắng nghe đoạn hội thoại và chọn đáp án chính xác.</div>
+
+        <div class="audio-hint">
+          <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7c0-4.97-4.03-9-9-9z"/></svg>
+          Lắng nghe đoạn hội thoại và chọn đáp án chính xác.
+        </div>
       </div>
 
       <div class="answer-sheet" id="quiz-answer-sheet">
@@ -1398,37 +1564,77 @@ footer.note {
     <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
 
     <div class="deck">
-      <div class="cassette">
-        <div class="reels">
-          <div class="reel" id="reel-l"></div>
-          <div class="reel" id="reel-r"></div>
+      
+      <div class="modern-audio-widget">
+        <!-- HIDDEN REQUIRED ELEMENTS FOR JS COMPATIBILITY -->
+        <div style="display: none;">
+          <div class="reels" id="reel-l"></div>
+          <div class="reels" id="reel-r"></div>
+          <div class="tape-window"></div>
         </div>
-        <div class="tape-window"></div>
-        <div class="play-controls">
-          <div class="audio-secondary-controls">
-            <button class="audio-seek-btn" id="btn-back-10" title="Lùi 10 giây">↶10</button>
-            <button class="audio-seek-btn" id="btn-forward-10" title="Tới 10 giây">10↷</button>
+
+        <div class="audio-arc-container">
+          <div class="arc-top-row">
+            <button class="ctrl-btn btn-10s" id="btn-back-10" title="Lùi 10 giây">
+              <svg viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+              <span>-10s</span>
+            </button>
+            <button class="ctrl-btn btn-10s" id="btn-forward-10" title="Tới 10 giây">
+              <svg viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+              <span>+10s</span>
+            </button>
           </div>
-          <div class="audio-primary-controls">
-            <button class="audio-seek-btn" id="btn-back-5" title="Lùi 5 giây">↶ 5s</button>
-            <button class="play-btn" id="btn-play" title="Nghe (Enter)">▶</button>
-            <button class="audio-seek-btn" id="btn-forward-5" title="Tới 5 giây">5s ↷</button>
-          </div>
-          <div class="audio-utility-controls">
-            <button class="audio-pause-btn" id="btn-pause" title="Tạm dừng / tiếp tục">⏸ Tạm dừng</button>
-            <button class="replay-btn" id="btn-replay">↻ Nghe lại</button>
+          <div class="arc-middle-row">
+            <button class="ctrl-btn btn-5s" id="btn-back-5" title="Lùi 5 giây">
+              <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+              <span>5s</span>
+            </button>
+            <button class="ctrl-btn btn-play" id="btn-play" title="Nghe (Enter)">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="ctrl-btn btn-5s" id="btn-forward-5" title="Tới 5 giây">
+              <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h-2c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4z"/></svg>
+              <span>5s</span>
+            </button>
           </div>
         </div>
-        <div class="speed-row">
-          <label><span>Tốc độ đọc</span><span id="speed-val">1.0×</span></label>
-          <input type="range" id="speed-slider" min="0.6" max="3" step="0.1" value="1">
-          <div class="quick-rate-buttons">
-            <button class="quick-rate-btn" data-rate="1" data-target="practice">1×</button>
-            <button class="quick-rate-btn" data-rate="2" data-target="practice">2×</button>
-            <button class="quick-rate-btn" data-rate="3" data-target="practice">3×</button>
+
+        <div class="secondary-actions">
+          <button class="sec-btn btn-pause" id="btn-pause">
+            <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            Tạm dừng
+          </button>
+          <button class="sec-btn btn-replay" id="btn-replay">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+            Nghe lại
+          </button>
+        </div>
+
+        <div class="speed-controls">
+          <div class="speed-header">
+            <div class="speed-title">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.22 2.61 7.84 6.36 9.38l1.41-2.12C7.11 18.23 5 15.36 5 12c0-3.86 3.14-7 7-7s7 3.14 7 7c0 3.36-2.11 6.23-4.77 7.26l1.41 2.12C19.39 19.84 22 16.22 22 12c0-5.52-4.48-10-10-10zm2.74 8.63L11 14.36V9h2v4.13l2.87-2.86-1.13-1.64z"/></svg>
+              Tốc độ đọc
+            </div>
+            <span class="speed-val" id="speed-val">1.0×</span>
+          </div>
+          
+          <input type="range" class="modern-slider" id="speed-slider" min="0.6" max="3" step="0.1" value="1">
+
+          <div class="speed-pills">
+            <button class="speed-pill quick-rate-btn" data-rate="0.75" data-target="practice">0.75×</button>
+            <button class="speed-pill quick-rate-btn active" data-rate="1" data-target="practice">1×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="1.25" data-target="practice">1.25×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="1.5" data-target="practice">1.5×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="2" data-target="practice">2×</button>
+            <button class="speed-pill quick-rate-btn" data-rate="3" data-target="practice">3×</button>
           </div>
         </div>
-        <div class="hint-text">Bấm ▶ để nghe. Bạn có thể nghe lại nhiều lần trước khi gõ đáp án.</div>
+
+        <div class="audio-hint">
+          <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7c0-4.97-4.03-9-9-9z"/></svg>
+          Lắng nghe đoạn hội thoại và chọn đáp án chính xác.
+        </div>
       </div>
 
       <div class="answer-sheet">
@@ -2481,9 +2687,13 @@ const PASSAGES = [
             ]
           },
           {
-            english: 'Cutlery is the knives, forks and spoons.',
+            english: 'Cutlery is the {{knives}}, {{forks}} and {{spoons}}.',
             translation: 'Bộ dao nĩa bao gồm dao, nĩa và thìa.',
-            vocabulary: []
+            vocabulary: [
+              { word: 'knives', meaning: 'dao' },
+              { word: 'forks', meaning: 'nĩa' },
+              { word: 'spoons', meaning: 'thìa' }
+            ]
           },
           {
             english: 'There will also be a {{napkin}}.',
@@ -2493,9 +2703,10 @@ const PASSAGES = [
             ]
           },
           {
-            english: 'You are supposed to put your napkin on your {{lap}} when you eat.',
+            english: 'You are supposed to put your {{napkin}} on your {{lap}} when you eat.',
             translation: 'Bạn được cho là nên đặt khăn ăn lên đùi khi ăn.',
             vocabulary: [
+              { word: 'napkin', meaning: 'khăn ăn' },
               { word: 'lap', meaning: 'đùi' }
             ]
           },
@@ -2526,11 +2737,11 @@ const PASSAGES = [
             ]
           },
           {
-            english: 'When it is time to go, you will pay your {{bill}} and leave {{a tip}} for the waiter or waitress.',
+            english: 'When it is time to go, you will pay your {{bill}} and leave {{tip}} for the waiter or waitress.',
             translation: 'Khi đến lúc phải đi, bạn sẽ thanh toán hóa đơn và để lại tiền boa cho người bồi bàn.',
             vocabulary: [
               { word: 'bill', meaning: 'hóa đơn' },
-              { word: 'a tip', meaning: 'một khoản tiền boa' }
+              { word: 'tip', meaning: 'tiền boa' }
             ]
           }
         ]
