@@ -540,6 +540,10 @@ button {
   align-items: start;
 }
 
+.deck.full-width {
+  grid-template-columns: 1fr !important;
+}
+
 @media (max-width: 860px) {
   .deck { grid-template-columns: 1fr; }
 }
@@ -1329,6 +1333,9 @@ footer.note {
     <div class="section-label">Bài nghe điền từ & Quiz · Trình độ A2–B1</div>
     <div id="passage-grid" class="topic-grid"></div>
 
+    <div class="section-label" style="margin-top:16px;">Luyện điền từ & Biến đổi từ (Word Formation) · Trình độ B1–B2</div>
+    <div id="wordformation-grid" class="topic-grid"></div>
+
     <div class="section-label" style="margin-top:16px;">Luyện từ vựng theo chủ đề IELTS</div>
     <div id="topic-grid" class="topic-grid"></div>
   </section>
@@ -1367,9 +1374,9 @@ footer.note {
     </div>
     <div class="progress-track"><div class="progress-fill" id="gf-progress-fill"></div></div>
 
-    <div class="deck">
+    <div class="deck" id="gf-deck">
       
-      <div class="modern-audio-widget">
+      <div class="modern-audio-widget" id="gf-audio-widget">
         <!-- HIDDEN REQUIRED ELEMENTS FOR JS COMPATIBILITY -->
         <div style="display: none;">
           <div class="reels"><div class="reel"></div><div class="reel"></div></div>
@@ -2645,7 +2652,7 @@ const PASSAGES = [
           },
           {
             english: 'The host or hostess will give you a menu {{to look at}}.',
-            translation: 'Nhân viên tiếp đón sẽ đưa cho bạn một thực đơn để xem.',
+            translation: 'Nhân viên tiếp đón đưa cho bạn một thực đơn để xem.',
             vocabulary: [
               { word: 'to look at', meaning: 'để xem' }
             ]
@@ -2666,7 +2673,7 @@ const PASSAGES = [
           },
           {
             english: 'Sometimes, there is also a wine list and a {{dessert}} menu.',
-            translation: 'Thỉnh thoảng, cũng có một danh sách rượu vang và một thực đơn tráng miệng.',
+            translation: 'Thỉnh thoáng, cũng có một danh sách rượu vang và một thực đơn tráng miệng.',
             vocabulary: [
               { word: 'dessert', meaning: 'món tráng miệng' }
             ]
@@ -2924,7 +2931,7 @@ const PASSAGES = [
       },
       {
         id: 'restaurant-5', title: 'Part 5', level: 'A2 – B1', type: 'gapfill',
-        context: 'Phần 5: Trải nghiệm dùng bữa tại một nhà hàng bít tết mới.',
+        context: 'Phần 5: Đánh giá bữa ăn tại nhà hàng bít tết mới.',
         audio: 'audio/Media1-clip.mp3',
         likeDislike: {
           questions: [
@@ -3015,6 +3022,48 @@ const PASSAGES = [
               { word: 'creamy', meaning: 'béo mịn/kem' }
             ]
           }
+        ]
+      },
+      {
+        id: 'restaurant-6', title: 'Part 6', level: 'A2 - B1', type: 'gapfill',
+        context: 'Phần 6: Đánh giá bữa ăn tại nhà hàng hải sản.',
+        audio: 'audio/Media1-clip_2.mp3',
+        sentences: [
+            {
+                english: 'Have you ever tried that seafood restaurant on Main Street? You should—it’s great! I go there often. In fact, I went there last weekend. To begin, I had a salad. It was nice and fresh with a great house {{dressing}}.',
+                translation: 'Bạn đã từng thử nhà hàng hải sản trên Đường Main chưa? Bạn nên thử đi—nó rất tuyệt! Tôi thường đến đó. Thực ra, tôi đã đến đó vào cuối tuần trước. Để bắt đầu, tôi đã dùng một món salad. Nó ngon và tươi với loại nước sốt đặc biệt của quán rất tuyệt.',
+                vocabulary: [
+                    { word: 'dressing', meaning: 'nước sốt (trộn salad)' }
+                ]
+            },
+            {
+                english: 'My main dish was a fish that I had never tried. I really enjoyed the {{spices}} it was cooked in.',
+                translation: 'Món chính của tôi là một loại cá mà tôi chưa bao giờ thử. Tôi thực sự thích các loại gia vị dùng để nấu món đó.',
+                vocabulary: [
+                    { word: 'spices', meaning: 'gia vị' }
+                ]
+            },
+            {
+                english: 'The vegetables were good—very fresh and {{tasty}}.',
+                translation: 'Rau củ cũng rất ngon—rất tươi và đậm đà.',
+                vocabulary: [
+                    { word: 'tasty', meaning: 'ngon, đậm đà' }
+                ]
+            },
+            {
+                english: 'For dessert, I had chocolate cake. It’s usually very delicious, but this time, it was much too sweet. I couldn’t eat more than two {{bites}}!',
+                translation: 'Đối với món tráng miệng, tôi dùng bánh sô cô la. Thường thì nó rất ngon, nhưng lần này, nó quá ngọt. Tôi không thể ăn quá hai miếng!',
+                vocabulary: [
+                    { word: 'bites', meaning: 'miếng (cắn)' }
+                ]
+            },
+            {
+                english: 'That’s okay, though, because I am on a {{diet}}.',
+                translation: 'Tuy nhiên cũng không sao, vì tôi đang ăn kiêng.',
+                vocabulary: [
+                    { word: 'diet', meaning: 'chế độ ăn kiêng' }
+                ]
+            }
         ]
       }
     ]
@@ -3274,7 +3323,108 @@ const PASSAGES = [
           translation: 'Các công việc vặt trong nhà chiếm rất nhiều thời gian.',
           vocabulary: [ { word: 'chores', meaning: 'công việc vặt' } ]
         }
-    ] }
+    ] },
+    {
+    id: 'environment-wordformation-1',
+    title: 'Environment - Word Formation',
+    level: 'B1 - B2',
+    type: 'wordformation',
+    context: 'Complete each sentence using the correct form of the word given.',
+    sentences: [
+        {
+            english: 'Human activities, including deforestation, the burning of fossil fuels, and urbanization, have caused severe environmental {{degradation}} in many areas.',
+            translation: 'Các hoạt động của con người, bao gồm nạn phá rừng, việc đốt nhiên liệu hóa thạch, và đô thị hóa đã gây ra sự suy thoái môi trường nghiêm trọng ở nhiều khu vực.',
+            vocabulary: [
+                { word: 'degradation', meaning: 'sự suy thoái' },
+                { word: 'deforestation', meaning: 'nạn phá rừng' },
+                { word: 'fossil fuels', meaning: 'nhiên liệu hóa thạch' },
+                { word: 'urbanization', meaning: 'đô thị hóa' }
+            ]
+        },
+        {
+            english: 'Population growth is the main cause of resource {{depletion}}.',
+            translation: 'Sự gia tăng dân số là nguyên nhân chính gây ra sự cạn kiệt tài nguyên.',
+            vocabulary: [
+                { word: 'depletion', meaning: 'sự cạn kiệt' },
+                { word: 'population growth', meaning: 'sự gia tăng dân số' },
+                { word: 'resource', meaning: 'tài nguyên' }
+            ]
+        },
+        {
+            english: 'Many animal species are becoming {{endangered}} due to habitat destruction.',
+            translation: 'Nhiều loài động vật đang bị đe dọa do sự phá hủy môi trường sống.',
+            vocabulary: [
+                { word: 'endangered', meaning: 'bị đe dọa, có nguy cơ tuyệt chủng' },
+                { word: 'habitat destruction', meaning: 'sự phá hủy môi trường sống' }
+            ]
+        },
+        {
+            english: 'A significant increase in greenhouse gases leads to global {{warming}}.',
+            translation: 'Sự gia tăng đáng kể của khí nhà kính dẫn đến hiện tượng nóng lên toàn cầu.',
+            vocabulary: [
+                { word: 'global warming', meaning: 'hiện tượng nóng lên toàn cầu' },
+                { word: 'significant increase', meaning: 'sự gia tăng đáng kể' },
+                { word: 'greenhouse gases', meaning: 'khí nhà kính' }
+            ]
+        },
+        {
+            english: 'Extreme weather conditions {{threaten}} the habitats of wildlife.',
+            translation: 'Những điều kiện thời tiết khắc nghiệt đe dọa môi trường sống của động vật hoang dã.',
+            vocabulary: [
+                { word: 'threaten', meaning: "đe dọa" },
+                { word: 'extreme weather conditions', meaning: 'điều kiện thời tiết khắc nghiệt' },
+                { word: 'wildlife', meaning: 'động vật hoang dã' }
+            ]
+        },
+        {
+            english: 'By introducing stricter laws as well as raising public awareness, the government can ensure that pollution can be {{prevented}}.',
+            translation: 'Bằng cách thông qua các luật chặt chẽ hơn cũng như là nâng cao ý thức cộng đồng, chính phủ có thể bảo đảm rằng ô nhiễm có thể được giải quyết.',
+            vocabulary: [
+                { word: 'prevent', meaning: 'ngăn chặn, giải quyết' },
+                { word: 'stricter laws', meaning: 'các luật chặt chẽ hơn' },
+                { word: 'raise public awareness', meaning: 'nâng cao ý thức cộng đồng' }
+            ]
+        },
+        {
+            english: 'To improve air quality, it is necessary for factories to reduce greenhouse gases and the {{emission}} of toxic chemicals into the atmosphere.',
+            translation: 'Để cải thiện chất lượng không khí, các nhà máy cần giảm khí thải nhà kính (greenhouse gases) và lượng phát thải hóa chất độc hại vào bầu khí quyển.',
+            vocabulary: [
+                { word: 'emission', meaning: 'lượng phát thải' },
+                { word: 'improve air quality', meaning: 'cải thiện chất lượng không khí' },
+                { word: 'toxic chemicals', meaning: 'hóa chất độc hại' },
+                { word: 'atmosphere', meaning: 'bầu khí quyển' }
+            ]
+        },
+        {
+            english: 'International cooperation plays an important role in combating climate {{change}}.',
+            translation: 'Hợp tác quốc tế đóng vai trò quan trọng trong việc chống lại sự biến đổi khí hậu.',
+            vocabulary: [
+                { word: 'climate change', meaning: 'sự biến đổi khí hậu' },
+                { word: 'international cooperation', meaning: 'hợp tác quốc tế' },
+                { word: 'combat', meaning: 'chống lại' }
+            ]
+        },
+        {
+            english: 'To ensure a sustainable future, we need to focus on {{renewable}} energy sources instead of using fossil fuels.',
+            translation: 'Để đảm bảo một tương lai bền vững, chúng ta cần tập trung vào các nguồn năng lượng có thể tái tạo thay vì sử dụng nhiên liệu hóa thạch.',
+            vocabulary: [
+                { word: 'renewable', meaning: 'có thể tái tạo' },
+                { word: 'sustainable future', meaning: 'tương lai bền vững' },
+                { word: 'energy sources', meaning: 'nguồn năng lượng' }
+            ]
+        },
+        {
+            english: 'Every individual should adopt an {{environmentally}} friendly lifestyle to reduce waste and protect the planet.',
+            translation: 'Mỗi cá nhân nên áp dụng lối sống thân thiện với môi trường để giảm lượng rác thải và bảo vệ hành tinh.',
+            vocabulary: [
+                { word: 'environmentally friendly', meaning: 'thân thiện với môi trường' },
+                { word: 'adopt a lifestyle', meaning: 'áp dụng lối sống' },
+                { word: 'reduce waste', meaning: 'giảm lượng rác thải' },
+                { word: 'protect the planet', meaning: 'bảo vệ hành tinh' }
+            ]
+        }
+    ]
+}
 ];
 
 const LEVEL_META = {
@@ -3506,7 +3656,10 @@ function getPassageById(id){
 
 function renderGapfillHome(){
   const grid = document.getElementById('passage-grid');
-  grid.innerHTML = '';
+  const wfGrid = document.getElementById('wordformation-grid');
+  if(grid) grid.innerHTML = '';
+  if(wfGrid) wfGrid.innerHTML = '';
+
   PASSAGES.forEach((p, i)=>{
     let totalSentences = 0;
     let totalBlanks = 0;
@@ -3518,11 +3671,7 @@ function renderGapfillHome(){
         } else {
             totalSentences += l.sentences.length;
             totalBlanks += l.sentences.reduce((acc, s) => {
-              if (!s || !s.english) {
-    console.log('Lỗi ở lesson:', l.id);
-    console.log(s);
-    return acc;
-}
+              if (!s || !s.english) return acc;
                 let text = typeof s === 'string' ? s : s.english;
                 return acc + (text.match(/\{\{.*?\}\}/g) || []).length;
             }, 0);
@@ -3531,11 +3680,7 @@ function renderGapfillHome(){
     } else {
       totalSentences = p.sentences.length;
       totalBlanks = p.sentences.reduce((acc, s) => {
-          if (!s || !s.english) {
-    console.log('Lỗi ở passage:', p.id);
-    console.log(s);
-    return acc;
-}
+          if (!s || !s.english) return acc;
           let text = typeof s === 'string' ? s : s.english;
           return acc + (text.match(/\{\{.*?\}\}/g) || []).length;
       }, 0);
@@ -3554,7 +3699,12 @@ function renderGapfillHome(){
     } else {
       card.addEventListener('click', ()=> openPassageIntro(p.id));
     }
-    grid.appendChild(card);
+
+    if (p.type === 'wordformation' && wfGrid) {
+      wfGrid.appendChild(card);
+    } else if (grid) {
+      grid.appendChild(card);
+    }
   });
 }
 
@@ -3608,12 +3758,15 @@ function openPassageIntro(passageId){
   if (match.group) {
     backBtn.textContent = `← ${match.group.title}`;
   } else {
-    backBtn.textContent = `← Tất cả bài nghe`;
+    backBtn.textContent = `← Tất cả bài học`;
   }
 
   const startBtn = document.getElementById('btn-start-gapfill');
   if(p.type === 'quiz'){
     startBtn.textContent = 'Bắt đầu Quiz →';
+    document.getElementById('btn-listen-full').style.display = 'none';
+  } else if (p.type === 'wordformation') {
+    startBtn.textContent = 'Bắt đầu làm bài →';
     document.getElementById('btn-listen-full').style.display = 'none';
   } else {
     startBtn.textContent = 'Bắt đầu điền từ →';
@@ -3634,7 +3787,7 @@ document.getElementById('btn-back-home-2').addEventListener('click', ()=> {
 });
 
 document.getElementById('btn-listen-full').addEventListener('click', ()=>{
-  if(gf.passage && gf.passage.type !== 'quiz'){
+  if(gf.passage && gf.passage.type !== 'quiz' && gf.passage.type !== 'wordformation'){
       if(playPassageAudio(gf.passage, 1)) return;
       const fullText = gf.passage.sentences.map(item => {
           let t = typeof item === 'string' ? item : item.english;
@@ -3671,6 +3824,18 @@ function startGapfill(passage){
   gf.sentenceResults = [];
   gf.startTime = Date.now();
   gf.rate = parseFloat(document.getElementById('speed-slider-gf').value);
+
+  const audioWidget = document.getElementById('gf-audio-widget');
+  const deck = document.getElementById('gf-deck');
+  
+  if (passage.type === 'wordformation') {
+    if (audioWidget) audioWidget.style.display = 'none';
+    if (deck) deck.classList.add('full-width');
+  } else {
+    if (audioWidget) audioWidget.style.display = 'flex';
+    if (deck) deck.classList.remove('full-width');
+  }
+
   updateGfStrip();
   showScreen('screen-gapfill');
   loadGapfillItem();
@@ -3710,13 +3875,20 @@ function loadGapfillItem(){
       </table>
     `;
   }
-  sentenceEl.innerHTML = likeDislikeHtml + item.parts.map(part=>{
+
+  let questionHtml = item.parts.map(part=>{
     if(part.type==='text') return escapeHtml(part.value);
     const width = Math.max(part.answer.length*12 + 32, 80);
     const html = `<input type="text" class="blank-input" data-i="${blankIdx}" style="width:${width}px" autocomplete="off" autocapitalize="off" spellcheck="false">`;
     blankIdx++;
     return html;
   }).join('');
+
+  if (gf.passage.type === 'wordformation' && item.translation) {
+    questionHtml += `<div style="margin-top:16px; font-size:15px; color:var(--text-secondary); font-weight:normal; background:#F9FAFB; padding:12px 16px; border-radius:10px; border:1px solid var(--border);">🇻🇳 Dịch câu: ${escapeHtml(item.translation)}</div>`;
+  }
+
+  sentenceEl.innerHTML = likeDislikeHtml + questionHtml;
 
   const fb = document.getElementById('feedback-gf');
   fb.className = 'feedback';
@@ -3743,9 +3915,11 @@ function loadGapfillItem(){
     });
   });
 
-  setTimeout(()=> {
-    if(!playPassageAudio(getCurrentGapfillAudio(item), gf.rate)) speak(item.full, gf.rate);
-  }, 300);
+  if (gf.passage.type !== 'wordformation') {
+    setTimeout(()=> {
+      if(!playPassageAudio(getCurrentGapfillAudio(item), gf.rate)) speak(item.full, gf.rate);
+    }, 300);
+  }
 }
 
 function escapeHtml(str){
@@ -4071,6 +4245,7 @@ function retryGapfillMissed(){
   if(gf.missedSentences.length===0){ showScreen('screen-home'); return; }
   const tempPassage = {
     id: gf.passage.id, title: gf.passage.title + ' (ôn lại câu sai)', level: gf.passage.level, context: gf.passage.context,
+    type: gf.passage.type,
     audio: gf.passage.audio,
     likeDislike: gf.passage.likeDislike,
     sentences: gf.missedSentences
@@ -4211,7 +4386,17 @@ function loadPictureChoiceItem(activity) {
   });
 
   qz.awaitingNext = false;
-  setTimeout(()=> speak(q.audioText, qz.rate), 300);
+  const audioPlayer = document.getElementById('quiz-audio-player');
+  // Load the audio source from the question object, assuming data contains audioSrc.
+  // Fallback to text-to-speech if no MP3 source exists.
+  if (q.audioSrc) {
+    audioPlayer.src = q.audioSrc;
+    const activePill = document.querySelector('#quiz-speed-selector .speed-pill.active');
+    audioPlayer.playbackRate = activePill ? parseFloat(activePill.getAttribute('data-speed')) : 1;
+  } else {
+    audioPlayer.removeAttribute('src'); // Empty state for graceful fallback
+    setTimeout(()=> speak(q.audioText, qz.rate), 300);
+  }
 }
 
 function nextPictureChoiceItem() {
@@ -4318,7 +4503,17 @@ function loadTrueFalseActivity(activity) {
   });
   
   qz.awaitingNext = false;
-  setTimeout(()=> speak(activity.audioText, qz.rate), 300);
+  const audioPlayer = document.getElementById('quiz-audio-player');
+  // Load the audio source from the activity object, assuming data contains audioSrc.
+  // Fallback to text-to-speech if no MP3 source exists.
+  if (activity.audioSrc) {
+    audioPlayer.src = activity.audioSrc;
+    const activePill = document.querySelector('#quiz-speed-selector .speed-pill.active');
+    audioPlayer.playbackRate = activePill ? parseFloat(activePill.getAttribute('data-speed')) : 1;
+  } else {
+    audioPlayer.removeAttribute('src'); // Empty state for graceful fallback
+    setTimeout(()=> speak(activity.audioText, qz.rate), 300);
+  }
 }
 
 function nextQuizActivity() {
