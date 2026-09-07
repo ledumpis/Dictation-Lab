@@ -1064,6 +1064,42 @@ button {
 .tf-result-icon.correct { color: var(--success); }
 .tf-result-icon.wrong { color: var(--danger); }
 
+.quiz-task-heading { margin: 0 0 8px; font-size: 20px; color: var(--text); }
+.quiz-task-instruction { margin: 0 0 20px; color: var(--text-secondary); line-height: 1.55; }
+.quiz-list { display: grid; gap: 12px; }
+.quiz-list-item { padding: 16px 18px; border: 1px solid var(--border); border-radius: 14px; background: #FFF; box-shadow: 0 3px 10px rgba(15, 23, 42, 0.03); }
+.quiz-list-question { font-weight: 700; line-height: 1.5; margin-bottom: 6px; }
+.quiz-list-translation { color: var(--text-secondary); font-size: 14px; margin-bottom: 12px; line-height: 1.45; }
+.quiz-list-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.quiz-list-choice { display: flex; align-items: flex-start; gap: 9px; padding: 9px 10px; border: 1px solid var(--border); border-radius: 9px; cursor: pointer; }
+.quiz-list-choice:hover { border-color: var(--primary); background: #F8FBFF; }
+.quiz-list-choice input { margin-top: 3px; accent-color: var(--primary); }
+.quiz-tf-table { margin: 0; }
+.quiz-tf-table .quiz-list-question { margin: 0 0 5px; }
+.quiz-tf-table .quiz-list-translation { margin: 0; }
+.quiz-tf-table .quiz-review { margin: 10px 0 0; }
+.quiz-review { margin-top: 12px; padding: 12px; border-radius: 10px; background: #F8FAFC; font-size: 14px; line-height: 1.55; }
+.quiz-review.wrong { background: #FEF2F2; }
+.quiz-review.correct { background: #F0FDF4; }
+.quiz-review-vocab { margin-top: 8px; color: var(--primary); }
+.quiz-vocabulary-card { text-align: left; }
+.quiz-vocabulary-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.quiz-vocabulary-item { padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: #FFF; font-size: 14px; line-height: 1.45; }
+.quiz-vocabulary-item b { color: var(--primary); display: block; margin-bottom: 2px; }
+
+/* ---------- Traffic quiz visual format ---------- */
+#screen-quiz.traffic-quiz-mode .answer-sheet { max-width: 900px; }
+#screen-quiz.traffic-quiz-mode .quiz-task-heading { font-size: 24px; margin-bottom: 10px; }
+#screen-quiz.traffic-quiz-mode .quiz-task-instruction { padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+#screen-quiz.traffic-quiz-mode .quiz-list { gap: 16px; }
+#screen-quiz.traffic-quiz-mode .quiz-list-item { padding: 20px; border-radius: 16px; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04); }
+#screen-quiz.traffic-quiz-mode .quiz-list-choices { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+#screen-quiz.traffic-quiz-mode .quiz-list-choice { position: relative; justify-content: center; align-items: center; min-height: 46px; padding: 10px 14px; border-radius: 11px; background: #FFFFFF; font-weight: 600; transition: all 180ms ease; }
+#screen-quiz.traffic-quiz-mode .quiz-list-choice input { position: absolute; opacity: 0; pointer-events: none; }
+#screen-quiz.traffic-quiz-mode .quiz-list-choice:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12); }
+#screen-quiz.traffic-quiz-mode .quiz-list-choice:has(input:checked) { background: var(--primary); border-color: var(--primary); color: #FFFFFF; box-shadow: 0 5px 14px rgba(59, 130, 246, 0.28); }
+#screen-quiz.traffic-quiz-mode .quiz-tf-table { border-radius: 14px; overflow: hidden; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04); }
+
 /* ---------- Results ---------- */
 .results-card {
   background: var(--card);
@@ -1685,6 +1721,9 @@ footer.note {
 
       <!-- New Learning Cards Container for Gapfill -->
       <div id="gf-learning-container" style="display:none;"></div>
+
+      <!-- Vocabulary summary for quiz lessons -->
+      <div id="quiz-vocabulary-container" style="display:none;"></div>
 
       <div class="results-actions">
         <button class="btn btn-primary" id="btn-retry-missed">Luyện lại từ sai</button>
@@ -2803,7 +2842,7 @@ const PASSAGES = [
             ]
           },
           {
-            english: 'Fine. Well, first of all silver nitrate, iodide is {{fired}} into the cloud from the ground using a rocket.',
+            english: 'Fine. Well, first of all silver nitr, er, iodide is {{fired}} into the cloud from the ground using a rocket.',
             translation: 'Vâng ạ. Đầu tiên, bạc iodide được bắn vào đám mây từ mặt đất bằng tên lửa.',
             vocabulary: [
               { word: 'fired', meaning: 'được bắn vào' }
@@ -2876,6 +2915,71 @@ const PASSAGES = [
           }
         ]
       }
+    ]
+  },
+  { id:'traffic', title:'Traffic', type:'group', level:'A2 – B1',
+    context:'Bài nghe về giao thông, phương tiện di chuyển và các giải pháp cho vấn đề giao thông. Bấm vào để chọn bài luyện.',
+    lessons: [
+      { id:'traffic-1', title:'Exercise 1', level:'A2 – B1', type:'quiz', context:'Exercise 1: Nghe các bản tin giao thông và ghép với hình phù hợp.', activities:[
+        { type:'quiz-list', title:'Exercise 1', instruction:'Listen to each traffic report. Match it with the correct picture.', workbookImage:'images/traffic-ex1-workbook.png', audioSrc:'audio/ex 1.mp3', questions:[
+          { text:'Listen to traffic report 1.', translation:'Nghe bản tin giao thông số 1.', choices:[{key:'A',text:'A'},{key:'B',text:'B'},{key:'C',text:'C'},{key:'D',text:'D'},{key:'E',text:'E'},{key:'F',text:'F'}], answer:'D', content:'There’s been an accident on northbound Route 101. A truck has overturned and traffic is very congested.', contentTranslation:'Đã xảy ra một tai nạn trên tuyến Route 101 hướng Bắc. Một xe tải bị lật và giao thông đang ùn tắc nghiêm trọng.', vocabulary:[{word:'northbound',meaning:'hướng Bắc'},{word:'overturned',meaning:'bị lật'},{word:'congested',meaning:'ùn tắc'}] },
+          { text:'Listen to traffic report 2.', translation:'Nghe bản tin giao thông số 2.', choices:[{key:'A',text:'A'},{key:'B',text:'B'},{key:'C',text:'C'},{key:'D',text:'D'},{key:'E',text:'E'},{key:'F',text:'F'}], answer:'E', content:'Traffic is moving smoothly today on the Kennedy Bridge. Traffic is unusually light.', contentTranslation:'Hôm nay giao thông trên cầu Kennedy lưu thông thông suốt. Lượng xe ít bất thường.', vocabulary:[{word:'traffic is moving smoothly',meaning:'giao thông lưu thông thông suốt'},{word:'traffic is unusually light',meaning:'lượng xe ít bất thường'},{word:'very few cars',meaning:'rất ít xe'}] },
+          { text:'Listen to traffic report 3.', translation:'Nghe bản tin giao thông số 3.', choices:[{key:'A',text:'A'},{key:'B',text:'B'},{key:'C',text:'C'},{key:'D',text:'D'},{key:'E',text:'E'},{key:'F',text:'F'}], answer:'A', content:'The New Harbor Bridge is very busy today. It’s bumper to bumper, so avoid the bridge if you can.', contentTranslation:'Cầu New Harbor hôm nay rất đông. Xe nối đuôi nhau, vì vậy hãy tránh đi qua cầu nếu có thể.', vocabulary:[{word:'bumper to bumper',meaning:'xe nối đuôi nhau'},{word:'traffic is moving very slowly',meaning:'giao thông di chuyển rất chậm'},{word:'avoid the bridge',meaning:'tránh đi qua cầu'}] },
+          { text:'Listen to traffic report 4.', translation:'Nghe bản tin giao thông số 4.', choices:[{key:'A',text:'A'},{key:'B',text:'B'},{key:'C',text:'C'},{key:'D',text:'D'},{key:'E',text:'E'},{key:'F',text:'F'}], answer:'F', content:'There has been a traffic accident on Watergate Drive. It looks like two cars had a head-on collision.', contentTranslation:'Đã có một tai nạn giao thông trên đường Watergate. Có vẻ hai xe đã va chạm trực diện.', vocabulary:[{word:'traffic accident',meaning:'tai nạn giao thông'},{word:'head-on collision',meaning:'va chạm trực diện'},{word:'keep away from',meaning:'tránh xa khỏi'},{word:'ambulances',meaning:'xe cứu thương'}] },
+          { text:'Listen to traffic report 5.', translation:'Nghe bản tin giao thông số 5.', choices:[{key:'A',text:'A'},{key:'B',text:'B'},{key:'C',text:'C'},{key:'D',text:'D'},{key:'E',text:'E'},{key:'F',text:'F'}], answer:'B', content:'Highway 25 is closed for repairs today. No traffic will be allowed on Highway 25 all day.', contentTranslation:'Xa lộ 25 hôm nay đóng cửa để sửa chữa. Không phương tiện nào được phép lưu thông trên Xa lộ 25 cả ngày.', vocabulary:[{word:'closed for repairs',meaning:'đóng cửa để sửa chữa'},{word:'no traffic allowed',meaning:'không cho phép phương tiện lưu thông'},{word:'stay away from',meaning:'tránh xa'}] },
+          { text:'Listen to traffic report 6.', translation:'Nghe bản tin giao thông số 6.', choices:[{key:'A',text:'A'},{key:'B',text:'B'},{key:'C',text:'C'},{key:'D',text:'D'},{key:'E',text:'E'},{key:'F',text:'F'}], answer:'C', content:'It’s the annual marathon today. Pine Street and all the streets from Pine through Oak are closed until 2:00 p.m.', contentTranslation:'Hôm nay là cuộc chạy marathon thường niên. Đường Pine và tất cả các đường từ Pine đến Oak đóng cửa đến 2 giờ chiều.', vocabulary:[{word:'annual marathon',meaning:'cuộc chạy marathon thường niên'},{word:'streets are closed',meaning:'các con đường bị đóng'},{word:'until 2:00 p.m.',meaning:'cho đến 2 giờ chiều'}] }
+        ] }
+      ] },
+      { id:'traffic-2', title:'Exercise 2', level:'A2 – B1', type:'quiz', context:'Exercise 2: Cách di chuyển và bài tập Đúng/Sai.', activities:[
+        { type:'quiz-list', title:'Task 1', instruction:'These people have to go somewhere. How will each person get there? Listen and circle the correct answer.', audioSrc:'audio/ex 2.mp3', questions:[
+          {text:'1.',translation:'1. Người thứ nhất sẽ đến đó bằng cách nào?',choices:[{key:'a',text:'by bus'},{key:'b',text:'by car'},{key:'c',text:'by bicycle'}],answer:'b',content:'There is too much traffic to go by bike, so the driver offers a ride downtown.',contentTranslation:'Có quá nhiều xe nên đi xe đạp không an toàn, vì vậy người lái xe đề nghị chở vào trung tâm.',vocabulary:[{word:'give someone a ride',meaning:'cho ai đi nhờ xe'},{word:'ride in traffic',meaning:'đi xe trong dòng giao thông'},{word:'downtown',meaning:'trung tâm thành phố'}]},
+          {text:'2.',translation:'2. Người thứ hai sẽ đến đó bằng cách nào?',choices:[{key:'a',text:'by car'},{key:'b',text:'by bus'},{key:'c',text:'by subway'}],answer:'c',content:'There is a traffic jam on the freeway because buses have broken down, so the subway will be quicker.',contentTranslation:'Có kẹt xe trên đường cao tốc vì vài xe buýt bị hỏng, nên đi tàu điện ngầm sẽ nhanh hơn.',vocabulary:[{word:'traffic jam',meaning:'ùn tắc giao thông'},{word:'freeway',meaning:'đường cao tốc'},{word:'break down',meaning:'bị hỏng'}]},
+          {text:'3.',translation:'3. Người thứ ba sẽ đến đó bằng cách nào?',choices:[{key:'a',text:'by taxi'},{key:'b',text:'by car'},{key:'c',text:'by bus'}],answer:'a',content:'They have waited half an hour for a bus and decide to take a taxi to avoid being late for the movie.',contentTranslation:'Họ đã đợi xe buýt nửa giờ và quyết định đi taxi để không muộn xem phim.',vocabulary:[{word:'wait for a bus',meaning:'đợi xe buýt'},{word:'be late for',meaning:'muộn cho'},{word:'call for a taxi',meaning:'gọi taxi'}]},
+          {text:'4.',translation:'4. Harry sẽ về nhà bằng cách nào?',choices:[{key:'a',text:'by car'},{key:'b',text:'by bus'},{key:'c',text:'by taxi'}],answer:'a',content:'Kevin is having dinner with them and lives near Harry, so Harry will ask Kevin to drive him home.',contentTranslation:'Kevin ăn tối cùng họ và sống gần Harry, vì vậy Harry sẽ nhờ Kevin lái xe đưa mình về nhà.',vocabulary:[{word:'drive someone home',meaning:'lái xe đưa ai về nhà'},{word:'plenty of',meaning:'nhiều'},{word:'nearby',meaning:'ở gần'}]},
+          {text:'5.',translation:'5. Người thứ năm sẽ đến đó bằng cách nào?',choices:[{key:'a',text:'by car'},{key:'b',text:'by taxi and subway'},{key:'c',text:'by subway and on foot'}],answer:'c',content:'A broken traffic light is backing up traffic. The fastest way is to take the subway to the station and walk.',contentTranslation:'Đèn giao thông hỏng làm xe cộ ùn lại. Cách nhanh nhất là đi tàu điện ngầm đến ga rồi đi bộ.',vocabulary:[{word:'back up',meaning:'ùn lại/dồn ứ'},{word:'traffic light',meaning:'đèn giao thông'},{word:'on foot',meaning:'đi bộ'}]},
+          {text:'6.',translation:'6. Người thứ sáu sẽ đến đó bằng cách nào?',choices:[{key:'a',text:'by car'},{key:'b',text:'by bike'},{key:'c',text:'by bus'}],answer:'b',content:'The weather is nice, and the speaker wants exercise, so he will ride his bike.',contentTranslation:'Thời tiết đẹp và người nói muốn tập thể dục, nên anh ấy sẽ đi xe đạp.',vocabulary:[{word:'ride a bike',meaning:'đi xe đạp'},{word:'get some exercise',meaning:'tập thể dục'},{word:'be careful of traffic',meaning:'cẩn thận xe cộ'}]}
+        ] },
+        { type:'quiz-list', layout:'true-false', title:'Task 2', instruction:'Listen again. Are these statements true or false? Check the correct answer.', audioSrc:'audio/ex 2.mp3', questions:[
+          {text:'1. There is a big baseball game today.',translation:'Có một trận bóng chày lớn hôm nay.',choices:[{key:'true',text:'True'},{key:'false',text:'False'}],answer:'false',content:'The speakers say there is a big football game.',contentTranslation:'Những người nói nhắc đến một trận bóng đá lớn.',vocabulary:[{word:'big football game',meaning:'trận bóng đá lớn'},{word:'because of',meaning:'do/vì'},{word:'too much traffic',meaning:'quá nhiều xe cộ'}]},
+          {text:'2. There is a traffic jam on the freeway.',translation:'Có một vụ kẹt xe trên đường cao tốc.',choices:[{key:'true',text:'True'},{key:'false',text:'False'}],answer:'true',content:'The traffic report says there is a traffic jam on the freeway.',contentTranslation:'Bản tin giao thông nói rằng có kẹt xe trên đường cao tốc.',vocabulary:[{word:'traffic report',meaning:'bản tin giao thông'},{word:'traffic jam',meaning:'kẹt xe'},{word:'freeway',meaning:'đường cao tốc'}]},
+          {text:'3. Taxis usually don’t come very quickly.',translation:'Taxi thường không đến rất nhanh.',choices:[{key:'true',text:'True'},{key:'false',text:'False'}],answer:'false',content:'They say taxis usually come pretty quickly.',contentTranslation:'Họ nói taxi thường đến khá nhanh.',vocabulary:[{word:'call for a taxi',meaning:'gọi taxi'},{word:'wait half an hour',meaning:'đợi nửa giờ'},{word:'be late for',meaning:'muộn cho'}]},
+          {text:'4. Kevin lives close to Harry.',translation:'Kevin sống gần Harry.',choices:[{key:'true',text:'True'},{key:'false',text:'False'}],answer:'true',content:'Kevin lives near Harry.',contentTranslation:'Kevin sống gần Harry.',vocabulary:[{word:'live near',meaning:'sống gần'},{word:'drive someone home',meaning:'lái xe đưa ai về nhà'},{word:'plenty of taxis',meaning:'nhiều taxi'}]},
+          {text:'5. The traffic is backing up because a traffic light is broken.',translation:'Giao thông đang ùn tắc vì một đèn giao thông bị hỏng.',choices:[{key:'true',text:'True'},{key:'false',text:'False'}],answer:'true',content:'One traffic light is broken, so all the traffic is backing up.',contentTranslation:'Một đèn giao thông bị hỏng, vì vậy toàn bộ xe cộ đang ùn lại.',vocabulary:[{word:'back up',meaning:'ùn lại'},{word:'broken',meaning:'bị hỏng'},{word:'traffic light',meaning:'đèn giao thông'}]},
+          {text:'6. The weather is not so good.',translation:'Thời tiết không được đẹp lắm.',choices:[{key:'true',text:'True'},{key:'false',text:'False'}],answer:'false',content:'The weather is really nice out.',contentTranslation:'Thời tiết bên ngoài thực sự rất đẹp.',vocabulary:[{word:'ride a bike',meaning:'đi xe đạp'},{word:'get some exercise',meaning:'tập thể dục'},{word:'be careful of traffic',meaning:'cẩn thận xe cộ'}]}
+        ] }
+      ] },
+      { id:'traffic-3', title:'Exercise 3', level:'A2 – B1', type:'quiz', context:'Exercise 3: Giải pháp cho các vấn đề giao thông.', activities:[
+        {type:'quiz-list',title:'Task 1',instruction:'People are describing solutions to traffic problems in their cities. What did each city do? Listen and circle the correct answer.',audioSrc:'audio/ex 3.mp3',questions:[
+          {text:'1.',translation:'1. Thành phố thứ nhất đã làm gì?',choices:[{key:'a',text:'They improved the quality of buses.'},{key:'b',text:'They raised bus fares on weekends.'},{key:'c',text:'They lowered taxi fares.'}],answer:'a',content:'They bought nice new buses and added air conditioning to existing buses.',contentTranslation:'Họ mua những xe buýt mới tốt hơn và lắp điều hòa cho các xe buýt hiện có.',vocabulary:[{word:'public transportation',meaning:'phương tiện giao thông công cộng'},{word:'air conditioning',meaning:'điều hòa không khí'},{word:'bus fares',meaning:'giá vé xe buýt'}]},
+          {text:'2.',translation:'2. Thành phố thứ hai đã làm gì?',choices:[{key:'a',text:'They built more parking garages.'},{key:'b',text:'They made drivers pay a daily fee.'},{key:'c',text:'They kept all cars out of the city center.'}],answer:'b',content:'Drivers have to pay $10 to drive downtown between 8 a.m. and 6 p.m.',contentTranslation:'Người lái xe phải trả 10 đô-la để lái vào trung tâm từ 8 giờ sáng đến 6 giờ chiều.',vocabulary:[{word:'parking spaces',meaning:'chỗ đỗ xe'},{word:'daily fee',meaning:'phí hằng ngày'},{word:'city center',meaning:'trung tâm thành phố'}]},
+          {text:'3.',translation:'3. Thành phố thứ ba đã làm gì?',choices:[{key:'a',text:'They made many streets downtown one-way.'},{key:'b',text:'They made new lanes for cars to use.'},{key:'c',text:'They made a law that people can drive downtown every day if they have a special pass.'}],answer:'a',content:'The government turned many streets downtown into one-way streets.',contentTranslation:'Chính phủ đã biến nhiều đường ở trung tâm thành đường một chiều.',vocabulary:[{word:'one-way street',meaning:'đường một chiều'},{word:'bus lane',meaning:'làn đường dành cho xe buýt'},{word:'special pass',meaning:'giấy phép đặc biệt'}]},
+          {text:'4.',translation:'4. Thành phố thứ tư đã làm gì?',choices:[{key:'a',text:'They did not allow people to ride a bicycle downtown.'},{key:'b',text:'They made a rule that there must be at least three people in a car to go downtown.'},{key:'c',text:'They bought new buses that don’t create pollution.'}],answer:'c',content:'They ordered new pollution-free buses that use electricity.',contentTranslation:'Họ đặt mua xe buýt mới không gây ô nhiễm, sử dụng điện.',vocabulary:[{word:'air pollution',meaning:'ô nhiễm không khí'},{word:'bicycle lanes',meaning:'làn đường xe đạp'},{word:'pollution-free',meaning:'không gây ô nhiễm'}]}
+        ]},
+        {type:'quiz-list',title:'Task 2',instruction:'Listen again. What problem did each city have? Write the correct letter.',audioSrc:'audio/ex 3.mp3',questions:[
+          {text:'1.',translation:'1. Thành phố thứ nhất gặp vấn đề gì?',choices:[{key:'a',text:'The traffic moved too slowly.'},{key:'b',text:'There weren’t enough parking spaces.'},{key:'c',text:'The public transportation wasn’t very good.'},{key:'d',text:'The air pollution in the city needed to be lowered.'}],answer:'c',content:'Public transportation was never very good, so people had to drive everywhere.',contentTranslation:'Phương tiện giao thông công cộng chưa bao giờ tốt, nên mọi người phải lái xe đi mọi nơi.',vocabulary:[{word:'public transportation',meaning:'giao thông công cộng'},{word:'drive everywhere',meaning:'lái xe đi khắp nơi'},{word:'traffic',meaning:'giao thông'}]},
+          {text:'2.',translation:'2. Thành phố thứ hai gặp vấn đề gì?',choices:[{key:'a',text:'The traffic moved too slowly.'},{key:'b',text:'There weren’t enough parking spaces.'},{key:'c',text:'The public transportation wasn’t very good.'},{key:'d',text:'The air pollution in the city needed to be lowered.'}],answer:'b',content:'Thousands of people drove into the city center, and there weren’t enough parking spaces.',contentTranslation:'Hàng nghìn người lái xe vào trung tâm thành phố, nhưng không có đủ chỗ đỗ xe.',vocabulary:[{word:'parking spaces',meaning:'chỗ đỗ xe'},{word:'drive into',meaning:'lái xe vào'},{word:'thousands of',meaning:'hàng nghìn'}]},
+          {text:'3.',translation:'3. Thành phố thứ ba gặp vấn đề gì?',choices:[{key:'a',text:'The traffic moved too slowly.'},{key:'b',text:'There weren’t enough parking spaces.'},{key:'c',text:'The public transportation wasn’t very good.'},{key:'d',text:'The air pollution in the city needed to be lowered.'}],answer:'a',content:'Traffic was a real problem because it moved so slowly.',contentTranslation:'Giao thông là một vấn đề thực sự vì xe cộ di chuyển quá chậm.',vocabulary:[{word:'move slowly',meaning:'di chuyển chậm'},{word:'real problem',meaning:'vấn đề nghiêm trọng'},{word:'downtown',meaning:'trung tâm thành phố'}]},
+          {text:'4.',translation:'4. Thành phố thứ tư gặp vấn đề gì?',choices:[{key:'a',text:'The traffic moved too slowly.'},{key:'b',text:'There weren’t enough parking spaces.'},{key:'c',text:'The public transportation wasn’t very good.'},{key:'d',text:'The air pollution in the city needed to be lowered.'}],answer:'d',content:'Air pollution was a huge problem and needed to be lowered.',contentTranslation:'Ô nhiễm không khí là một vấn đề rất lớn và cần được giảm xuống.',vocabulary:[{word:'air pollution',meaning:'ô nhiễm không khí'},{word:'lower pollution',meaning:'giảm ô nhiễm'},{word:'huge problem',meaning:'vấn đề rất lớn'}]}
+        ]}
+      ] },
+      { id:'traffic-4', title:'Exercise 4', level:'A2 – B1', type:'quiz', context:'Exercise 4: Ghép bản tin giao thông với vấn đề phù hợp.', activities:[
+        {type:'quiz-list',title:'Exercise 4',instruction:'Listen and write the correct letter.',audioSrc:'audio/ex 4.mp3',questions:[
+          {text:'1.',translation:'1. Nghe bản tin số 1 và chọn chữ cái đúng.',choices:[{key:'a',text:'a head-on collision'},{key:'b',text:'heavy congestion'},{key:'c',text:'road closed for repairs'},{key:'d',text:'an overturned vehicle'},{key:'e',text:'broken traffic lights'}],answer:'b',content:'There are a lot of cars on the road because of the championship football game.',contentTranslation:'Có rất nhiều xe trên đường vì trận chung kết bóng đá.',vocabulary:[{word:'heavy congestion',meaning:'ùn tắc nghiêm trọng'},{word:'championship',meaning:'giải vô địch'},{word:'leave early',meaning:'đi sớm'}]},
+          {text:'2.',translation:'2. Nghe bản tin số 2 và chọn chữ cái đúng.',choices:[{key:'a',text:'a head-on collision'},{key:'b',text:'heavy congestion'},{key:'c',text:'road closed for repairs'},{key:'d',text:'an overturned vehicle'},{key:'e',text:'broken traffic lights'}],answer:'a',content:'A north-bound and a south-bound car ran into each other on Highway 24.',contentTranslation:'Một xe hướng Bắc và một xe hướng Nam đã đâm vào nhau trên Xa lộ 24.',vocabulary:[{word:'head-on collision',meaning:'va chạm trực diện'},{word:'emergency vehicles',meaning:'xe cứu hộ khẩn cấp'},{word:'slow down',meaning:'giảm tốc'}]},
+          {text:'3.',translation:'3. Nghe bản tin số 3 và chọn chữ cái đúng.',choices:[{key:'a',text:'a head-on collision'},{key:'b',text:'heavy congestion'},{key:'c',text:'road closed for repairs'},{key:'d',text:'an overturned vehicle'},{key:'e',text:'broken traffic lights'}],answer:'e',content:'A driver ran into a traffic light pole, and all the traffic lights in that area are broken.',contentTranslation:'Một tài xế đâm vào cột đèn giao thông, khiến tất cả đèn giao thông ở khu vực đó bị hỏng.',vocabulary:[{word:'traffic light pole',meaning:'cột đèn giao thông'},{word:'broken traffic lights',meaning:'đèn giao thông bị hỏng'},{word:'avoid the area',meaning:'tránh khu vực đó'}]},
+          {text:'4.',translation:'4. Nghe bản tin số 4 và chọn chữ cái đúng.',choices:[{key:'a',text:'a head-on collision'},{key:'b',text:'heavy congestion'},{key:'c',text:'road closed for repairs'},{key:'d',text:'an overturned vehicle'},{key:'e',text:'broken traffic lights'}],answer:'c',content:'A section of Interstate 55 is closed today for repairs. Use Highway 23 instead.',contentTranslation:'Một đoạn của Xa lộ Liên bang 55 hôm nay đóng cửa để sửa chữa. Hãy dùng Xa lộ 23 thay thế.',vocabulary:[{word:'closed for repairs',meaning:'đóng cửa để sửa chữa'},{word:'section of',meaning:'một đoạn của'},{word:'instead',meaning:'thay vào đó'}]},
+          {text:'5.',translation:'5. Nghe bản tin số 5 và chọn chữ cái đúng.',choices:[{key:'a',text:'a head-on collision'},{key:'b',text:'heavy congestion'},{key:'c',text:'road closed for repairs'},{key:'d',text:'an overturned vehicle'},{key:'e',text:'broken traffic lights'}],answer:'d',content:'Route 17 is very icy, and a car has overturned.',contentTranslation:'Tuyến đường 17 rất đóng băng, và một chiếc xe đã bị lật.',vocabulary:[{word:'icy conditions',meaning:'điều kiện đường đóng băng'},{word:'overturned vehicle',meaning:'xe bị lật'},{word:'throughout the day',meaning:'suốt cả ngày'}]}
+        ]}
+      ] },
+      { id:'traffic-5', title:'Exercise 5', level:'A2 – B1', type:'quiz', context:'Exercise 5: Cách mọi người đi làm hằng ngày.', activities:[
+        {type:'quiz-list',title:'Exercise 5',instruction:'People are talking about how they get to work everyday. How does each person get to work now? Listen and circle the correct answer.',audioSrc:'audio/ex 5.mp3',questions:[
+          {text:'1.',translation:'1. Joe hiện đi làm bằng cách nào?',choices:[{key:'a',text:'by car'},{key:'b',text:'by bicycle'},{key:'c',text:'by subway'}],answer:'c',content:'Joe started taking the subway because the roads were so congested when he drove.',contentTranslation:'Joe bắt đầu đi tàu điện ngầm vì đường quá tắc khi anh lái xe.',vocabulary:[{word:'congested',meaning:'ùn tắc'},{word:'take the subway',meaning:'đi tàu điện ngầm'},{word:'get to work',meaning:'đến chỗ làm'}]},
+          {text:'2.',translation:'2. Robin hiện đi làm bằng cách nào?',choices:[{key:'a',text:'on foot'},{key:'b',text:'by bicycle'},{key:'c',text:'by taxi'}],answer:'a',content:'Robin walks to work because her doctor told her to get more exercise.',contentTranslation:'Robin đi bộ đến chỗ làm vì bác sĩ bảo cô cần tập thể dục nhiều hơn.',vocabulary:[{word:'walk to work',meaning:'đi bộ đến chỗ làm'},{word:'get more exercise',meaning:'tập thể dục nhiều hơn'},{word:'about 30 minutes',meaning:'khoảng 30 phút'}]},
+          {text:'3.',translation:'3. Ellen hiện đi làm bằng cách nào?',choices:[{key:'a',text:'by subway'},{key:'b',text:'by ferry'},{key:'c',text:'on foot'}],answer:'b',content:'Ellen now takes a ferry across the South River.',contentTranslation:'Ellen bây giờ đi phà qua sông South.',vocabulary:[{word:'ferry service',meaning:'dịch vụ phà'},{word:'across the river',meaning:'qua sông'},{word:'commute',meaning:'đi lại giữa nhà và nơi làm việc'}]},
+          {text:'4.',translation:'4. Người thứ tư hiện đi làm bằng cách nào?',choices:[{key:'a',text:'by car'},{key:'b',text:'by jogging'},{key:'c',text:'on foot'}],answer:'b',content:'The speaker jogs to work and back instead of driving and going to the health club.',contentTranslation:'Người nói chạy bộ đến chỗ làm và về nhà thay vì lái xe rồi đến câu lạc bộ thể thao.',vocabulary:[{word:'kill two birds with one stone',meaning:'một công đôi việc'},{word:'jog to work',meaning:'chạy bộ đến chỗ làm'},{word:'get stuck in traffic',meaning:'bị kẹt xe'}]},
+          {text:'5.',translation:'5. Người thứ năm hiện đi làm bằng cách nào?',choices:[{key:'a',text:'by subway'},{key:'b',text:'by bus'},{key:'c',text:'on foot'}],answer:'b',content:'After a bad fall on subway steps, the speaker takes the bus.',contentTranslation:'Sau khi ngã nặng trên bậc thang tàu điện ngầm, người nói đi xe buýt.',vocabulary:[{word:'subway rider',meaning:'người đi tàu điện ngầm'},{word:'bad fall',meaning:'cú ngã nặng'},{word:'look out the window',meaning:'nhìn ra cửa sổ'}]}
+        ]}
+      ] }
     ]
   },
   { id:'restaurant', title:'Restaurant', type:'group', level:'A2 – B1',
@@ -4354,6 +4458,7 @@ async function finishGapfill(){
   const cardsContainer = document.getElementById('gf-learning-container');
   cardsContainer.innerHTML = '';
   cardsContainer.style.display = 'block';
+  document.getElementById('quiz-vocabulary-container').style.display = 'none';
 
   gf.sentenceResults.forEach((res, idx) => {
     const isCorrect = res.isCorrect;
@@ -4547,6 +4652,7 @@ let qz = { passage:null, activities:[], actIndex:0, qIndex:0, correct:0, wrong:0
 
 function startQuiz(passage) {
   qz.passage = passage;
+  document.getElementById('screen-quiz').classList.toggle('traffic-quiz-mode', passage.id.startsWith('traffic-'));
   qz.activities = passage.activities;
   qz.actIndex = 0;
   qz.qIndex = 0;
@@ -4559,6 +4665,7 @@ function startQuiz(passage) {
   qz.activities.forEach(act => {
     if(act.type === 'picture-choice') qz.total += act.questions.length;
     if(act.type === 'true-false') qz.total += act.questions.length;
+    if(act.type === 'quiz-list') qz.total += act.questions.length;
   });
 
   document.getElementById('quiz-info').innerHTML = `<b>${passage.title}</b> · ${passage.level}`;
@@ -4572,6 +4679,8 @@ function loadQuizActivity() {
     loadPictureChoiceItem(activity);
   } else if (activity.type === 'true-false') {
     loadTrueFalseActivity(activity);
+  } else if (activity.type === 'quiz-list') {
+    loadQuizListActivity(activity);
   }
 }
 
@@ -4585,6 +4694,88 @@ function getQuizProgress() {
       completed += qz.qIndex;
   }
   return completed;
+}
+
+function loadQuizListActivity(activity){
+  updateQuizProgress();
+  const sheet = document.getElementById('quiz-answer-sheet');
+  const isTrueFalse = activity.layout === 'true-false';
+  sheet.innerHTML = `
+    <h3 class="quiz-task-heading">${activity.title}</h3>
+    <p class="quiz-task-instruction">${activity.instruction}</p>
+    ${activity.workbookImage ? `<img class="quiz-image" src="${activity.workbookImage}" alt="Workbook exercise">` : ''}
+    ${isTrueFalse ? `
+      <table class="tf-table quiz-tf-table">
+        <thead><tr><th>Statement</th><th class="center">True</th><th class="center">False</th></tr></thead>
+        <tbody>
+          ${activity.questions.map((q, i)=>`
+            <tr id="quiz-list-item-${i}">
+              <td>
+                <div class="quiz-list-question">${formatQuizListQuestion(q, i)}</div>
+                <div class="quiz-list-translation">${q.translation}</div>
+                <div class="quiz-review" id="quiz-review-${i}" hidden></div>
+              </td>
+              <td class="center"><input type="radio" class="tf-radio" name="quiz-list-${i}" value="true" aria-label="True"></td>
+              <td class="center"><input type="radio" class="tf-radio" name="quiz-list-${i}" value="false" aria-label="False"></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    ` : `
+    <div class="quiz-list">
+      ${activity.questions.map((q, i)=>`
+        <div class="quiz-list-item" id="quiz-list-item-${i}">
+          <div class="quiz-list-question">${formatQuizListQuestion(q, i)}</div>
+          <div class="quiz-list-translation">${q.translation}</div>
+          <div class="quiz-list-choices">
+            ${q.choices.map(c=>`<label class="quiz-list-choice"><input type="radio" name="quiz-list-${i}" value="${c.key}"><span>${formatQuizListChoice(c)}</span></label>`).join('')}
+          </div>
+          <div class="quiz-review" id="quiz-review-${i}" hidden></div>
+        </div>
+      `).join('')}
+    </div>`}
+    <div class="feedback" id="feedback-quiz"></div>
+    <div class="actions-row"><button class="btn btn-primary" id="btn-submit-quiz-list">Nộp bài</button></div>
+  `;
+  qz.awaitingNext = false;
+  document.getElementById('btn-submit-quiz-list').addEventListener('click', ()=>{
+    if(qz.awaitingNext){ nextQuizActivity(); return; }
+    if(activity.questions.some((q,i)=>!document.querySelector(`input[name="quiz-list-${i}"]:checked`))){
+      alert('Vui lòng trả lời toàn bộ câu hỏi trước khi nộp bài.');
+      return;
+    }
+    let correct = 0;
+    activity.questions.forEach((q,i)=>{
+      const selected = document.querySelector(`input[name="quiz-list-${i}"]:checked`).value;
+      const isCorrect = selected === q.answer;
+      if(isCorrect){ qz.correct++; correct++; } else { qz.wrong++; }
+      document.querySelectorAll(`input[name="quiz-list-${i}"]`).forEach(input=>input.disabled=true);
+      const answerText = q.choices.find(c=>c.key===q.answer).text;
+      const review = document.getElementById(`quiz-review-${i}`);
+      review.hidden = false;
+      review.className = `quiz-review ${isCorrect ? 'correct' : 'wrong'}`;
+      review.innerHTML = `<b>${isCorrect ? '✔ Đúng' : '✘ Chưa đúng'}</b><br>Đáp án đúng: <b>${q.answer}. ${answerText}</b>${q.content ? `<br><br><b>Nội dung nghe:</b> ${q.content}<br><b>Dịch:</b> ${q.contentTranslation}` : ''}${q.vocabulary && q.vocabulary.length ? `<div class="quiz-review-vocab"><b>Từ vựng:</b> ${q.vocabulary.map(v=>`${v.word}: ${v.meaning}`).join(' · ')}</div>` : ''}`;
+    });
+    const feedback = document.getElementById('feedback-quiz');
+    feedback.className = 'feedback show correct';
+    feedback.innerHTML = `<b>Kết quả:</b> ${correct}/${activity.questions.length} câu đúng.`;
+    qz.awaitingNext = true;
+    document.getElementById('btn-submit-quiz-list').textContent = 'Tiếp tục →';
+    updateQuizProgress(qz.total);
+  });
+  if(activity.audioSrc) playPassageAudio(activity.audioSrc, qz.rate);
+  else if(activity.audioText) setTimeout(()=>speak(activity.audioText,qz.rate),300);
+}
+
+function formatQuizListQuestion(question, index){
+  const text = question.text || '';
+  return /^\d+\.($|\s)/.test(text) ? text : `${question.number || index + 1}. ${text}`;
+}
+
+function formatQuizListChoice(choice){
+  const key = String(choice.key || '');
+  const text = String(choice.text || '');
+  return key.toLowerCase() === text.toLowerCase() ? `<b>${text}</b>` : `<b>${key}.</b> ${text}`;
 }
 
 function updateQuizProgress(currentTotal = null) {
@@ -4660,9 +4851,13 @@ function loadPictureChoiceItem(activity) {
   // Load the audio source from the question object, assuming data contains audioSrc.
   // Fallback to text-to-speech if no MP3 source exists.
   if (q.audioSrc) {
-    audioPlayer.src = q.audioSrc;
-    const activePill = document.querySelector('#quiz-speed-selector .speed-pill.active');
-    audioPlayer.playbackRate = activePill ? parseFloat(activePill.getAttribute('data-speed')) : 1;
+    if(audioPlayer){
+      audioPlayer.src = q.audioSrc;
+      const activePill = document.querySelector('#quiz-speed-selector .speed-pill.active');
+      audioPlayer.playbackRate = activePill ? parseFloat(activePill.getAttribute('data-speed')) : 1;
+    } else {
+      playPassageAudio(q.audioSrc, qz.rate);
+    }
   } else {
     audioPlayer.removeAttribute('src'); // Empty state for graceful fallback
     setTimeout(()=> speak(q.audioText, qz.rate), 300);
@@ -4777,9 +4972,13 @@ function loadTrueFalseActivity(activity) {
   // Load the audio source from the activity object, assuming data contains audioSrc.
   // Fallback to text-to-speech if no MP3 source exists.
   if (activity.audioSrc) {
-    audioPlayer.src = activity.audioSrc;
-    const activePill = document.querySelector('#quiz-speed-selector .speed-pill.active');
-    audioPlayer.playbackRate = activePill ? parseFloat(activePill.getAttribute('data-speed')) : 1;
+    if(audioPlayer){
+      audioPlayer.src = activity.audioSrc;
+      const activePill = document.querySelector('#quiz-speed-selector .speed-pill.active');
+      audioPlayer.playbackRate = activePill ? parseFloat(activePill.getAttribute('data-speed')) : 1;
+    } else {
+      playPassageAudio(activity.audioSrc, qz.rate);
+    }
   } else {
     audioPlayer.removeAttribute('src'); // Empty state for graceful fallback
     setTimeout(()=> speak(activity.audioText, qz.rate), 300);
@@ -4814,6 +5013,34 @@ async function finishQuiz() {
   document.getElementById('missed-list').style.display = 'none';
   document.getElementById('gf-lesson-summary').style.display = 'none';
   document.getElementById('gf-learning-container').style.display = 'none';
+  const quizVocabularyContainer = document.getElementById('quiz-vocabulary-container');
+  const vocabulary = new Map();
+  qz.activities.forEach(activity => {
+    (activity.questions || []).forEach(question => {
+      (question.vocabulary || []).forEach(item => {
+        const key = item.word.toLowerCase();
+        if(!vocabulary.has(key)) vocabulary.set(key, item);
+      });
+    });
+  });
+  if(vocabulary.size){
+    quizVocabularyContainer.innerHTML = `
+      <div class="learning-card quiz-vocabulary-card">
+        <div class="learning-card-header">
+          <span class="item-tag" style="margin:0;">VOCABULARY REVIEW</span>
+          <span class="learning-card-status status-correct">${vocabulary.size} từ/cụm từ</span>
+        </div>
+        <div class="learning-label">Từ vựng trọng tâm của bài</div>
+        <div class="quiz-vocabulary-list">
+          ${Array.from(vocabulary.values()).map(item=>`<div class="quiz-vocabulary-item"><b>${item.word}</b><span>${item.meaning}</span></div>`).join('')}
+        </div>
+      </div>
+    `;
+    quizVocabularyContainer.style.display = 'block';
+  } else {
+    quizVocabularyContainer.innerHTML = '';
+    quizVocabularyContainer.style.display = 'none';
+  }
   
   document.getElementById('btn-retry-missed').disabled = true;
   document.getElementById('btn-retry-missed').style.display = 'none'; // Not applicable for Quiz
@@ -4829,20 +5056,30 @@ async function finishQuiz() {
 }
 
 // Global Quiz Audio Controls
+function getQuizAudioSource(){
+  const act = qz.activities[qz.actIndex];
+  return act.audioSrc || (act.type === 'picture-choice' ? act.questions[qz.qIndex].audioSrc : null);
+}
+
+function getQuizAudioText(){
+  const act = qz.activities[qz.actIndex];
+  return act.type === 'picture-choice' ? act.questions[qz.qIndex].audioText : act.audioText;
+}
+
 document.getElementById('btn-play-quiz').addEventListener('click', ()=> {
-    const act = qz.activities[qz.actIndex];
-    const audioText = act.type === 'picture-choice' ? act.questions[qz.qIndex].audioText : act.audioText;
-    speak(audioText, qz.rate);
+    const audioSrc = getQuizAudioSource();
+    if(!playPassageAudio(audioSrc, qz.rate)) speak(getQuizAudioText(), qz.rate);
 });
 document.getElementById('btn-replay-quiz').addEventListener('click', ()=> {
-    const act = qz.activities[qz.actIndex];
-    const audioText = act.type === 'picture-choice' ? act.questions[qz.qIndex].audioText : act.audioText;
-    speak(audioText, qz.rate);
+    const audioSrc = getQuizAudioSource();
+    if(!playPassageAudio(audioSrc, qz.rate)) speak(getQuizAudioText(), qz.rate);
 });
 document.getElementById('speed-slider-quiz').addEventListener('input', (e)=>{
   setAudioRate('quiz', parseFloat(e.target.value));
 });
 document.getElementById('btn-exit-quiz').addEventListener('click', ()=>{
+  document.getElementById('screen-quiz').classList.remove('traffic-quiz-mode');
+  stopPassageAudio();
   if(window.speechSynthesis) window.speechSynthesis.cancel();
   openPassageIntro(qz.passage.id);
 });
@@ -5022,6 +5259,7 @@ async function finishPractice(){
   // Make sure to hide the Gapfill-specific panels
   document.getElementById('gf-lesson-summary').style.display = 'none';
   document.getElementById('gf-learning-container').style.display = 'none';
+  document.getElementById('quiz-vocabulary-container').style.display = 'none';
 
   const missedBox = document.getElementById('missed-list');
   const missedRows = document.getElementById('missed-rows');
