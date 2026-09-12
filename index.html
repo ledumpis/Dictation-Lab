@@ -839,6 +839,15 @@ button {
   margin-bottom: 24px;
   font-weight: 500;
 }
+#gf-sentence {
+  white-space: normal;
+}
+
+#gf-sentence br {
+  display: block;
+  content: "";
+  margin-bottom: 10px;
+}
 
 .blank-input {
   display: inline-block;
@@ -3442,6 +3451,139 @@ const PASSAGES = [
       }
     ]
   },
+  {
+    id: 'transport-survey', title: 'Transport Survey', level: 'A2 – B1', type: 'gapfill', context: 'Bài nghe điền từ: Cuộc khảo sát về giao thông và thói quen đi lại.',
+    audio: [
+      'audio TS/TS c1.mp3',
+      'audio TS/TS c2.mp3',
+      'audio TS/TS c3.mp3',
+      'audio TS/TS c4.mp3',
+      'audio TS/TS c5.mp3',
+      'audio TS/TS c6.mp3',
+      'audio TS/TS c7.mp3',
+      'audio TS/TS c8.mp3',
+      'audio TS/TS c9.mp3',
+      'audio TS/TS c10.mp3',
+      'audio TS/TS c11.mp3',
+      'audio TS/TS c12.mp3',
+      'audio TS/TS c13.mp3',
+    ],
+    sentences: [
+      {
+        english: "MAN: Excuse me. Would you mind if I asked you some questions? We're doing a {{survey}} on transport.\nSADIE: Yes, that's OK.",
+        translation: "NAM: Xin lỗi. Chị có phiền không nếu tôi hỏi chị một vài câu hỏi? Chúng tôi đang thực hiện một cuộc khảo sát về giao thông.\nNỮ: Vâng, được thôi.",
+        vocabulary: [
+          { word: "survey", meaning: "cuộc khảo sát" },
+          { word: "transport", meaning: "giao thông / sự chuyên chở" }
+        ]
+      },
+      {
+        english: "MAN: First of all, can I take your {{name}}?\nSADIE: Yes. It's Sadie Jones.\nMAN: Thanks very much. And could I have your {{date of birth}} – just the year will do, actually. Is that all right?\nSADIE: Yes, that's fine. It's 1991.",
+        translation: "NAM: Trước tiên, tôi có thể xin tên của chị không?\nNỮ: Vâng. Tôi là Sadie Jones.\nNAM: Cảm ơn rất nhiều. Và tôi có thể xin ngày tháng năm sinh của chị không – thực ra chỉ cần năm là được. Vậy có ổn không?\nNỮ: Vâng, được thôi. Là năm 1991.",
+        vocabulary: [
+          { word: "date of birth", meaning: "ngày tháng năm sinh" }
+        ]
+      },
+      {
+        english: "MAN: So next your {{postcode}}, please.\nSADIE: It's DW30 7YZ.\nMAN: Great. Thanks. Is that in Wells?\nSADIE: No it's actually in Harborne – Wells isn't far from there, though.\nMAN: I really like that {{area}}. My grandmother lived there when I was a kid.\nSADIE: Yes, it is nice.",
+        translation: "NAM: Tiếp theo xin vui lòng cho biết mã bưu điện của chị.\nNỮ: Đó là DW30 7YZ.\nNAM: Tuyệt. Cảm ơn. Nơi đó có phải ở Wells không?\nNỮ: Không, thực ra nó ở Harborne – mặc dù Wells cũng không xa đó lắm.\nNAM: Tôi rất thích khu vực đó. Bà tôi đã sống ở đó khi tôi còn nhỏ.\nNỮ: Vâng, nơi đó rất đẹp.",
+        vocabulary: [
+          { word: "postcode", meaning: "mã bưu điện" },
+          { word: "area", meaning: "khu vực" }
+        ]
+      },
+      {
+        english: "MAN: Right, so now I want to ask you some questions about how you travelled here today. Did you use {{public transport}}?\nSADIE: Yes. I came by bus.",
+        translation: "NAM: Phải rồi, vậy bây giờ tôi muốn hỏi chị một vài câu hỏi về cách chị đi đến đây hôm nay. Chị có sử dụng phương tiện giao thông công cộng không?\nNỮ: Có. Tôi đến bằng xe buýt.",
+        vocabulary: [
+          { word: "public transport", meaning: "phương tiện giao thông công cộng" },
+          { word: "travel", meaning: "đi lại / di chuyển" }
+        ]
+      },
+      {
+        english: "MAN: OK. And that was today. It's the 24th of April, isn't it?\nSADIE: Isn't it the {{25th}}? No, actually, you're right.\nMAN: Ha ha. And what was the {{reason}} for your trip today? I can see you've got some {{shopping}} with you.",
+        translation: "NAM: OK. Và đó là ngày hôm nay. Hôm nay là ngày 24 tháng Tư, phải không?\nNỮ: Không phải là ngày 25 sao? Không, thực ra, anh đúng rồi.\nNAM: Ha ha. Và lý do cho chuyến đi của chị hôm nay là gì? Tôi có thể thấy chị mang theo một số đồ mua sắm.",
+        vocabulary: [
+          { word: "reason", meaning: "lý do" },
+          { word: "shopping", meaning: "đồ mua sắm / việc mua sắm" }
+        ]
+      },
+      {
+        english: "SADIE: Yes. I did some shopping but the main reason I came here was to go to the {{dentist}}.\nMAN: That's not much fun. Hope it was nothing {{serious}}.\nSADIE: No, it was just a {{check up}}. It's fine.",
+        translation: "NỮ: Vâng. Tôi có mua sắm một chút nhưng lý do chính tôi đến đây là để đi khám nha sĩ.\nNAM: Việc đó không vui lắm nhỉ. Hy vọng không có gì nghiêm trọng.\nNỮ: Không, chỉ là một buổi kiểm tra sức khỏe thôi. Mọi thứ đều ổn.",
+        vocabulary: [
+          { word: "dentist", meaning: "nha sĩ" },
+          { word: "serious", meaning: "nghiêm trọng" },
+          { word: "check-up", meaning: "buổi khám sức khỏe / kiểm tra định kỳ" }
+        ]
+      },
+      {
+        english: "MAN: Good. Do you normally travel by bus into the city {{centre}}?\nSADIE: Yes. I stopped driving in ages ago because {{parking}} was so difficult to find and it costs so much.",
+        translation: "NAM: Tốt. Chị có thường đi xe buýt vào trung tâm thành phố không?\nNỮ: Có. Tôi đã ngừng lái xe từ lâu rồi vì tìm chỗ đậu xe rất khó và tốn kém quá nhiều.",
+        vocabulary: [
+          { word: "city centre", meaning: "trung tâm thành phố" },
+          { word: "in ages", meaning: "từ lâu rồi" },
+          { word: "parking", meaning: "chỗ đậu xe" }
+        ]
+      },
+      {
+        english: "MAN: I see.\nSADIE: The bus is much more {{convenient}} too. It only takes about 30 minutes.\nMAN: That's good. So where did you start your {{journey}}?\nSADIE: At the bus stop on Claxby Street.",
+        translation: "NAM: Tôi hiểu rồi.\nNỮ: Xe buýt cũng thuận tiện hơn rất nhiều. Chỉ mất khoảng 30 phút.\nNAM: Thật tốt. Vậy chị đã bắt đầu chuyến đi của mình ở đâu?\nNỮ: Tại trạm xe buýt trên phố Claxby.",
+        vocabulary: [
+          { word: "convenient", meaning: "thuận tiện" },
+          { word: "journey", meaning: "chuyến đi / hành trình" }
+        ]
+      },
+      {
+        english: "MAN: And how {{satisfied}} with the service are you? Do you have any {{complaints}}?\nSADIE: Well, as I said, it's very {{convenient}} and quick when it's on time, but this morning it was late. Only about 10 minutes, but still.",
+        translation: "NAM: Và chị cảm thấy hài lòng với dịch vụ như thế nào? Chị có phàn nàn gì không?\nNỮ: Chà, như tôi đã nói, nó rất thuận tiện và nhanh chóng khi đúng giờ, nhưng sáng nay nó đã bị muộn. Dù chỉ khoảng 10 phút, nhưng vẫn là muộn.",
+        vocabulary: [
+          { word: "satisfied", meaning: "hài lòng" },
+          { word: "complaints", meaning: "lời phàn nàn / khiếu nại" },
+          { word: "convenient", meaning: "thuận tiện" }
+        ]
+      },
+      {
+        english: "MAN: Yes, I understand that's {{annoying}}. And what about the {{timetable}}? Do you have any {{comments}} about that?\nSADIE: Mmm. I suppose I {{mainly}} use the bus during the day, but any time I've been in town in the evening – for dinner or at the cinema – I've noticed you have to wait a long time for a bus – there aren't that many.",
+        translation: "NAM: Vâng, tôi hiểu điều đó khá bực mình. Còn về thời gian biểu thì sao? Chị có bình luận gì về điều đó không?\nNỮ: Mmm. Tôi cho rằng tôi chủ yếu sử dụng xe buýt vào ban ngày, nhưng bất cứ khi nào tôi ở thị trấn vào buổi tối – để ăn tối hoặc ở rạp chiếu phim – tôi nhận thấy bạn phải đợi xe buýt rất lâu – không có nhiều xe buýt lắm.",
+        vocabulary: [
+          { word: "annoying", meaning: "gây bực mình / phiền toái" },
+          { word: "timetable", meaning: "thời gian biểu / lịch trình" },
+          { word: "comments", meaning: "bình luận / ý kiến" },
+          { word: "mainly", meaning: "chủ yếu" }
+        ]
+      },
+      {
+        english: "MAN: OK, thanks. So now I'd like to ask you about your car use.\nSADIE: Well, I have got a car but I don't use it that often. Mainly just to go to the {{supermarket}}. But that's about it really. My {{husband}} uses it at the weekends to go to the {{golf club}}.",
+        translation: "NAM: OK, cảm ơn. Vậy bây giờ tôi muốn hỏi chị về việc sử dụng ô tô của chị.\nNỮ: Chà, tôi có một chiếc ô tô nhưng tôi không thường xuyên sử dụng nó. Chủ yếu chỉ để đi siêu thị. Nhưng thực sự chỉ có vậy thôi. Chồng tôi sử dụng nó vào cuối tuần để đến câu lạc bộ gôn.",
+        vocabulary: [
+          { word: "supermarket", meaning: "siêu thị" },
+          { word: "golf club", meaning: "câu lạc bộ gôn" },
+          { word: "husband", meaning: "chồng" }
+        ]
+      },
+      {
+        english: "MAN: And what about a bicycle?\nSADIE: I don't actually have one {{at the moment}}.\nMAN: What about the city bikes you can {{rent}}? Do you ever use those?\nSADIE: No – I'm not {{keen on}} cycling there because of all the {{pollution}}. But I would like to get a {{bike}} – it would be good to use it to get to work.",
+        translation: "NAM: Còn xe đạp thì sao?\nNỮ: Thực ra hiện tại tôi không có chiếc nào.\nNAM: Thế còn những chiếc xe đạp công cộng trong thành phố mà chị có thể thuê thì sao? Chị có bao giờ sử dụng chúng không?\nNỮ: Không – tôi không thích đạp xe ở đó vì tình trạng ô nhiễm. Nhưng tôi muốn mua một chiếc xe đạp – sẽ rất tốt nếu dùng nó để đi làm.",
+        vocabulary: [
+          { word: "rent", meaning: "thuê" },
+          { word: "keen on", meaning: "thích / đam mê" },
+          { word: "pollution", meaning: "sự ô nhiễm" },
+          { word: "bike", meaning: "xe đạp" },
+          { word: "at the moment", meaning: "hiện tại / ngay lúc này" }
+        ]
+      },
+      {
+        english: "MAN: So why haven't you got one now?\nSADIE: Well, I live in a {{flat}} – on the second floor and it doesn't have any {{storage}} – so we'd have to leave it in the {{hall}} outside the flat.\nMAN: I see. OK. Well, I think that's all ...",
+        translation: "NAM: Vậy tại sao bây giờ chị vẫn chưa có?\nNỮ: Chà, tôi sống trong một căn hộ – trên tầng hai và nó không có bất kỳ chỗ chứa đồ nào – vì vậy chúng tôi sẽ phải để nó ở hành lang bên ngoài căn hộ.\nNAM: Tôi hiểu rồi. OK. Chà, tôi nghĩ vậy là đủ rồi...",
+        vocabulary: [
+          { word: "flat", meaning: "căn hộ" },
+          { word: "storage", meaning: "chỗ chứa đồ / kho chứa" },
+          { word: "hall", meaning: "hành lang / sảnh" }
+        ]
+      }
+    ]
+  },
   { id:'winter', title:'Winter', level:'A2 – B1', type:'gapfill',
     context:'Bài nghe về những hoạt động, khung cảnh và trải nghiệm mùa đông. Nghe từng câu rồi điền từ còn thiếu vào chỗ trống — phù hợp cho học sinh trình độ A2 tới B1.',
     sentences:[
@@ -3798,7 +3940,38 @@ const PASSAGES = [
             ]
         }
     ]
-}
+},
+{
+    id: 'transportation-changes',
+    title: 'Transportation Changes',
+    level: 'A2 – B1',
+    type: 'gapfill',
+    context: 'Bài nghe điền từ: Sự thay đổi của giao thông vận tải trong 100 năm qua.',
+    audio: 'audio/Transportation.mp3',
+    sentences: [
+      {
+        english: "Transportation {{hasn't really changed}} a lot in the past 100 years. When you think about {{changes in other areas}} of our life, transportation is {{pretty much the same}} as it was years ago. OK, cars, trains and airplanes are faster, but they're not so different than they were 50 years ago. Take airplanes, for example. I think air {{travel has got worse}}. Fifty years ago, people flew and were given great service. Today, you are {{like sardines in a can}}. And look at cars. The cars from fifty years ago look nicer than today's ones. They still had four wheels, {{used petrol and had}} a steering wheel. I think transportation will really only {{change when it becomes}} more personal. I'm waiting for {{my own jet pack or}} mini-copter.",
+        translation: "Giao thông vận tải đã không thực sự thay đổi nhiều trong 100 năm qua. Khi bạn nghĩ về những thay đổi trong các lĩnh vực khác của cuộc sống chúng ta, giao thông vận tải gần như vẫn giống như nhiều năm trước. Được rồi, ô tô, tàu hỏa và máy bay thì nhanh hơn, nhưng chúng không khác biệt quá nhiều so với 50 năm trước. Lấy máy bay làm ví dụ. Tôi nghĩ việc di chuyển bằng đường hàng không đã trở nên tồi tệ hơn. Năm mươi năm trước, mọi người đi máy bay và được cung cấp dịch vụ tuyệt vời. Ngày nay, bạn bị nhồi nhét chật chội như cá mòi đóng hộp. Và hãy nhìn vào ô tô. Những chiếc ô tô từ năm mươi năm trước trông đẹp hơn những chiếc ngày nay. Chúng vẫn có bốn bánh, sử dụng xăng và có vô lăng. Tôi nghĩ giao thông vận tải sẽ thực sự chỉ thay đổi khi nó trở nên cá nhân hóa hơn. Tôi đang chờ đợi thiết bị phản lực cá nhân hoặc trực thăng mini của riêng mình.",
+        vocabulary: [
+          { word: "transportation", meaning: "giao thông vận tải" },
+          { word: "in the past", meaning: "trong quá khứ / qua" },
+          { word: "changes in other areas", meaning: "những thay đổi ở các lĩnh vực khác" },
+          { word: "pretty much the same", meaning: "gần như vẫn giống / không thay đổi nhiều" },
+          { word: "different than", meaning: "khác biệt so với" },
+          { word: "air travel", meaning: "di chuyển bằng đường hàng không" },
+          { word: "get worse", meaning: "trở nên tồi tệ hơn" },
+          { word: "great service", meaning: "dịch vụ tuyệt vời" },
+          { word: "like sardines in a can", meaning: "chật chội như cá mòi đóng hộp / bị nhồi nhét" },
+          { word: "look nicer", meaning: "trông đẹp hơn" },
+          { word: "petrol", meaning: "xăng" },
+          { word: "steering wheel", meaning: "vô lăng" },
+          { word: "personal", meaning: "cá nhân / mang tính cá nhân" },
+          { word: "jet pack", meaning: "thiết bị phản lực cá nhân" },
+          { word: "mini-copter", meaning: "trực thăng mini" }
+        ]
+      }
+    ]
+  }
 ];
 
 const LEVEL_META = {
@@ -3875,8 +4048,9 @@ function stopPassageAudio(){
 }
 
 function playPassageAudio(passage, rate){
-  const audioSource = typeof passage === 'string' ? passage : passage && passage.audio;
-  if(!audioSource) return false;
+  const configuredSource = typeof passage === 'string' ? passage : passage && passage.audio;
+  const audioSource = Array.isArray(configuredSource) ? configuredSource[0] : configuredSource;
+  if(typeof audioSource !== 'string' || !audioSource) return false;
   if(window.speechSynthesis) window.speechSynthesis.cancel();
 
   if(!passageAudio || passageAudio.getAttribute('src') !== audioSource){
@@ -4012,9 +4186,18 @@ function getCurrentLikeDislike(item){
   return gf.index === 0 ? gf.passage.likeDislike : null;
 }
 
+function getGapfillAudio(passage, index){
+  if(!passage || !passage.audio) return '';
+  if(typeof passage.audio === 'string') return passage.audio;
+  if(Array.isArray(passage.audio)) return passage.audio[index] || '';
+  return '';
+}
+
 function getCurrentGapfillAudio(item){
-  if(item && item.original && item.original.audio) return item.original.audio;
-  return gf.passage.audio;
+  const sentenceAudio = item && item.original && item.original.audio;
+  if(typeof sentenceAudio === 'string') return sentenceAudio;
+  if(Array.isArray(sentenceAudio)) return sentenceAudio[gf.index] || '';
+  return getGapfillAudio(gf.passage, gf.index);
 }
 
 function getPassageById(id){
@@ -4250,13 +4433,28 @@ function loadGapfillItem(){
     `;
   }
 
-  let questionHtml = item.parts.map(part=>{
-    if(part.type==='text') return escapeHtml(part.value);
-    const width = Math.max(part.answer.length*12 + 32, 80);
-    const html = `<input type="text" class="blank-input" data-i="${blankIdx}" style="width:${width}px" autocomplete="off" autocapitalize="off" spellcheck="false">`;
-    blankIdx++;
-    return html;
-  }).join('');
+ let questionHtml = item.parts.map(part=>{
+  if(part.type==='text') {
+    return escapeHtml(part.value).replace(/\n/g, '<br>');
+  }
+
+  const width = Math.max(part.answer.length * 12 + 32, 80);
+
+  const html = `
+    <input
+      type="text"
+      class="blank-input"
+      data-i="${blankIdx}"
+      style="width:${width}px"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+    >
+  `;
+
+  blankIdx++;
+  return html;
+}).join('');
 
   if (gf.passage.type === 'wordformation' && item.translation) {
     questionHtml += `<div style="margin-top:16px; font-size:15px; color:var(--text-secondary); font-weight:normal; background:#F9FAFB; padding:12px 16px; border-radius:10px; border:1px solid var(--border);">🇻🇳 Dịch câu: ${escapeHtml(item.translation)}</div>`;
