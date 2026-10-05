@@ -1329,6 +1329,72 @@ footer.note {
   font-weight: 500;
 }
 
+/* ---------- Developer lesson panel (visible only with ?dev=1) ---------- */
+#dev-toggle {
+  display: none;
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 70;
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 18px;
+  background: var(--text);
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(17,24,39,.24);
+  font-weight: 700;
+  font-size: 14px;
+}
+body.dev-mode #dev-toggle { display: inline-flex; align-items: center; gap: 8px; }
+#dev-toggle:hover { transform: translateY(-2px); background: #1F2937; }
+
+#dev-backdrop { display: none; position: fixed; inset: 0; z-index: 79; background: rgba(15,23,42,.48); backdrop-filter: blur(3px); }
+#dev-panel {
+  display: none;
+  position: fixed;
+  z-index: 80;
+  top: 16px;
+  right: 16px;
+  bottom: 16px;
+  width: min(680px, calc(100vw - 32px));
+  overflow: auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: -12px 0 40px rgba(15,23,42,.18);
+}
+body.dev-panel-open { overflow: hidden; }
+body.dev-panel-open #dev-backdrop, body.dev-panel-open #dev-panel { display: block; }
+.dev-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 24px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1; }
+.dev-panel-header h2 { font-size: 19px; }
+.dev-panel-header p { margin-top: 2px; color: var(--text-secondary); font-size: 13px; }
+.dev-close { width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 50%; background: var(--card); color: var(--text-secondary); font-size: 20px; line-height: 1; }
+.dev-close:hover { color: var(--danger); border-color: #FECACA; background: #FEF2F2; }
+.dev-panel-body { padding: 22px 24px 28px; }
+.dev-form { display: grid; gap: 16px; }
+.dev-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.dev-field { display: grid; gap: 6px; }
+.dev-field label { color: var(--text); font-size: 13px; font-weight: 700; }
+.dev-field small { color: var(--text-secondary); font-size: 12px; line-height: 1.45; }
+.dev-field input, .dev-field textarea { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); padding: 10px 12px; font: inherit; font-size: 14px; }
+.dev-field textarea { min-height: 106px; resize: vertical; line-height: 1.55; }
+.dev-field input:focus, .dev-field textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.14); }
+.dev-field textarea.dev-content { min-height: 170px; }
+.dev-section-title { margin-top: 9px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 14px; }
+.dev-actions { display: flex; flex-wrap: wrap; gap: 9px; padding-top: 2px; }
+.dev-btn { padding: 10px 13px; border-radius: 9px; border: 1px solid var(--border); background: var(--card); color: var(--text); font: inherit; font-size: 13px; font-weight: 700; }
+.dev-btn:hover { border-color: var(--primary); color: var(--primary); background: #EFF6FF; }
+.dev-btn.primary { border-color: var(--primary); color: #fff; background: var(--primary); }
+.dev-btn.primary:hover { background: var(--primary-hover); color: #fff; }
+.dev-btn.danger:hover { color: var(--danger); border-color: #FCA5A5; background: #FEF2F2; }
+.dev-status { min-height: 20px; color: var(--text-secondary); font-size: 13px; }
+.dev-status.error { color: #B91C1C; }.dev-status.success { color: #15803D; }
+.dev-lesson-list { display: grid; gap: 9px; margin-top: 10px; }
+.dev-lesson-row { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+.dev-lesson-title { flex: 1; min-width: 0; }.dev-lesson-title strong, .dev-lesson-title span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.dev-lesson-title span { color: var(--text-secondary); font-size: 12px; margin-top: 2px; }
+.dev-lesson-row .dev-btn { padding: 7px 9px; font-size: 12px; }
+.dev-empty { color: var(--text-secondary); font-size: 13px; padding: 8px 0; }
+@media (max-width: 560px) { .dev-panel-body, .dev-panel-header { padding-left: 16px; padding-right: 16px; }.dev-form-grid { grid-template-columns: 1fr; }.dev-lesson-row { align-items: flex-start; flex-wrap: wrap; }.dev-lesson-title { flex-basis: calc(100% - 2px); } }
 </style>
 </head>
 <body>
@@ -1744,6 +1810,44 @@ footer.note {
 
   <footer class="note">DICTATION LAB · Luyện nghe và từ vựng học thuật</footer>
 </div>
+
+<!-- Developer tools: activated only when the URL contains ?dev=1 -->
+<button id="dev-toggle" type="button" aria-label="Mở công cụ DEV">🛠 <span>DEV</span></button>
+<div id="dev-backdrop" aria-hidden="true"></div>
+<aside id="dev-panel" aria-label="DEV lesson manager" aria-modal="true" role="dialog">
+  <div class="dev-panel-header">
+    <div><h2>🛠 Lesson Builder</h2><p>Chỉ lưu trên trình duyệt này cho đến khi bạn export JSON.</p></div>
+    <button class="dev-close" id="dev-close" type="button" aria-label="Đóng DEV panel">×</button>
+  </div>
+  <div class="dev-panel-body">
+    <form class="dev-form" id="dev-lesson-form">
+      <div class="dev-form-grid">
+        <div class="dev-field"><label for="dev-title">Tên bài</label><input id="dev-title" type="text" placeholder="Ví dụ: Health Part 1" required></div>
+        <div class="dev-field"><label for="dev-id">ID bài</label><input id="dev-id" type="text" placeholder="Tự tạo theo tên bài nếu để trống"><small>Chỉ dùng chữ thường, số và dấu gạch ngang.</small></div>
+        <div class="dev-field"><label for="dev-level">Trình độ</label><input id="dev-level" type="text" value="A2 – B1" required></div>
+        <div class="dev-field"><label>Loại bài</label><input type="text" value="Gap-fill" disabled></div>
+      </div>
+      <div class="dev-field"><label for="dev-english">Nội dung tiếng Anh</label><textarea class="dev-content" id="dev-english" placeholder="Dán toàn bộ đoạn văn ở đây. Đoạn văn sẽ được giữ là một bài duy nhất." required></textarea></div>
+      <div class="dev-field"><label for="dev-translation">Translation tiếng Việt</label><textarea class="dev-content" id="dev-translation" placeholder="Nhập bản dịch hoàn chỉnh cho toàn bộ đoạn văn." required></textarea></div>
+      <div class="dev-field"><label for="dev-blanks">Từ đục lỗ</label><textarea id="dev-blanks" placeholder="health&#10;loads of"></textarea><small>Mỗi từ/cụm từ một dòng (hoặc ngăn bằng dấu phẩy). Hệ thống chỉ đánh dấu các cụm xuất hiện trong đoạn tiếng Anh.</small></div>
+      <div class="dev-field"><label for="dev-vocabulary">Vocabulary</label><textarea id="dev-vocabulary" placeholder="health = sức khỏe&#10;loads of = rất nhiều&#10;fit = khỏe mạnh"></textarea><small>Mỗi dòng theo dạng: English = nghĩa tiếng Việt.</small></div>
+      <div class="dev-field"><label for="dev-audio">Audio</label><input id="dev-audio" type="text" placeholder="audio/health-1.mp3"><small>Để trống nếu bài chưa có MP3. Hệ thống sẽ lưu <code>audio: ''</code>.</small></div>
+      <div class="dev-actions">
+        <button class="dev-btn" id="dev-new" type="button">➕ Thêm bài</button>
+        <button class="dev-btn" id="dev-preview" type="button">👁️ Xem trước</button>
+        <button class="dev-btn primary" type="submit">💾 Lưu bài</button>
+      </div>
+      <div class="dev-status" id="dev-status" aria-live="polite"></div>
+    </form>
+    <h3 class="dev-section-title">Các bài DEV đã tạo</h3>
+    <div class="dev-actions" style="margin-top:12px">
+      <button class="dev-btn" id="dev-export" type="button">📤 Export lessons</button>
+      <button class="dev-btn" id="dev-import" type="button">📥 Import lessons</button>
+      <input id="dev-import-file" type="file" accept="application/json,.json" hidden>
+    </div>
+    <div class="dev-lesson-list" id="dev-lesson-list"></div>
+  </div>
+</aside>
 
 <script>
 /* ===================== DATA ===================== */
@@ -4225,6 +4329,17 @@ function getCurrentGapfillAudio(item){
   return getGapfillAudio(gf.passage, gf.index);
 }
 
+function isDevPanelLesson(passage){
+  return Boolean(passage && passage.__devPanelNoTTS) ||
+    (typeof devRuntimeLessons !== 'undefined' && devRuntimeLessons.includes(passage)) ||
+    (typeof devPreviewLesson !== 'undefined' && passage === devPreviewLesson);
+}
+
+function playGapfillAudio(item){
+  if(playPassageAudio(getCurrentGapfillAudio(item), gf.rate)) return;
+  if(!isDevPanelLesson(gf.passage)) speak(item.full, gf.rate);
+}
+
 function getPassageById(id){
   for (let p of PASSAGES) {
     if (p.id === id) return { passage: p, group: null };
@@ -4371,6 +4486,7 @@ document.getElementById('btn-back-home-2').addEventListener('click', ()=> {
 document.getElementById('btn-listen-full').addEventListener('click', ()=>{
   if(gf.passage && gf.passage.type !== 'quiz' && gf.passage.type !== 'wordformation'){
       if(playPassageAudio(gf.passage, 1)) return;
+      if(isDevPanelLesson(gf.passage)) return;
       const fullText = gf.passage.sentences.map(item => {
           let t = typeof item === 'string' ? item : item.english;
           return t.replace(/\{\{(.*?)\}\}/g,'$1');
@@ -4514,7 +4630,7 @@ function loadGapfillItem(){
 
   if (gf.passage.type !== 'wordformation') {
     setTimeout(()=> {
-      if(!playPassageAudio(getCurrentGapfillAudio(item), gf.rate)) speak(item.full, gf.rate);
+      playGapfillAudio(item);
     }, 300);
   }
 }
@@ -4813,6 +4929,10 @@ async function finishGapfill(){
 
     // Attach local event listeners for the newly created buttons
     card.querySelector('.btn-listen-card').addEventListener('click', () => {
+      if(isDevPanelLesson(gf.passage)){
+        if(gf.passage.audio) playPassageAudio(gf.passage.audio, gf.rate);
+        return;
+      }
       speak(res.item.full, gf.rate);
     });
 
@@ -4846,6 +4966,7 @@ function retryGapfillMissed(){
     type: gf.passage.type,
     audio: gf.passage.audio,
     likeDislike: gf.passage.likeDislike,
+    __devPanelNoTTS: isDevPanelLesson(gf.passage),
     sentences: gf.missedSentences
   };
   startGapfill(tempPassage);
@@ -4853,11 +4974,11 @@ function retryGapfillMissed(){
 
 document.getElementById('btn-play-gf').addEventListener('click', ()=> {
   const item = gf.sentences[gf.index];
-  if(!playPassageAudio(getCurrentGapfillAudio(item), gf.rate)) speak(item.full, gf.rate);
+  playGapfillAudio(item);
 });
 document.getElementById('btn-replay-gf').addEventListener('click', ()=> {
   const item = gf.sentences[gf.index];
-  if(!playPassageAudio(getCurrentGapfillAudio(item), gf.rate)) speak(item.full, gf.rate);
+  playGapfillAudio(item);
 });
 document.getElementById('speed-slider-gf').addEventListener('input', (e)=>{
   setAudioRate('gf', parseFloat(e.target.value));
@@ -4867,6 +4988,10 @@ document.getElementById('btn-skip-gf').addEventListener('click', skipGapfillItem
 document.getElementById('btn-exit-gapfill').addEventListener('click', ()=>{
   stopPassageAudio();
   if(window.speechSynthesis) window.speechSynthesis.cancel();
+  if(devPreviewLesson && gf.passage === devPreviewLesson){
+    openDevPanel();
+    return;
+  }
   openPassageIntro(gf.passage.id);
 });
 
@@ -5561,7 +5686,341 @@ document.getElementById('btn-retry-all').addEventListener('click', ()=>{
   else { startPractice(state.topic, state.level, state.level==='word'?state.topic.words:state.level==='phrase'?state.topic.phrases:state.topic.sentences); }
 });
 
+/* ===================== DEV LESSON BUILDER ===================== */
+const DEV_STORAGE_KEY = 'ielts-dictation-lab:dev-lessons:v1';
+const devModeEnabled = new URLSearchParams(window.location.search).get('dev') === '1';
+const originalPassageIds = new Set(collectPassageIds(PASSAGES));
+let devRuntimeLessons = [];
+let devEditingId = null;
+let devPreviewLesson = null;
+
+function collectPassageIds(passages){
+  const ids = [];
+  passages.forEach(passage => {
+    if(!passage || !passage.id) return;
+    ids.push(passage.id);
+    if(passage.type === 'group' && Array.isArray(passage.lessons)){
+      passage.lessons.forEach(lesson => { if(lesson && lesson.id) ids.push(lesson.id); });
+    }
+  });
+  return ids;
+}
+
+function readDevLessons(){
+  try{
+    const stored = JSON.parse(localStorage.getItem(DEV_STORAGE_KEY) || '[]');
+    return Array.isArray(stored) ? stored.filter(isValidDevLesson) : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function isValidDevLesson(lesson){
+  return lesson && typeof lesson === 'object' && lesson.type === 'gapfill' &&
+    typeof lesson.id === 'string' && typeof lesson.title === 'string' &&
+    Array.isArray(lesson.sentences) && lesson.sentences.length > 0 &&
+    lesson.sentences.every(sentence => sentence && typeof sentence.english === 'string');
+}
+
+function writeDevLessons(lessons){
+  localStorage.setItem(DEV_STORAGE_KEY, JSON.stringify(lessons));
+}
+
+function mergeDevLessons(){
+  devRuntimeLessons.forEach(lesson => {
+    const index = PASSAGES.indexOf(lesson);
+    if(index !== -1) PASSAGES.splice(index, 1);
+  });
+  devRuntimeLessons = [];
+  const usedIds = new Set(collectPassageIds(PASSAGES));
+  readDevLessons().forEach(lesson => {
+    if(!usedIds.has(lesson.id)){
+      PASSAGES.push(lesson);
+      devRuntimeLessons.push(lesson);
+      usedIds.add(lesson.id);
+    }
+  });
+}
+
+function slugifyLessonId(value){
+  const slug = String(value || '').trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return slug || 'lesson';
+}
+
+function getUniqueDevId(value, currentId){
+  const base = slugifyLessonId(value);
+  const usedIds = new Set(collectPassageIds(PASSAGES));
+  if(currentId) usedIds.delete(currentId);
+  let candidate = base;
+  let count = 2;
+  while(usedIds.has(candidate)) candidate = `${base}-${count++}`;
+  return candidate;
+}
+
+function parseVocabularyInput(value){
+  return String(value || '').split(/\r?\n/).map(line => {
+    const separator = line.indexOf('=');
+    if(separator === -1) return null;
+    const word = line.slice(0, separator).trim();
+    const meaning = line.slice(separator + 1).trim();
+    return word && meaning ? { word, meaning } : null;
+  }).filter(Boolean);
+}
+
+function escapeRegExp(value){
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function applyGapfillBlanks(text, words){
+  let output = String(text || '');
+  const tokens = [];
+  const missing = [];
+  [...words].sort((a, b) => b.length - a.length).forEach(word => {
+    const expression = new RegExp(`(^|[^A-Za-z0-9_])(${escapeRegExp(word)})(?=$|[^A-Za-z0-9_])`, 'gi');
+    let found = false;
+    output = output.replace(expression, (full, prefix, match) => {
+      found = true;
+      const token = `\uE000${tokens.length}\uE001`;
+      tokens.push(match);
+      return prefix + token;
+    });
+    if(!found) missing.push(word);
+  });
+  tokens.forEach((token, index) => {
+    output = output.replace(`\uE000${index}\uE001`, `{{${token}}}`);
+  });
+  return { text: output, missing };
+}
+
+function getDevFormElements(){
+  return {
+    title: document.getElementById('dev-title'), id: document.getElementById('dev-id'),
+    level: document.getElementById('dev-level'), english: document.getElementById('dev-english'),
+    translation: document.getElementById('dev-translation'), blanks: document.getElementById('dev-blanks'),
+    vocabulary: document.getElementById('dev-vocabulary'), audio: document.getElementById('dev-audio')
+  };
+}
+
+function setDevStatus(message, kind){
+  const status = document.getElementById('dev-status');
+  status.textContent = message || '';
+  status.className = `dev-status${kind ? ` ${kind}` : ''}`;
+}
+
+function buildDevLessonFromForm(){
+  const fields = getDevFormElements();
+  const title = fields.title.value.trim();
+  const english = fields.english.value.trim();
+  const translation = fields.translation.value.trim();
+  const blankWords = fields.blanks.value.split(/[\r\n,]+/).map(word => word.trim()).filter(Boolean)
+    .filter((word, index, words) => words.findIndex(item => item.toLowerCase() === word.toLowerCase()) === index);
+  if(!title || !english || !translation) throw new Error('Hãy nhập tên bài, nội dung tiếng Anh và bản dịch tiếng Việt.');
+  if(blankWords.length === 0) throw new Error('Hãy nhập ít nhất một từ hoặc cụm từ cần đục lỗ.');
+
+  const withBlanks = applyGapfillBlanks(english, blankWords);
+  if(withBlanks.missing.length) throw new Error(`Không tìm thấy trong đoạn tiếng Anh: ${withBlanks.missing.join(', ')}.`);
+
+  const requestedId = fields.id.value.trim() || title;
+  const id = getUniqueDevId(requestedId, devEditingId);
+  return {
+    id,
+    title,
+    level: fields.level.value.trim() || 'A2 – B1',
+    type: 'gapfill',
+    context: 'Bài luyện Gap-fill do DEV tạo.',
+    audio: fields.audio.value.trim(),
+    sentences: [{
+      english: withBlanks.text,
+      translation,
+      vocabulary: parseVocabularyInput(fields.vocabulary.value)
+    }]
+  };
+}
+
+function clearDevForm(){
+  const fields = getDevFormElements();
+  fields.title.value = '';
+  fields.id.value = '';
+  fields.id.dataset.manual = '';
+  fields.level.value = 'A2 – B1';
+  fields.english.value = '';
+  fields.translation.value = '';
+  fields.blanks.value = '';
+  fields.vocabulary.value = '';
+  fields.audio.value = '';
+  devEditingId = null;
+  devPreviewLesson = null;
+  document.querySelector('#dev-lesson-form button[type="submit"]').textContent = '💾 Lưu bài';
+  setDevStatus('Sẵn sàng tạo bài Gap-fill mới.');
+}
+
+function loadDevLessonForEditing(id){
+  const lesson = readDevLessons().find(item => item.id === id);
+  if(!lesson) return;
+  const sentence = lesson.sentences[0] || {};
+  const fields = getDevFormElements();
+  fields.title.value = lesson.title || '';
+  fields.id.value = lesson.id || '';
+  fields.level.value = lesson.level || 'A2 – B1';
+  fields.english.value = String(sentence.english || '').replace(/\{\{(.*?)\}\}/g, '$1');
+  fields.translation.value = sentence.translation || '';
+  fields.blanks.value = (String(sentence.english || '').match(/\{\{(.*?)\}\}/g) || []).map(match => match.slice(2, -2)).join('\n');
+  fields.vocabulary.value = (sentence.vocabulary || []).map(item => `${item.word} = ${item.meaning}`).join('\n');
+  fields.audio.value = typeof lesson.audio === 'string' ? lesson.audio : '';
+  devEditingId = lesson.id;
+  document.querySelector('#dev-lesson-form button[type="submit"]').textContent = '💾 Lưu thay đổi';
+  setDevStatus(`Đang sửa: ${lesson.title}`);
+  document.getElementById('dev-title').focus();
+}
+
+function renderDevLessonList(){
+  const list = document.getElementById('dev-lesson-list');
+  const lessons = readDevLessons();
+  list.innerHTML = '';
+  if(lessons.length === 0){
+    const empty = document.createElement('p');
+    empty.className = 'dev-empty';
+    empty.textContent = 'Chưa có bài nào được tạo bằng DEV Panel.';
+    list.appendChild(empty);
+    return;
+  }
+  lessons.forEach(lesson => {
+    const row = document.createElement('div');
+    row.className = 'dev-lesson-row';
+    const title = document.createElement('div');
+    title.className = 'dev-lesson-title';
+    const strong = document.createElement('strong'); strong.textContent = lesson.title;
+    const meta = document.createElement('span'); meta.textContent = `${lesson.id} · ${lesson.level}`;
+    title.append(strong, meta);
+    const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'dev-btn'; edit.textContent = '✏️ Sửa';
+    edit.addEventListener('click', () => loadDevLessonForEditing(lesson.id));
+    const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'dev-btn danger'; remove.textContent = '🗑️ Xóa';
+    remove.addEventListener('click', () => {
+      if(!window.confirm(`Xóa bài DEV “${lesson.title}”?`)) return;
+      writeDevLessons(readDevLessons().filter(item => item.id !== lesson.id));
+      if(devEditingId === lesson.id) clearDevForm();
+      mergeDevLessons();
+      renderGapfillHome();
+      renderDevLessonList();
+      setDevStatus('Đã xóa bài DEV.', 'success');
+    });
+    row.append(title, edit, remove);
+    list.appendChild(row);
+  });
+}
+
+function openDevPanel(){
+  if(!devModeEnabled) return;
+  devPreviewLesson = null;
+  document.body.classList.add('dev-panel-open');
+  renderDevLessonList();
+}
+
+function closeDevPanel(){
+  document.body.classList.remove('dev-panel-open');
+}
+
+function downloadDevLessons(){
+  const blob = new Blob([JSON.stringify(readDevLessons(), null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'dictation-lab-dev-lessons.json';
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function importDevLessons(file){
+  const reader = new FileReader();
+  reader.onload = event => {
+    try{
+      const imported = JSON.parse(event.target.result);
+      if(!Array.isArray(imported)) throw new Error('Tệp JSON phải là một danh sách bài học.');
+      const valid = imported.filter(isValidDevLesson);
+      if(valid.length !== imported.length) throw new Error('Tệp có bài học không đúng cấu trúc Gap-fill.');
+      const existing = readDevLessons();
+      const reserved = new Set([...originalPassageIds, ...existing.map(item => item.id)]);
+      const normalized = valid.map(lesson => {
+        const copy = JSON.parse(JSON.stringify(lesson));
+        const base = slugifyLessonId(copy.id || copy.title);
+        let candidate = base;
+        let count = 2;
+        while(reserved.has(candidate)) candidate = `${base}-${count++}`;
+        copy.id = candidate;
+        reserved.add(candidate);
+        return copy;
+      });
+      writeDevLessons([...existing, ...normalized]);
+      mergeDevLessons();
+      renderGapfillHome();
+      renderDevLessonList();
+      setDevStatus(`Đã import ${normalized.length} bài. ID trùng (nếu có) đã được đổi hậu tố.`, 'success');
+    }catch(error){
+      setDevStatus(error.message || 'Không thể import tệp JSON.', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function initDevPanel(){
+  mergeDevLessons();
+  if(!devModeEnabled) return;
+  document.body.classList.add('dev-mode');
+  document.getElementById('dev-toggle').addEventListener('click', openDevPanel);
+  document.getElementById('dev-close').addEventListener('click', closeDevPanel);
+  document.getElementById('dev-backdrop').addEventListener('click', closeDevPanel);
+  document.getElementById('dev-new').addEventListener('click', clearDevForm);
+  document.getElementById('dev-title').addEventListener('input', event => {
+    const id = document.getElementById('dev-id');
+    if(!id.dataset.manual) id.value = slugifyLessonId(event.target.value);
+  });
+  document.getElementById('dev-id').addEventListener('input', event => {
+    event.target.dataset.manual = event.target.value.trim() ? 'true' : '';
+  });
+  document.getElementById('dev-preview').addEventListener('click', () => {
+    try{
+      const lesson = buildDevLessonFromForm();
+      devPreviewLesson = lesson;
+      closeDevPanel();
+      startGapfill(lesson);
+    }catch(error){
+      setDevStatus(error.message, 'error');
+    }
+  });
+  document.getElementById('dev-lesson-form').addEventListener('submit', event => {
+    event.preventDefault();
+    try{
+      const lesson = buildDevLessonFromForm();
+      const lessons = readDevLessons();
+      const target = devEditingId ? lessons.findIndex(item => item.id === devEditingId) : -1;
+      if(target === -1) lessons.push(lesson); else lessons[target] = lesson;
+      writeDevLessons(lessons);
+      devEditingId = lesson.id;
+      mergeDevLessons();
+      renderGapfillHome();
+      renderDevLessonList();
+      document.getElementById('dev-id').value = lesson.id;
+      document.getElementById('dev-id').dataset.manual = 'true';
+      document.querySelector('#dev-lesson-form button[type="submit"]').textContent = '💾 Lưu thay đổi';
+      setDevStatus(`Đã lưu “${lesson.title}”. Bài này sẽ vẫn còn sau khi refresh.`, 'success');
+    }catch(error){
+      setDevStatus(error.message, 'error');
+    }
+  });
+  document.getElementById('dev-export').addEventListener('click', downloadDevLessons);
+  document.getElementById('dev-import').addEventListener('click', () => document.getElementById('dev-import-file').click());
+  document.getElementById('dev-import-file').addEventListener('change', event => {
+    const file = event.target.files[0];
+    if(file) importDevLessons(file);
+    event.target.value = '';
+  });
+  clearDevForm();
+}
+
 /* ===================== INIT ===================== */
+initDevPanel();
 renderHome();
 renderGapfillHome();
 const storedStudent = getStoredStudent();
