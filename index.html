@@ -1849,6 +1849,7 @@ body.dev-panel-open #dev-backdrop, body.dev-panel-open #dev-panel { display: blo
   </div>
 </aside>
 
+<script src="dev-lessons.js"></script>
 <script>
 /* ===================== DATA ===================== */
 const TOPICS = [
@@ -5688,6 +5689,9 @@ document.getElementById('btn-retry-all').addEventListener('click', ()=>{
 
 /* ===================== DEV LESSON BUILDER ===================== */
 const DEV_STORAGE_KEY = 'ielts-dictation-lab:dev-lessons:v1';
+const DEPLOYED_DEV_LESSONS = Array.isArray(window.IE_DLP_DEPLOYED_LESSONS)
+  ? window.IE_DLP_DEPLOYED_LESSONS.filter(isValidDevLesson)
+  : [];
 const devModeEnabled = new URLSearchParams(window.location.search).get('dev') === '1';
 const originalPassageIds = new Set(collectPassageIds(PASSAGES));
 let devRuntimeLessons = [];
@@ -5709,9 +5713,13 @@ function collectPassageIds(passages){
 function readDevLessons(){
   try{
     const stored = JSON.parse(localStorage.getItem(DEV_STORAGE_KEY) || '[]');
-    return Array.isArray(stored) ? stored.filter(isValidDevLesson) : [];
+    const localLessons = Array.isArray(stored) ? stored.filter(isValidDevLesson) : [];
+    const byId = new Map();
+    DEPLOYED_DEV_LESSONS.forEach(lesson => byId.set(lesson.id, lesson));
+    localLessons.forEach(lesson => byId.set(lesson.id, lesson));
+    return Array.from(byId.values());
   }catch(error){
-    return [];
+    return [...DEPLOYED_DEV_LESSONS];
   }
 }
 
@@ -5923,13 +5931,16 @@ function closeDevPanel(){
 }
 
 function downloadDevLessons(){
-  const blob = new Blob([JSON.stringify(readDevLessons(), null, 2)], {type:'application/json'});
+  const lessons = readDevLessons();
+  const payload = `// IELTS Dictation Lab — deployed DEV lessons\n// Replace this file on GitHub Pages whenever you export new lessons.\nwindow.IE_DLP_DEPLOYED_LESSONS = ${JSON.stringify(lessons, null, 2)};\n`;
+  const blob = new Blob([payload], {type:'application/javascript'});
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'dictation-lab-dev-lessons.json';
+  link.download = 'dev-lessons.js';
   link.click();
   URL.revokeObjectURL(url);
+  setDevStatus(`Đã export ${lessons.length} bài → dev-lessons.js. Chỉ cần upload file này lên GitHub.`, 'success');
 }
 
 function importDevLessons(file){
