@@ -5696,6 +5696,8 @@ const DEPLOYED_DEV_LESSONS = Array.isArray(window.IE_DLP_DEPLOYED_LESSONS)
   ? window.IE_DLP_DEPLOYED_LESSONS.filter(isValidDevLesson)
   : [];
 const devModeEnabled = new URLSearchParams(window.location.search).get('dev') === '1';
+const DEV_AUTH_KEY = 'ielts-dictation-lab:dev-auth:v1';
+const DEV_PASSWORD = 'adidaphat'; // Đổi mật khẩu tại đây nếu muốn
 const originalPassageIds = new Set(collectPassageIds(PASSAGES));
 let devRuntimeLessons = [];
 let devEditingId = null;
@@ -5985,6 +5987,18 @@ function importDevLessons(file){
 function initDevPanel(){
   mergeDevLessons();
   if(!devModeEnabled) return;
+
+  // Khóa DEV bằng mật khẩu. Trạng thái mở khóa chỉ lưu trong tab hiện tại.
+  const unlocked = sessionStorage.getItem(DEV_AUTH_KEY) === '1';
+  if(!unlocked){
+    const entered = window.prompt('🔐 DEV Mode\n\nNhập mật khẩu để mở công cụ DEV:');
+    if(entered !== DEV_PASSWORD){
+      alert('❌ Sai mật khẩu. DEV Mode đã bị khóa.');
+      return;
+    }
+    sessionStorage.setItem(DEV_AUTH_KEY, '1');
+  }
+
   document.body.classList.add('dev-mode');
   document.getElementById('dev-toggle').addEventListener('click', openDevPanel);
   document.getElementById('dev-close').addEventListener('click', closeDevPanel);
