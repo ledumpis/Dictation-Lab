@@ -6,7 +6,7 @@ window.IE_DLP_DEPLOYED_LESSONS = [
     "title": "Hospitals",
     "level": "A2 – B1",
     "type": "gapfill",
-    "context": "Bài luyện Gap-fill do DEV tạo.",
+    "context": "Bài nghe này kể về một người khá “đen đủi” vì đã phải nằm viện nhiều lần. Dù không thích bệnh viện, nhưng người này lại khá thích xem phim về bệnh viện.",
     "audio": "audio/Hospitals.mp3",
     "sentences": [
       {
