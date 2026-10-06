@@ -1380,6 +1380,7 @@ body.dev-panel-open #dev-backdrop, body.dev-panel-open #dev-panel { display: blo
 .dev-field textarea { min-height: 106px; resize: vertical; line-height: 1.55; }
 .dev-field input:focus, .dev-field textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.14); }
 .dev-field textarea.dev-content { min-height: 170px; }
+#dev-context { min-height: 90px; }
 .dev-section-title { margin-top: 9px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 14px; }
 .dev-actions { display: flex; flex-wrap: wrap; gap: 9px; padding-top: 2px; }
 .dev-btn { padding: 10px 13px; border-radius: 9px; border: 1px solid var(--border); background: var(--card); color: var(--text); font: inherit; font-size: 13px; font-weight: 700; }
@@ -1826,6 +1827,8 @@ body.dev-panel-open #dev-backdrop, body.dev-panel-open #dev-panel { display: blo
         <div class="dev-field"><label for="dev-id">ID bài</label><input id="dev-id" type="text" placeholder="Tự tạo theo tên bài nếu để trống"><small>Chỉ dùng chữ thường, số và dấu gạch ngang.</small></div>
         <div class="dev-field"><label for="dev-level">Trình độ</label><input id="dev-level" type="text" value="A2 – B1" required></div>
         <div class="dev-field"><label>Loại bài</label><input type="text" value="Gap-fill" disabled></div>
+      </div>
+      <div class="dev-field"><label for="dev-context">Mô tả bài / Context</label><textarea id="dev-context" placeholder="Ví dụ: Bài nghe nói về những trải nghiệm của người nói khi ở bệnh viện." required></textarea><small>Dòng mô tả này sẽ hiện ngay dưới tên bài khi mở bài luyện.</small>
       </div>
       <div class="dev-field"><label for="dev-english">Nội dung tiếng Anh</label><textarea class="dev-content" id="dev-english" placeholder="Dán toàn bộ đoạn văn ở đây. Đoạn văn sẽ được giữ là một bài duy nhất." required></textarea></div>
       <div class="dev-field"><label for="dev-translation">Translation tiếng Việt</label><textarea class="dev-content" id="dev-translation" placeholder="Nhập bản dịch hoàn chỉnh cho toàn bộ đoạn văn." required></textarea></div>
@@ -5805,7 +5808,8 @@ function applyGapfillBlanks(text, words){
 function getDevFormElements(){
   return {
     title: document.getElementById('dev-title'), id: document.getElementById('dev-id'),
-    level: document.getElementById('dev-level'), english: document.getElementById('dev-english'),
+    level: document.getElementById('dev-level'), context: document.getElementById('dev-context'),
+    english: document.getElementById('dev-english'),
     translation: document.getElementById('dev-translation'), blanks: document.getElementById('dev-blanks'),
     vocabulary: document.getElementById('dev-vocabulary'), audio: document.getElementById('dev-audio')
   };
@@ -5820,11 +5824,12 @@ function setDevStatus(message, kind){
 function buildDevLessonFromForm(){
   const fields = getDevFormElements();
   const title = fields.title.value.trim();
+  const context = fields.context.value.trim();
   const english = fields.english.value.trim();
   const translation = fields.translation.value.trim();
   const blankWords = fields.blanks.value.split(/[\r\n,]+/).map(word => word.trim()).filter(Boolean)
     .filter((word, index, words) => words.findIndex(item => item.toLowerCase() === word.toLowerCase()) === index);
-  if(!title || !english || !translation) throw new Error('Hãy nhập tên bài, nội dung tiếng Anh và bản dịch tiếng Việt.');
+  if(!title || !context || !english || !translation) throw new Error('Hãy nhập tên bài, mô tả bài, nội dung tiếng Anh và bản dịch tiếng Việt.');
   if(blankWords.length === 0) throw new Error('Hãy nhập ít nhất một từ hoặc cụm từ cần đục lỗ.');
 
   const withBlanks = applyGapfillBlanks(english, blankWords);
@@ -5837,7 +5842,7 @@ function buildDevLessonFromForm(){
     title,
     level: fields.level.value.trim() || 'A2 – B1',
     type: 'gapfill',
-    context: 'Bài luyện Gap-fill do DEV tạo.',
+    context,
     audio: fields.audio.value.trim(),
     sentences: [{
       english: withBlanks.text,
@@ -5853,6 +5858,7 @@ function clearDevForm(){
   fields.id.value = '';
   fields.id.dataset.manual = '';
   fields.level.value = 'A2 – B1';
+  fields.context.value = '';
   fields.english.value = '';
   fields.translation.value = '';
   fields.blanks.value = '';
@@ -5872,6 +5878,7 @@ function loadDevLessonForEditing(id){
   fields.title.value = lesson.title || '';
   fields.id.value = lesson.id || '';
   fields.level.value = lesson.level || 'A2 – B1';
+  fields.context.value = lesson.context || '';
   fields.english.value = String(sentence.english || '').replace(/\{\{(.*?)\}\}/g, '$1');
   fields.translation.value = sentence.translation || '';
   fields.blanks.value = (String(sentence.english || '').match(/\{\{(.*?)\}\}/g) || []).map(match => match.slice(2, -2)).join('\n');
